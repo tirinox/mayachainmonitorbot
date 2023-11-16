@@ -9,6 +9,7 @@ from services.jobs.fetch.fair_price import RuneMarketInfoFetcher
 from services.jobs.fetch.last_block import LastBlockFetcher
 from services.jobs.fetch.runeyield import AsgardConsumerConnectorBase, get_rune_yield_connector
 from services.jobs.fetch.tx import TxFetcher
+from services.lib.config import Config
 from services.lib.constants import NetworkIdents
 from services.lib.delegates import INotified
 from services.lib.draw_utils import img_to_bio
@@ -49,15 +50,18 @@ class LpAppFramework(App):
 
     @staticmethod
     def solve_working_dir_mess():
-        cwd = os.getcwd()
+        old_cwd = cwd = os.getcwd()
 
         for replacement in ['/tools/debug', '/tests', '/tools']:
             if cwd.endswith(replacement):
-                cwd_new = cwd.replace(replacement, '')
-                os.chdir(cwd_new)
-                cwd_new = os.getcwd()
-                print(f'Hey! Auto changed directory. "{cwd}" -> "{cwd_new}"!')
+                cwd = cwd.replace(replacement, '')
+                os.chdir(cwd)
+                cwd = os.getcwd()
+                print(f'Hey! Auto changed directory. "{old_cwd}" -> "{cwd}"!')
                 break
+
+        if cwd:
+            Config.DEFAULT_ENV_FILE = f'{cwd}/../.env'
 
     @property
     def tg_token(self):

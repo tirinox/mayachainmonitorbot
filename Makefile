@@ -4,7 +4,7 @@ export
 .DEFAULT_GOAL := help
 .PHONY: help build start stop restart pull logs clean upgrade redis-cli redis-sv-loc certbot buildf test lint graph switch-db attach
 
-BOTNAME = thtgbot
+BOTNAME = mayatgbot
 
 help:
 	$(info Commands: build | start | stop | restart | pull | logs | clean | upgrade | redis-cli | redis-sv-loc | switch-db | attach)

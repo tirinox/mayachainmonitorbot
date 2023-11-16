@@ -1,5 +1,7 @@
 ## Install Certbot
 
+(!) Note: not valid for Mayachain for now
+ 
 ```
 sudo apt install certbot python3-certbot-nginx
 ```

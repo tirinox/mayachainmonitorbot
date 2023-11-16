@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import betterproto
 
 
-@dataclass(eq=False, repr=False)
+@dataclass
 class Coin(betterproto.Message):
     """
     Coin defines a token with a denomination and an amount. NOTE: The amount
@@ -18,7 +18,7 @@ class Coin(betterproto.Message):
     amount: str = betterproto.string_field(2)
 
 
-@dataclass(eq=False, repr=False)
+@dataclass
 class DecCoin(betterproto.Message):
     """
     DecCoin defines a token with a denomination and a decimal amount. NOTE: The
@@ -30,14 +30,14 @@ class DecCoin(betterproto.Message):
     amount: str = betterproto.string_field(2)
 
 
-@dataclass(eq=False, repr=False)
+@dataclass
 class IntProto(betterproto.Message):
     """IntProto defines a Protobuf wrapper around an Int object."""
 
     int: str = betterproto.string_field(1)
 
 
-@dataclass(eq=False, repr=False)
+@dataclass
 class DecProto(betterproto.Message):
     """DecProto defines a Protobuf wrapper around a Dec object."""
 

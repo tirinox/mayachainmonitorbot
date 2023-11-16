@@ -7,7 +7,7 @@ from typing import List
 import betterproto
 
 
-@dataclass(eq=False, repr=False)
+@dataclass
 class MultiSignature(betterproto.Message):
     """
     MultiSignature wraps the signatures from a multisig.LegacyAminoPubKey. See
@@ -18,7 +18,7 @@ class MultiSignature(betterproto.Message):
     signatures: List[bytes] = betterproto.bytes_field(1)
 
 
-@dataclass(eq=False, repr=False)
+@dataclass
 class CompactBitArray(betterproto.Message):
     """
     CompactBitArray is an implementation of a space efficient bit array. This

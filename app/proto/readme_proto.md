@@ -3,11 +3,18 @@
 We are going to use Betterproto library because it is modern and cool.
 https://github.com/danielgtaylor/python-betterproto
 
+## [Optional] Create a virtual environment
+`python -m venv venv && source venv/bin/activate`
+
 ## Install both the library and compiler
 `pip install "betterproto[compiler]"`
 
 ## Install just the library (to use the generated code output)
 `pip install betterproto`
+
+## Install other dependencies
+`python -m pip install grpcio grpcio-tools`
+
 
 Download Cosmos SDK (AFAIK THORChain uses v0.45.1, check it):
 ```
@@ -18,21 +25,19 @@ cd ..
 ```
 
 
-Download THORChain source code (https://gitlab.com/thorchain/thornode/) and switch your working directory:
+Download MayaNode source code (https://gitlab.com/mayachain/mayanode) and switch your working directory:
 ```
-git clone https://gitlab.com/thorchain/thornode.git
-cd thornode
-git checkout release-1.123.0
+git clone https://gitlab.com/mayachain/mayanode.git
+cd mayanode
+git checkout v1.107.1
 ```
 
-
-Note: use the "release-vxxx" branch. For instance: https://gitlab.com/thorchain/thornode/-/tree/release-1.123.0
 
 Command to generate Python files:
 ```mkdir -p pylib
 python -m pip install grpcio
 python -m pip install grpcio-tools
-python -m grpc_tools.protoc -I "proto" -I "third_party/proto" -I "../cosmos-sdk/proto" --python_betterproto_out=pylib proto/thorchain/v1/x/thorchain/types/*.proto "../cosmos-sdk/proto/cosmos/tx/v1beta1/tx.proto"
+python -m grpc_tools.protoc -I "proto" -I "third_party/proto" -I "../cosmos-sdk/proto" --python_betterproto_out=pylib proto/mayachain/v1/x/mayachain/types/*.proto "../cosmos-sdk/proto/cosmos/tx/v1beta1/tx.proto"
 ```
 
 Now move the contents of "pylib" here.

@@ -145,7 +145,7 @@ class ThorLastBlock(NamedTuple):
 
 class ThorPool(NamedTuple):
     balance_asset: int = 0
-    balance_rune: int = 0
+    balance_cacao: int = 0
     asset: str = ''
     lp_units: int = 0
     pool_units: int = 0
@@ -153,7 +153,7 @@ class ThorPool(NamedTuple):
     synth_units: int = 0
     decimals: int = 0
     error: str = ''
-    pending_inbound_rune: int = 0
+    pending_inbound_cacao: int = 0
     pending_inbound_asset: int = 0
     savers_depth: int = 0
     savers_units: int = 0
@@ -165,18 +165,18 @@ class ThorPool(NamedTuple):
     STATUS_ENABLED = 'Enabled'
 
     @property
-    def assets_per_rune(self):
-        return self.balance_asset / self.balance_rune
+    def assets_per_cacao(self):
+        return self.balance_asset / self.balance_cacao
 
     @property
-    def runes_per_asset(self):
-        return self.balance_rune / self.balance_asset
+    def cacaos_per_asset(self):
+        return self.balance_cacao / self.balance_asset
 
     @classmethod
     def from_json(cls, j):
         return cls(
             balance_asset=int(j.get('balance_asset', 0)),
-            balance_rune=int(j.get('balance_rune', 0)),
+            balance_cacao=int(j.get('balance_cacao', 0)),
             asset=j.get('asset', ''),
             lp_units=int(j.get('LP_units', 0)),
             pool_units=int(j.get('pool_units', 0)),  # Sum of LP_units and synth_units
@@ -185,7 +185,7 @@ class ThorPool(NamedTuple):
             synth_supply=int(j.get('synth_supply', 0)),
             decimals=int(j.get('decimals', 0)),
             error=j.get('error', ''),
-            pending_inbound_rune=int(j.get('pending_inbound_rune', 0)),
+            pending_inbound_cacao=int(j.get('pending_inbound_cacao', 0)),
             pending_inbound_asset=int(j.get('pending_inbound_asset', 0)),
             savers_depth=int(j.get('savers_depth', 0)),
             savers_units=int(j.get('savers_units', 0)),
@@ -367,7 +367,7 @@ class ThorVault(NamedTuple):
         )
 
 
-RUNE = 'rune'
+CACAO = 'cacao'
 
 
 class ThorBalances(NamedTuple):
@@ -376,15 +376,15 @@ class ThorBalances(NamedTuple):
     address: str
 
     @property
-    def runes(self):
+    def cacao(self):
         for asset in self.assets:
-            if asset.asset == RUNE:
+            if asset.asset == CACAO:
                 return asset.amount
         return 0
 
     @property
-    def runes_float(self):
-        return thor_to_float(self.runes)
+    def cacao_float(self):
+        return thor_to_float(self.cacao)
 
     @classmethod
     def from_json(cls, j, address):
@@ -525,14 +525,14 @@ class ThorNativeTX(NamedTuple):
 class ThorLiquidityProvider(NamedTuple):
     asset: str
     asset_address: str
-    rune_address: str
+    cacao_address: str
     last_add_height: int
     last_withdraw_height: int
     units: int
-    pending_rune: int
+    pending_cacao: int
     pending_asset: int
     pending_tx_id: str
-    rune_deposit_value: int
+    cacao_deposit_value: int
     asset_deposit_value: int
 
     @classmethod
@@ -540,13 +540,13 @@ class ThorLiquidityProvider(NamedTuple):
         return cls(
             asset=j.get('asset'),
             asset_address=j.get('asset_address'),
-            rune_address=j.get('rune_address'),
+            cacao_address=j.get('cacao_address'),
             last_add_height=int(j.get('last_add_height', 0)),
             last_withdraw_height=int(j.get('last_withdraw_height', 0)),
             units=int(j.get('units', 0)),
-            pending_rune=int(j.get('pending_rune', 0)),
+            pending_cacao=int(j.get('pending_cacao', 0)),
             pending_asset=int(j.get('pending_asset', 0)),
-            rune_deposit_value=int(j.get('rune_deposit_value', 0)),
+            cacao_deposit_value=int(j.get('cacao_deposit_value', 0)),
             asset_deposit_value=int(j.get('asset_deposit_value', 0)),
             pending_tx_id=j.get('pending_tx_id') or j.get('pending_tx_Id'),  # id vs Id (both possible)
         )
@@ -571,10 +571,10 @@ class ThorMimirVote(NamedTuple):
 
 
 class ThorPOL(NamedTuple):
-    current_deposit: int  # current amount of rune deposited
+    current_deposit: int  # current amount of cacao deposited
     pnl: int  # total value of protocol's LP position in RUNE value
-    rune_deposited: int  # total amount of RUNE withdrawn from the pools
-    rune_withdrawn: int  # total amount of RUNE deposited into the pools
+    cacao_deposited: int  # total amount of RUNE withdrawn from the pools
+    cacao_withdrawn: int  # total amount of RUNE deposited into the pools
     value: int  # total value of protocol's LP position in RUNE value
 
     @classmethod
@@ -582,16 +582,14 @@ class ThorPOL(NamedTuple):
         return cls(
             current_deposit=int(j.get('current_deposit'), 0),
             pnl=int(j.get('pnl', 0)),
-            rune_deposited=int(j.get('rune_deposited', 0)),
-            rune_withdrawn=int(j.get('rune_withdrawn', 0)),
+            cacao_deposited=int(j.get('cacao_deposited', 0)),
+            cacao_withdrawn=int(j.get('cacao_withdrawn', 0)),
             value=int(j.get('value', 0)),
         )
 
 
 class ThorNetwork(NamedTuple):
     bond_reward_rune: int
-    burned_bep_2_rune: int
-    burned_erc_20_rune: int
     total_bond_units: int
     total_reserve: int
     vaults_migrating: bool
@@ -600,8 +598,6 @@ class ThorNetwork(NamedTuple):
     def from_json(cls, j):
         return cls(
             bond_reward_rune=int(j.get('bond_reward_rune'), 0),
-            burned_bep_2_rune=int(j.get('burned_bep_2_rune', 0)),
-            burned_erc_20_rune=int(j.get('burned_erc_20_rune', 0)),
             total_bond_units=int(j.get('total_bond_units', 0)),
             total_reserve=int(j.get('total_reserve', 0)),
             vaults_migrating=bool(j.get('vaults_migrating', False)),

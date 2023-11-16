@@ -111,7 +111,7 @@ class PoolFetcher(BaseFetcher):
     async def clear_cache(self, max_age=1000 * DAY):
         r: Redis = await self.deps.db.get_redis()
 
-        top_block = self.deps.last_block_store.thor
+        top_block = self.deps.last_block_store.maya
         if top_block is None or top_block < 1:
             self.logger.warning(f'Failed to get top block from the store ({top_block = })')
             return
@@ -156,7 +156,7 @@ class PoolFetcher(BaseFetcher):
             if height is None:
                 # latest
                 pool_map = await self._fetch_current_pool_data_from_thornode()
-                cache_key = self.deps.last_block_store.thor
+                cache_key = self.deps.last_block_store.maya
                 await self._save_to_cache(r, cache_key, pool_map)
             else:
                 pool_map = await self._load_from_cache(r, height)

@@ -131,7 +131,7 @@ class ThorLastBlock(NamedTuple):
     chain: str = ''
     last_observed_in: int = 0
     last_signed_out: int = 0
-    thorchain: int = 0
+    mayachain: int = 0
 
     @classmethod
     def from_json(cls, j):
@@ -139,7 +139,7 @@ class ThorLastBlock(NamedTuple):
             chain=j.get('chain', ''),
             last_observed_in=j.get('last_observed_in', 0) if 'last_observed_in' in j else j.get('lastobservedin'),
             last_signed_out=j.get('last_signed_out', 0) if 'last_signed_out' in j else j.get('lastsignedout'),
-            thorchain=j.get('thorchain', 0)
+            mayachain=j.get('mayachain', 0)
         )
 
 

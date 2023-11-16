@@ -22,7 +22,7 @@ class SaversStatsFetcher(INotified, WithDelegates, WithLogger):
         return await self.deps.thor_connector.query_savers(asset, height=height)
 
     async def get_all_savers(self, pool_map: PoolInfoMap, block_no=0) -> SaversBank:
-        block_no = block_no or self.deps.last_block_store.last_thor_block
+        block_no = block_no or self.deps.last_block_store.last_maya_block
 
         # Get savers members @ block #block_no
         active_pools = [p for p in pool_map.values() if p.is_enabled and p.savers_units > 0]
@@ -74,7 +74,7 @@ class SaversStatsFetcher(INotified, WithDelegates, WithLogger):
         price_holder.usd_per_rune = usd_per_rune
         price_holder.pool_info_map = curr_pools
 
-        last_block_no = block_store.last_thor_block
+        last_block_no = block_store.last_maya_block
 
         curr_saver = await self.get_all_savers(curr_pools, last_block_no)
 

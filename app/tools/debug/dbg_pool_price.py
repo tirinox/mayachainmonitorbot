@@ -42,7 +42,7 @@ async def demo_get_pool_info_midgard(d: DepContainer):
 
 async def demo_cache_blocks(app: LpAppFramework):
     await app.deps.last_block_fetcher.run_once()
-    last_block = app.deps.last_block_store.last_thor_block
+    last_block = app.deps.last_block_store.last_maya_block
     print(last_block)
 
     pf: PoolFetcher = app.deps.pool_fetcher
@@ -98,9 +98,7 @@ async def debug_load_pools(app: LpAppFramework):
     await app.deps.last_block_fetcher.run_once()
 
     pf = app.deps.pool_fetcher
-    pools = await pf.load_pools(13345278)
-    print(len(pools))
-    pools = await pf.load_pools(13345278)
+    pools = await pf.load_pools(3723736)
     print(len(pools))
     sep()
 

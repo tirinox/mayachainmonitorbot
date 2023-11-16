@@ -15,43 +15,43 @@ from services.models.time_series import TimeSeries
 
 
 class LastBlockStore(INotified, WithDelegates, WithLogger):
-    KEY_SERIES_BLOCK_HEIGHT = 'ThorBlockHeight'
+    KEY_SERIES_BLOCK_HEIGHT = 'BlockHeight'
     BLOCK_HEIGHT_MAX_LEN = 100_000
 
     @property
-    def thor(self):
-        return self.last_thor_block
+    def maya(self):
+        return self.last_maya_block
 
     def __init__(self, deps: DepContainer):
         super().__init__()
         self.deps = deps
         self.series = TimeSeries(self.KEY_SERIES_BLOCK_HEIGHT, self.deps.db)
-        self.last_thor_block = 0
+        self.last_maya_block = 0
         self.sleep_period = deps.last_block_fetcher.sleep_period
 
     def block_time_ago(self, seconds, last_block=None):
-        last_block = last_block or self.last_thor_block
+        last_block = last_block or self.last_maya_block
         return int(last_block - seconds / THOR_BLOCK_TIME)
 
     @staticmethod
-    def _estimate_last_thor_block(data: Dict[str, ThorLastBlock]):
-        return max(v.thorchain for v in data.values()) if data else 0
+    def _estimate_last_maya_block(data: Dict[str, ThorLastBlock]):
+        return max(v.mayachain for v in data.values()) if data else 0
 
     async def on_data(self, sender: LastBlockFetcher, data: Dict[str, ThorLastBlock]):
-        thor_block = self._estimate_last_thor_block(data)
+        maya_block = self._estimate_last_maya_block(data)
 
-        if thor_block <= 0 or thor_block < self.last_thor_block:
+        if maya_block <= 0 or maya_block < self.last_maya_block:
             return
 
-        self.last_thor_block = thor_block
+        self.last_maya_block = maya_block
 
-        self.logger.info(f'Last THOR block: #{thor_block}')
+        self.logger.info(f'Last THOR block: #{maya_block}')
 
-        await self.series.add(thor_block=thor_block)
+        await self.series.add(thor_block=maya_block)
 
         await self.series.trim_oldest(self.BLOCK_HEIGHT_MAX_LEN)
 
-        await self.pass_data_to_listeners(thor_block)
+        await self.pass_data_to_listeners(maya_block)
 
     async def get_last_block_height_points(self, duration_sec=DAY):
         return await self.series.get_last_values(duration_sec, key='thor_block', with_ts=True, decoder=int)

@@ -91,7 +91,7 @@ class AchievementsExtractor(WithLogger):
         years_old = full_years_old_ts(THORCHAIN_BIRTHDAY)
 
         achievements = [
-            Achievement(A.BLOCK_NUMBER, int(sender.last_thor_block)),
+            Achievement(A.BLOCK_NUMBER, int(sender.last_maya_block)),
             Achievement(A.ANNIVERSARY, years_old),
         ]
         return achievements

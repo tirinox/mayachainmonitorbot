@@ -29,6 +29,20 @@ class BlockResult:
     def find_tx_by_type(self, tx_class):
         return filter(lambda tx: isinstance(tx.first_message, tx_class), self.txs)
 
+    @property
+    def only_successful(self) -> 'BlockResult':
+        # a log is only present when tx's code == 0
+        filtered_data = [(tx, log) for tx, log in zip(self.txs, self.tx_logs) if log]
+        new_txs, new_logs = tuple(zip(*filtered_data))
+
+        return BlockResult(
+            self.block_no,
+            new_txs,
+            new_logs,
+            self.end_block_events,
+            self.is_error
+        )
+
 
 class NativeScannerBlock(BaseFetcher):
     MAX_ATTEMPTS_TO_SKIP_BLOCK = 5
@@ -222,4 +236,4 @@ class NativeScannerBlock(BaseFetcher):
             self.logger.error(f'Failed to get transactions of the block #{block_index}.')
             return
 
-        return block_result
+        return block_result.only_successful

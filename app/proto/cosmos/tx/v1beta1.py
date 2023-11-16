@@ -6,10 +6,10 @@ from typing import List
 
 import betterproto
 
-from .cosmos.base import v1beta1
-from .cosmos.crypto.multisig import v1beta1
-from .cosmos.tx.signing import v1beta1
-from .google import protobuf
+from ...cosmos.base import v1beta1
+from ...cosmos.crypto.multisig import v1beta1 as crypto_multisig_v1_beta1
+from ...cosmos.tx.signing import v1beta1 as signing_v1_beta1
+from google import protobuf
 
 
 @dataclass
@@ -79,7 +79,7 @@ class TxBody(betterproto.Message):
     # the list only the first time it occurs. By convention, the first required
     # signer (usually from the first message) is referred to as the primary
     # signer and pays the fee for the whole transaction.
-    messages: List[protobuf.Any] = betterproto.message_field(1)
+    messages: List["betterproto_lib_google_protobuf.Any"] = betterproto.message_field(1)
     # memo is any arbitrary note/comment to be added to the transaction. WARNING:
     # in clients, any publicly exposed text should not be called memo, but should
     # be called `note` instead (see https://github.com/cosmos/cosmos-
@@ -91,11 +91,11 @@ class TxBody(betterproto.Message):
     # extension_options are arbitrary options that can be added by chains when
     # the default options are not sufficient. If any of these are present and
     # can't be handled, the transaction will be rejected
-    extension_options: List[protobuf.Any] = betterproto.message_field(1023)
+    extension_options: List["betterproto_lib_google_protobuf.Any"] = betterproto.message_field(1023)
     # extension_options are arbitrary options that can be added by chains when
     # the default options are not sufficient. If any of these are present and
     # can't be handled, they will be ignored
-    non_critical_extension_options: List[protobuf.Any] = betterproto.message_field(2047)
+    non_critical_extension_options: List["betterproto_lib_google_protobuf.Any"] = betterproto.message_field(2047)
 
 
 @dataclass
@@ -127,7 +127,7 @@ class SignerInfo(betterproto.Message):
     # public_key is the public key of the signer. It is optional for accounts
     # that already exist in state. If unset, the verifier can use the required \
     # signer address for this position and lookup the public key.
-    public_key: protobuf.Any = betterproto.message_field(1)
+    public_key: "betterproto_lib_google_protobuf.Any" = betterproto.message_field(1)
     # mode_info describes the signing mode of the signer and is a nested
     # structure to support nested multisig pubkey's
     mode_info: "ModeInfo" = betterproto.message_field(2)
@@ -158,7 +158,7 @@ class ModeInfoSingle(betterproto.Message):
     """
 
     # mode is the signing mode of the single signer
-    mode: v1beta1.SignMode = betterproto.enum_field(1)
+    mode: signing_v1_beta1.SignMode = betterproto.enum_field(1)
 
 
 @dataclass
@@ -166,7 +166,7 @@ class ModeInfoMulti(betterproto.Message):
     """Multi is the mode info for a multisig public key"""
 
     # bitarray specifies which keys within the multisig are signing
-    bitarray: v1beta1.CompactBitArray = betterproto.message_field(1)
+    bitarray: crypto_multisig_v1_beta1.CompactBitArray = betterproto.message_field(1)
     # mode_infos is the corresponding modes of the signers of the multisig which
     # could include nested multisig public keys
     mode_infos: List["ModeInfo"] = betterproto.message_field(2)

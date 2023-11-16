@@ -6,8 +6,8 @@ from typing import List
 
 import betterproto
 
-from .cosmos.crypto.multisig import v1beta1
-from .google import protobuf
+from ....cosmos.crypto.multisig import v1beta1
+from google import protobuf
 
 
 class SignMode(betterproto.Enum):
@@ -46,7 +46,7 @@ class SignatureDescriptor(betterproto.Message):
     """
 
     # public_key is the public key of the signer
-    public_key: protobuf.Any = betterproto.message_field(1)
+    public_key: "betterproto_lib_google_protobuf.Any" = betterproto.message_field(1)
     data: "SignatureDescriptorData" = betterproto.message_field(2)
     # sequence is the sequence of the account, which describes the number of
     # committed transactions signed by a given address. It is used to prevent

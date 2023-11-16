@@ -2,11 +2,11 @@ start - Start/restart the bot
 wallets - List of wallets you follow
 lp - Track LP/Savings yield
 price - Rune price chart
-stats - THORChain stats
+stats - Mayachain stats
 savings - Savings vaults stats
 supply - Rune supply chart
 queue - TX queue info
-nodes - List of THORNodes
+nodes - List of MayaNodes
 chains - Connected blockchains
 mimir - Mimir global constants
 pools - Top pools

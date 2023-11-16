@@ -60,7 +60,7 @@ personal:
 telegram:
   bot:
     token: "insert the bot token from @BotFather here"
-    username: "thor_infobot"
+    username: "MayaInfoBot"
   common:
     loading_sticker: CAACAgIAAxkBAAIRx1--Tia-m6DNRIApk3yqmNWvap_sAALcAAP3AsgPUNi8Bnu98HweBA
 
@@ -116,11 +116,11 @@ broadcasting:
 
   channels:
     - type: telegram
-      name: "@maya_alert"  # live channel
+      name: "@MayaAlerts"  # live channel
       lang: eng
-    - type: discord
-      name: 322323232323  # channel ID
-      lang: rus
+#    - type: discord
+#      name: 322323232323  # channel ID
+#      lang: rus
     - type: twitter
       lang: eng-tw
 

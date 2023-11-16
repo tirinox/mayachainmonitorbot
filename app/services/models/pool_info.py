@@ -200,7 +200,7 @@ def parse_thor_pools(thor_pools: List[ThorPool]) -> PoolInfoMap:
     return {
         p.asset: PoolInfo(
             p.asset,
-            p.balance_asset, p.balance_rune,
+            p.balance_asset, p.balance_cacao,
             int(p.lp_units), p.status,
             synth_units=int(p.synth_units),
             units=int(p.pool_units),

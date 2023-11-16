@@ -14,21 +14,21 @@ class ThorEnvironment:
     retries: int = 1
     retry_delay: float = 0.0
 
-    path_queue: str = '/thorchain/queue'
-    path_nodes: str = '/thorchain/nodes'
-    path_pools: str = "/thorchain/pools"
-    path_pools_height: str = "/thorchain/pools?height={height}"
-    path_pool: str = "/thorchain/pool/{pool}"
-    path_pool_height: str = "/thorchain/pool/{pool}?height={height}"
+    path_queue: str = '/mayachain/queue'
+    path_nodes: str = '/mayachain/nodes'
+    path_pools: str = "/mayachain/pools"
+    path_pools_height: str = "/mayachain/pools?height={height}"
+    path_pool: str = "/mayachain/pool/{pool}"
+    path_pool_height: str = "/mayachain/pool/{pool}?height={height}"
 
-    path_last_blocks: str = "/thorchain/lastblock"
-    path_constants: str = "/thorchain/constants"
-    path_mimir: str = "/thorchain/mimir"
-    path_mimir_nodes: str = '/thorchain/mimir/nodes'
-    path_mimir_votes: str = '/thorchain/mimir/nodes_all'
-    path_inbound_addresses: str = "/thorchain/inbound_addresses"
-    path_vault_yggdrasil: str = "/thorchain/vaults/yggdrasil"
-    path_vault_asgard: str = "/thorchain/vaults/asgard"
+    path_last_blocks: str = "/mayachain/lastblock"
+    path_constants: str = "/mayachain/constants"
+    path_mimir: str = "/mayachain/mimir"
+    path_mimir_nodes: str = '/mayachain/mimir/nodes'
+    path_mimir_votes: str = '/mayachain/mimir/nodes_all'
+    path_inbound_addresses: str = "/mayachain/inbound_addresses"
+    path_vault_yggdrasil: str = "/mayachain/vaults/yggdrasil"
+    path_vault_asgard: str = "/mayachain/vaults/asgard"
     path_balance: str = '/cosmos/bank/v1beta1/balances/{address}'
     path_block_by_height: str = '/block?height={height}'
     path_tx_by_hash: str = '/cosmos/tx/v1beta1/txs/{hash}'
@@ -38,13 +38,13 @@ class ThorEnvironment:
     path_genesis: str = '/genesis'
     path_status: str = '/status?'
 
-    path_liq_provider_details = '/thorchain/pool/{asset}/liquidity_provider/{address}?height={height}'
-    path_liq_providers = '/thorchain/pool/{asset}/liquidity_providers?height={height}'
+    path_liq_provider_details = '/mayachain/pool/{asset}/liquidity_provider/{address}?height={height}'
+    path_liq_providers = '/mayachain/pool/{asset}/liquidity_providers?height={height}'
 
-    path_saver_details = '/thorchain/pool/{asset}/saver/{address}?height={height}'
-    path_savers = '/thorchain/pool/{asset}/savers?height={height}'
-    path_pol = '/thorchain/pol?height={height}'
-    path_network = '/thorchain/network?height={height}'
+    path_saver_details = '/mayachain/pool/{asset}/saver/{address}?height={height}'
+    path_savers = '/mayachain/pool/{asset}/savers?height={height}'
+    path_pol = '/mayachain/pol?height={height}'
+    path_network = '/mayachain/network?height={height}'
 
     path_block_results = '/block_results?height={height}'
 

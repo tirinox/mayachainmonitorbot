@@ -3,9 +3,9 @@ import os
 import pytest
 
 from services.jobs.affiliate_merge import AffiliateTXMerger
-from services.lib.constants import NetworkIdents, THOR_DIVIDER, NATIVE_RUNE_SYMBOL
+from services.lib.constants import NetworkIdents, THOR_DIVIDER, NATIVE_CACAO_SYMBOL
 from services.lib.midgard.parser import MidgardParserV2
-from services.lib.money import is_rune
+from services.lib.money import is_cacao
 from services.lib.utils import load_json
 from services.models.tx import ThorCoin, ThorMetaSwap, ThorTx, ThorSubTx
 
@@ -38,10 +38,10 @@ def test_parser_v2_smoke(fn, example_tx_gen):
 
 
 def test_merge_two_coins():
-    a = ThorCoin('1', NATIVE_RUNE_SYMBOL)
-    b = ThorCoin('2', NATIVE_RUNE_SYMBOL)
+    a = ThorCoin('1', NATIVE_CACAO_SYMBOL)
+    b = ThorCoin('2', NATIVE_CACAO_SYMBOL)
     assert ThorCoin.merge_two(a, b).amount == '3'
-    assert is_rune(ThorCoin.merge_two(a, b).asset)
+    assert is_cacao(ThorCoin.merge_two(a, b).asset)
 
     with pytest.raises(AssertionError):
         ThorCoin.merge_two(ThorCoin('1', 'ffs'), ThorCoin('2', 'abc'))
@@ -54,8 +54,8 @@ def test_merge_two_coins():
 
 # noinspection PyTypeChecker
 def test_merge_two_swap_events():
-    a = ThorMetaSwap('10', [ThorCoin('10', NATIVE_RUNE_SYMBOL), ThorCoin('11', NATIVE_RUNE_SYMBOL)], 333, 1200000)
-    b = ThorMetaSwap('20', [ThorCoin('44', NATIVE_RUNE_SYMBOL), ThorCoin('45', NATIVE_RUNE_SYMBOL)], 22, 2300000)
+    a = ThorMetaSwap('10', [ThorCoin('10', NATIVE_CACAO_SYMBOL), ThorCoin('11', NATIVE_CACAO_SYMBOL)], 333, 1200000)
+    b = ThorMetaSwap('20', [ThorCoin('44', NATIVE_CACAO_SYMBOL), ThorCoin('45', NATIVE_CACAO_SYMBOL)], 22, 2300000)
     c = ThorMetaSwap.merge_two(a, b)
     assert c.liquidity_fee == 30
     assert c.trade_slip == 355
@@ -79,7 +79,7 @@ def test_affiliate_merge_simple(example_tx_gen):
     assert tm.meta_swap.liquidity_fee == '16417504333'
 
     assert len(tm.meta_swap.network_fees) == 4
-    assert is_rune(tm.meta_swap.network_fees[0].asset)
+    assert is_cacao(tm.meta_swap.network_fees[0].asset)
     assert tm.meta_swap.network_fees[0].amount == '2000000'
 
     assert len(tm.in_tx) == 1
@@ -144,7 +144,7 @@ def test_affiliate_add_merge_dual(fn, example_tx_gen):
     assert tx.in_tx[0].coins[0].amount == '5848107'
     assert tx.in_tx[0].coins[0].asset == 'ETH.ETH'
     assert tx.in_tx[1].coins[0].amount == '3211421250'
-    assert is_rune(tx.in_tx[1].coins[0].asset)
+    assert is_cacao(tx.in_tx[1].coins[0].asset)
 
 
 @pytest.fixture

@@ -2,17 +2,17 @@ from datetime import datetime
 from math import ceil
 from typing import List, Optional
 
-from aionode.types import ThorChainInfo, ThorBalances
 from semver import VersionInfo
 
+from aionode.types import ThorChainInfo, ThorBalances
 from localization.achievements.ach_rus import AchievementsRussianLocalization
-from localization.eng_base import BaseLocalization, CREATOR_TG, URL_LEADERBOARD_MCCN
+from localization.eng_base import BaseLocalization, CREATOR_TG
 from proto.types import ThorName
 from services.jobs.fetch.circulating import ThorRealms
 from services.lib.config import Config
 from services.lib.constants import Chains
 from services.lib.date_utils import format_time_ago, seconds_human, now_ts
-from services.lib.explorers import get_explorer_url_to_address, get_thoryield_address, \
+from services.lib.explorers import get_explorer_url_to_address, get_mayacan_address_url, \
     get_ip_info_link
 from services.lib.midgard.name_service import add_thor_suffix, NameMap
 from services.lib.money import pretty_dollar, pretty_money, short_address, adaptive_round_to_str, calc_percent_change, \
@@ -120,7 +120,6 @@ class RussianLocalization(BaseLocalization):
 
     BUTTON_SM_SUMMARY = '💲 Сводка'
 
-    BUTTON_VIEW_RUNE_DOT_YIELD = '🌎 Открыть на THORYield'
     BUTTON_VIEW_VALUE_ON = 'Скрыть деньги: НЕТ'
     BUTTON_VIEW_VALUE_OFF = 'Скрыть деньги: ДА'
 
@@ -293,7 +292,7 @@ class RussianLocalization(BaseLocalization):
         if local_name:
             acc_caption += f' | Имя: {code(local_name)}'
 
-        thor_yield_url = get_thoryield_address(self.cfg.network_id, address, chain)
+        thor_yield_url = get_mayacan_address_url(self.cfg.network_id, address)
         thor_yield_link = link(thor_yield_url, 'THORYield')
 
         if min_limit is not None:
@@ -338,7 +337,6 @@ class RussianLocalization(BaseLocalization):
             f"{self.can_add_more_lp_text(new)}\n"
             f'Цена {self.R} в пуле <code>{new.price:.3f} $</code>.\n'
             f'{call}'
-            f'{self.thor_site()}'
         )
 
     def notification_text_cap_full(self, cap: ThorCapInfo):
@@ -358,7 +356,7 @@ class RussianLocalization(BaseLocalization):
             f"<i>{pretty_money(cap.cap)} {self.R}</i> максимально возможных.\n"
             f"{self._cap_progress_bar(cap)}\n"
             f'🤲🏻 Вы можеще еще добавить {bold(short_rune(cap.how_much_rune_you_can_lp))} {self.R} '
-            f'или {bold(pretty_dollar(cap.how_much_usd_you_can_lp))}.\n👉🏻 {self.thor_site()}'
+            f'или {bold(pretty_dollar(cap.how_much_usd_you_can_lp))}.'
         )
 
     # ------ PRICE -------
@@ -753,11 +751,6 @@ class RussianLocalization(BaseLocalization):
             f"{self.can_add_more_lp_text(info)}\n"
             f"Цена {bold(self.R)} сейчас <code>{info.price:.3f} $</code>.\n"
         )
-
-    def text_leaderboard_info(self):
-        return f"🏆 Доска лушчих трейдеров THORChain:\n" \
-               f"\n" \
-               f" 👉 {bold(URL_LEADERBOARD_MCCN)} 👈\n"
 
     def queue_message(self, queue_info: QueueInfo):
         return (

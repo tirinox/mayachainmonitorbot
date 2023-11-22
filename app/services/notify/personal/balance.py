@@ -40,7 +40,7 @@ class PersonalBalanceNotifier(BasePersonalNotifier):
         usd_per_rune = self.deps.price_holder.usd_per_rune
         for tr in transfers:
             tr: RuneTransfer
-            if tr.is_rune:
+            if tr.is_cacao:
                 tr.usd_per_asset = usd_per_rune
             else:
                 pool_name = Asset.from_string(tr.asset).native_pool_name

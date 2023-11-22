@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from services.lib.constants import RUNE_DENOM
+from services.lib.constants import CACAO_DENOM
 from services.lib.date_utils import DAY
-from services.lib.money import is_rune
+from services.lib.money import is_cacao
 
 
 @dataclass
@@ -20,7 +20,7 @@ class RuneTransfer:
 
     @property
     def is_synth(self):
-        return self.asset != RUNE_DENOM and '/' in self.asset
+        return self.asset != CACAO_DENOM and '/' in self.asset
 
     @property
     def usd_amount(self):
@@ -30,8 +30,8 @@ class RuneTransfer:
         return address and (address == self.from_addr or address == self.to_addr)
 
     @property
-    def is_rune(self):
-        return is_rune(self.asset)
+    def is_cacao(self):
+        return is_cacao(self.asset)
 
     def rune_amount(self, usd_per_rune):
         return self.usd_amount / usd_per_rune

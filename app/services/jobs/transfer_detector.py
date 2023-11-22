@@ -5,16 +5,16 @@ from proto.access import NativeThorTx, parse_thor_address, DecodedEvent, thor_de
 from proto.types import MsgSend, MsgDeposit
 from services.jobs.scanner.native_scan import BlockResult
 from services.lib.constants import thor_to_float, DEFAULT_RESERVE_ADDRESS, BOND_MODULE, DEFAULT_RUNE_FEE, \
-    RUNE_DENOM, RUNE_SYMBOL
+    CACAO_DENOM, CACAO_SYMBOL, MAYA_PREFIX, Chains
 from services.lib.delegates import WithDelegates, INotified
-from services.lib.money import Asset, is_rune
+from services.lib.money import Asset, is_cacao
 from services.lib.utils import WithLogger
 from services.models.transfer import RuneTransfer
 
 
 # This one is used
 class RuneTransferDetectorNativeTX(WithDelegates, INotified):
-    def __init__(self, address_prefix='thor'):
+    def __init__(self, address_prefix=MAYA_PREFIX):
         super().__init__()
         self.address_prefix = address_prefix
 
@@ -39,8 +39,8 @@ class RuneTransferDetectorNativeTX(WithDelegates, INotified):
                     for coin in message.amount:
                         # todo: problem: he may want to Deposit something stupid, that he don't have, lika a trillion of TGT
                         asset = str(coin.denom)
-                        if is_rune(asset):
-                            asset = RUNE_SYMBOL
+                        if is_cacao(asset):
+                            asset = CACAO_SYMBOL
                         # do not announce
                         transfers.append(RuneTransfer(
                             from_addr=from_addr,
@@ -77,7 +77,7 @@ class RuneTransferDetectorNativeTX(WithDelegates, INotified):
 
 
 def is_fee_tx(amount, asset, to_addr, reserve_address):
-    return amount == DEFAULT_RUNE_FEE and asset.lower() == RUNE_DENOM and to_addr == reserve_address
+    return amount == DEFAULT_RUNE_FEE and asset.lower() == CACAO_DENOM and to_addr == reserve_address
 
 
 # This one is presently used!
@@ -89,9 +89,9 @@ class RuneTransferDetectorTxLogs(WithDelegates, INotified, WithLogger):
 
     @staticmethod
     def _build_transfer_from_event(ev: DecodedEvent, block_no):
-        if ev.type == 'outbound' and ev.attributes.get('chain') == 'THOR':
+        if ev.type == 'outbound' and ev.attributes.get('chain') == Chains.THOR:
             asset = ev.attributes.get('asset', '')
-            if is_rune(asset):
+            if is_cacao(asset):
                 asset = 'THOR.RUNE'
             memo = ev.attributes.get('memo', '')
 

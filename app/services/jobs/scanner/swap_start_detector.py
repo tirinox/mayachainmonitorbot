@@ -3,10 +3,10 @@ from typing import Optional, List
 from proto.access import parse_thor_address, NativeThorTx
 from proto.types import MsgDeposit, MsgObservedTxIn
 from services.jobs.scanner.native_scan import BlockResult
-from services.lib.constants import NATIVE_RUNE_SYMBOL, thor_to_float
+from services.lib.constants import NATIVE_CACAO_SYMBOL, thor_to_float
 from services.lib.depcont import DepContainer
 from services.lib.memo import THORMemo
-from services.lib.money import is_rune, Asset
+from services.lib.money import is_cacao, Asset
 from services.lib.utils import WithLogger
 from services.models.s_swap import StreamingSwap, AlertSwapStart
 from services.models.tx_type import TxType
@@ -27,8 +27,8 @@ class SwapStartDetector(WithLogger):
             return
 
         if msg.coins:
-            if is_rune(memo.asset):
-                out_asset_name = NATIVE_RUNE_SYMBOL
+            if is_cacao(memo.asset):
+                out_asset_name = NATIVE_CACAO_SYMBOL
             else:
                 out_asset_name = ph.pool_fuzzy_first(memo.asset)
 
@@ -39,7 +39,7 @@ class SwapStartDetector(WithLogger):
             in_amount = thor_to_float(msg.coins[0].amount)
             in_asset = Asset.from_coin(msg.coins[0])
 
-            if str(in_asset) == NATIVE_RUNE_SYMBOL:
+            if str(in_asset) == NATIVE_CACAO_SYMBOL:
                 volume_usd = in_amount * ph.usd_per_rune
             else:
                 in_pool_name = ph.pool_fuzzy_first(in_asset.native_pool_name)

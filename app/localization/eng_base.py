@@ -4,9 +4,9 @@ from datetime import datetime
 from math import ceil
 from typing import List, Optional
 
-from aionode.types import ThorChainInfo, ThorBalances
 from semver import VersionInfo
 
+from aionode.types import ThorChainInfo, ThorBalances
 from localization.achievements.ach_eng import AchievementsEnglishLocalization
 from proto.types import ThorName
 from services.jobs.fetch.circulating import ThorRealms
@@ -15,7 +15,7 @@ from services.lib.constants import thor_to_float, THOR_BLOCK_TIME, DEFAULT_CEX_N
     DEFAULT_CEX_BASE_ASSET, bp_to_percent
 from services.lib.date_utils import format_time_ago, now_ts, seconds_human, MINUTE, DAY
 from services.lib.explorers import get_explorer_url_to_address, Chains, get_explorer_url_to_tx, \
-    get_explorer_url_for_node, get_pool_url, get_thoryield_address, get_ip_info_link
+    get_explorer_url_for_node, get_pool_url, get_mayacan_address_url, get_ip_info_link
 from services.lib.midgard.name_service import NameService, add_thor_suffix, NameMap
 from services.lib.money import format_percent, pretty_money, short_address, short_money, \
     calc_percent_change, adaptive_round_to_str, pretty_dollar, emoji_for_percent_change, Asset, short_dollar, \
@@ -49,10 +49,6 @@ from services.notify.channel import Messengers
 
 CREATOR_TG = '@account1242'
 
-URL_THOR_SWAP = 'https://app.thorswap.finance/'
-
-URL_LEADERBOARD_MCCN = 'https://leaderboard.thornode.org/'
-
 
 class BaseLocalization(ABC):  # == English
     def __init__(self, cfg: Config):
@@ -76,8 +72,8 @@ class BaseLocalization(ABC):  # == English
     LIST_NEXT_PAGE = 'Next page »'
     LIST_PREV_PAGE = '« Prev. page'
 
-    THORCHAIN_LINK = 'https://thorchain.org/'
-    R = 'Rune'
+    THORCHAIN_LINK = 'https://www.mayaprotocol.com/'
+    R = 'Cacao'
 
     BOT_LOADING = '⌛ Bot has been recently restarted and is still loading. Please try again after 1-2 minutes.'
 
@@ -118,21 +114,21 @@ class BaseLocalization(ABC):  # == English
             f"/start – start/restart the bot\n"
             f"/lang – set the language\n"
             f"/cap – the current liquidity cap\n"
-            f"/price – the current Rune price.\n"
+            f"/price – the current Cacao price.\n"
             f"/queue – TX queue info\n"
-            f"/nodes – list of THOR Nodes\n"
-            f"/stats – THORChain stats\n"
+            f"/nodes – list of MayaNodes\n"
+            f"/stats – MayaChain stats\n"
             f"/chains – Connected chains\n"
             f"/lp – check your LP yield\n"
-            f"<b>⚠️ All notifications are forwarded to {self.alert_channel_name} channel!</b>\n"
+            f"<b>📨 Please follow our Telegram {self.alert_channel_name} channel!</b>\n"
             f"🤗 Support and feedback: {CREATOR_TG}."
         )
 
     def welcome_message(self, info: ThorCapInfo):
         return (
-            f"Hello! Here you can find THORChain metrics and review your liquidity results.\n"
+            f"Hello! Here you can find MayaChain metrics and review your liquidity results.\n"
             f"The {self.R} price is <code>${info.price:.3f}</code> now.\n"
-            f"<b>⚠️ All notifications are forwarded to {self.alert_channel_name} channel!</b>\n"
+            f"<b>📨 Please follow our Telegram  {self.alert_channel_name} channel!</b>\n"
             f"🤗 Support and feedback: {CREATOR_TG}."
         )
 
@@ -147,7 +143,7 @@ class BaseLocalization(ABC):  # == English
     BUTTON_MM_MY_ADDRESS = '🏦 My wallets'
     BUTTON_MM_METRICS = '📐 Metrics'
     BUTTON_MM_SETTINGS = f'⚙️ Settings'
-    BUTTON_MM_MAKE_AVATAR = f'🦹‍️️ THOR avatar'
+    BUTTON_MM_MAKE_AVATAR = f'🦹‍️️ Avatar'
     BUTTON_MM_NODE_OP = '🤖 NodeOp tools'
 
     # ------- MY WALLETS MENU -------
@@ -159,7 +155,6 @@ class BaseLocalization(ABC):  # == English
 
     BUTTON_SM_SUMMARY = '💲 Summary'
 
-    BUTTON_VIEW_RUNE_DOT_YIELD = '🌎 View it on THORYield'
     BUTTON_VIEW_VALUE_ON = 'Show value: ON'
     BUTTON_VIEW_VALUE_OFF = 'Show value: OFF'
 
@@ -267,7 +262,7 @@ class BaseLocalization(ABC):  # == English
 
     LP_PIC_TITLE = 'liquidity'
     LP_PIC_POOL = 'POOL'
-    LP_PIC_RUNE = 'RUNE'
+    LP_PIC_RUNE = 'Cacao'
     LP_PIC_ADDED = 'Added'
     LP_PIC_WITHDRAWN = 'Withdrawn'
     LP_PIC_REDEEM = 'Redeemable'
@@ -353,7 +348,7 @@ class BaseLocalization(ABC):  # == English
         if local_name:
             acc_caption += f' | Local name: {pre(local_name)}'
 
-        thor_yield_url = get_thoryield_address(self.cfg.network_id, address, chain)
+        thor_yield_url = get_mayacan_address_url(self.cfg.network_id, address)
         thor_yield_link = link(thor_yield_url, 'THORYield')
 
         if min_limit is not None:
@@ -377,10 +372,6 @@ class BaseLocalization(ABC):  # == English
 
     # ------- CAP -------
 
-    @staticmethod
-    def thor_site():
-        return URL_THOR_SWAP
-
     @property
     def show_add_more(self):
         return self.cfg.get('tx.show_add_more', True)
@@ -403,8 +394,7 @@ class BaseLocalization(ABC):  # == English
             f'Currently <b>{short_money(new.pooled_rune)}</b> {self.R} are in the liquidity pools.\n'
             f'{self._cap_progress_bar(new)}\n'
             f'{self.can_add_more_lp_text(new)}\n'
-            f'The price of {self.R} in the pools is {code(pretty_dollar(new.price))}.\n'
-            f'{self.thor_site()}'
+            f'The price of {self.R} in the pools is {code(pretty_dollar(new.price))}.'
         )
         return message
 
@@ -425,7 +415,7 @@ class BaseLocalization(ABC):  # == English
             f"<i>{short_money(cap.cap)} {self.R}</i> max pooled.\n"
             f"{self._cap_progress_bar(cap)}\n"
             f'🤲🏻 You can add {bold(short_money(cap.how_much_rune_you_can_lp))} {self.R} '
-            f'or {bold(short_dollar(cap.how_much_usd_you_can_lp))}.\n👉🏻 {self.thor_site()}'
+            f'or {bold(short_dollar(cap.how_much_usd_you_can_lp))}.'
         )
 
     # ------ PRICE -------
@@ -969,11 +959,6 @@ class BaseLocalization(ABC):  # == English
             f"{self.can_add_more_lp_text(info)}\n"
             f"The {bold(self.R)} price is <code>${info.price:.3f}</code> now.\n"
         )
-
-    def text_leaderboard_info(self):
-        return f"🏆 Traders leaderboard is here:\n" \
-               f"\n" \
-               f" 👉 {bold(URL_LEADERBOARD_MCCN)} 👈\n"
 
     def queue_message(self, queue_info: QueueInfo):
         return (
@@ -2272,7 +2257,7 @@ class BaseLocalization(ABC):  # == English
         pretty_pool = pool_asset.l1_asset.pretty_str
         explorer_url = get_explorer_url_to_address(self.cfg.network_id, Chains.THOR, address)
         explorer_link = link(explorer_url, short_address(address, 10, 5))
-        thor_yield_url = get_thoryield_address(self.cfg.network_id, address)
+        thor_yield_url = get_mayacan_address_url(self.cfg.network_id, address)
         thor_yield_link = link(thor_yield_url, 'THORYield')
         name_str = f' ({ital(local_name)})' if local_name else ''
 

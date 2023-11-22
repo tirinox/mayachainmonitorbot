@@ -70,7 +70,7 @@ class RuneMoveNotifier(INotified, WithDelegates, WithLogger):
     def _fill_asset_prices(self, transfers: List[RuneTransfer]):
         usd_per_rune = self.deps.price_holder.usd_per_rune
         for transfer in transfers:
-            if transfer.is_rune:
+            if transfer.is_cacao:
                 transfer.usd_per_asset = usd_per_rune
             else:
                 pool_name = Asset.from_string(transfer.asset).native_pool_name
@@ -101,7 +101,7 @@ class RuneMoveNotifier(INotified, WithDelegates, WithLogger):
         return addr in self.cex_list
 
     async def _store_transfer(self, transfer: RuneTransfer):
-        if not transfer.is_rune:
+        if not transfer.is_cacao:
             return
 
         inflow, outflow = 0.0, 0.0

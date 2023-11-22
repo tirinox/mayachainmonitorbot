@@ -1,6 +1,7 @@
 from typing import Optional, Union, List
 
 from services.jobs.scanner.event_db import EventDatabase
+from services.lib.constants import MAYA_PREFIX
 from services.lib.delegates import INotified, WithDelegates
 from services.lib.depcont import DepContainer
 from services.lib.money import DepthCurve
@@ -9,7 +10,7 @@ from services.models.loans import AlertLoanRepayment, AlertLoanOpen
 
 
 class LoanTxNotifier(INotified, WithDelegates, WithLogger):
-    def __init__(self, deps: DepContainer, prefix='thor', curve: Optional[DepthCurve] = None):
+    def __init__(self, deps: DepContainer, prefix=MAYA_PREFIX, curve: Optional[DepthCurve] = None):
         super().__init__()
         self.deps = deps
         self.prefix = prefix

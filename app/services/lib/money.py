@@ -7,7 +7,7 @@ from math import floor, log10
 from typing import List
 
 from proto.common import Coin
-from services.lib.constants import Chains, NATIVE_RUNE_SYMBOL, RUNE_DENOM
+from services.lib.constants import Chains, NATIVE_CACAO_SYMBOL, CACAO_DENOM
 from services.lib.utils import linear_transform
 
 EMOJI_SCALE = [
@@ -19,7 +19,7 @@ EMOJI_SCALE = [
     (65, '🌕'), (80, '⭐'), (100, '✨'), (10000000, '🚀')
 ]
 
-RAIDO_GLYPH = 'ᚱ'
+RAIDO_GLYPH = 'C'
 ABSURDLY_LARGE_NUMBER = 1e+15
 
 CHART_UP = '📈'
@@ -240,7 +240,7 @@ class Asset:
     @classmethod
     def from_string(cls, asset: str):
         try:
-            if asset == RUNE_DENOM:
+            if asset == CACAO_DENOM:
                 return copy(AssetRUNE)
 
             is_synth = '/' in asset
@@ -249,7 +249,7 @@ class Asset:
             chain = str(chain).upper()
             name = str(name).upper()
             tag = str(tag).upper()
-            is_virtual = chain == 'THOR' and name != 'RUNE'
+            is_virtual = False  # no lending in Maya?
             return cls(chain, name, tag, is_synth, is_virtual)
         except (IndexError, TypeError, ValueError):
             return cls(name=asset)
@@ -270,7 +270,7 @@ class Asset:
             return f'synth {self.name}'
         else:
             str_me = str(self)
-            if is_rune(str_me):
+            if is_cacao(str_me):
                 return 'Rune ᚱ'
             elif str_me in self.ABBREVIATE_GAS_ASSETS:
                 return self.name  # Not ETH.ETH, just ETH
@@ -343,6 +343,7 @@ class Asset:
         Chains.ATOM: 'ATOM',
         Chains.THOR: 'RUNE',
         Chains.BSC: 'BNB',
+        Chains.MAYA: 'CACAO',
         # to be continues
     }
 
@@ -353,12 +354,13 @@ class Asset:
         return cls(chain, name)
 
 
-AssetRUNE = Asset.from_string(NATIVE_RUNE_SYMBOL)
+AssetRUNE = Asset.from_string('THOR.RUNE')
+AssetCACAO = Asset.from_string('MAYA.CACAO')
 
 
-def is_rune(asset: str):
+def is_cacao(asset: str):
     asset = asset.strip()
-    return asset.lower() in ('r', RUNE_DENOM) or asset.upper() == NATIVE_RUNE_SYMBOL
+    return asset.lower() in ('r', CACAO_DENOM) or asset.upper() == NATIVE_CACAO_SYMBOL
 
 
 def weighted_mean(values, weights):

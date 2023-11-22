@@ -1,13 +1,14 @@
 from services.jobs.scanner.event_db import EventDatabase
 from services.jobs.scanner.native_scan import BlockResult
 from services.jobs.scanner.swap_start_detector import SwapStartDetector
+from services.lib.constants import MAYA_PREFIX
 from services.lib.delegates import INotified, WithDelegates
 from services.lib.depcont import DepContainer
 from services.lib.utils import WithLogger
 
 
 class StreamingSwapStartTxNotifier(INotified, WithDelegates, WithLogger):
-    def __init__(self, deps: DepContainer, prefix='thor'):
+    def __init__(self, deps: DepContainer, prefix=MAYA_PREFIX):
         super().__init__()
         self.deps = deps
         self.prefix = prefix

@@ -8,10 +8,11 @@ import betterproto
 
 import proto.types as thor_type_lib
 from proto.cosmos.tx.v1beta1 import Tx
+from services.lib.constants import MAYA_PREFIX
 from services.lib.utils import expect_string
 
 
-def parse_thor_address(addr: bytes, prefix='thor') -> str:
+def parse_thor_address(addr: bytes, prefix=MAYA_PREFIX) -> str:
     if isinstance(addr, bytes) and addr.startswith(prefix.encode('utf-8')):
         return addr.decode('utf-8')
 

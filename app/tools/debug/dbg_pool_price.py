@@ -99,14 +99,14 @@ async def debug_load_pools(app: LpAppFramework):
 
     pf = app.deps.pool_fetcher
     pools = await pf.load_pools(3723736)
-    print(len(pools))
+    print(pools)
     sep()
-
-    pools = await pf.load_pools()
-    print(len(pools))
-    sep()
-    pools = await pf.load_pools()
-    print(len(pools))
+    #
+    # pools = await pf.load_pools()
+    # print(len(pools))
+    # sep()
+    # pools = await pf.load_pools()
+    # print(len(pools))
 
 
 async def main():

@@ -14,8 +14,8 @@ BTC_SYMBOL = 'BTC.BTC'
 
 BCH_SYMBOL = 'BCH.BCH'
 
-NATIVE_RUNE_SYMBOL = 'THOR.RUNE'
-RUNE_SYMBOL = NATIVE_RUNE_SYMBOL
+NATIVE_CACAO_SYMBOL = 'MAYA.CACAO'
+CACAO_SYMBOL = NATIVE_CACAO_SYMBOL
 
 RUNE_SYMBOL_DET = 'RUNE-DET'
 RUNE_SYMBOL_POOL = 'RUNE-MARKET'
@@ -44,7 +44,7 @@ DOGE_SYMBOL = 'DOGE.DOGE'
 RUNE_IDEAL_SUPPLY = 500_000_000
 RUNE_SUPPLY_AFTER_SWITCH = 486_051_059
 
-RUNE_DENOM = 'rune'
+CACAO_DENOM = 'cacao'
 
 STABLE_COIN_POOLS_ALL = (
     BNB_BUSD_SYMBOL,
@@ -57,6 +57,8 @@ STABLE_COIN_POOLS_ALL = (
     ETH_GUSD_SYMBOL,
     ETH_LUSD_SYMBOL,
 )
+
+MAYA_PREFIX = 'maya'
 
 
 STABLE_COIN_POOLS = STABLE_COIN_POOLS_ALL
@@ -72,6 +74,7 @@ def is_stable_coin(pool):
 
 
 class Chains:
+    MAYA = 'MAYA'
     THOR = 'THOR'
     ETH = 'ETH'
     BTC = 'BTC'
@@ -79,20 +82,21 @@ class Chains:
     LTC = 'LTC'
     BNB = 'BNB'
     DOGE = 'DOGE'
-    TERRA = 'TERRA'  # bye-bye
     AVAX = 'AVAX'
     ATOM = 'GAIA'
     BSC = 'BSC'
+    KUJI = 'KUJI'
+    DASH = 'DASH'
 
-    META_ALL = (THOR, ETH, BTC, BCH, LTC, BNB, DOGE, AVAX, ATOM, BSC)
+    META_ALL = (MAYA, THOR, ETH, BTC, BCH, LTC, BNB, DOGE, AVAX, ATOM, BSC, KUJI, DASH)
 
     @staticmethod
     def detect_chain(orig_address: str) -> str:
         address = orig_address.lower()
         if address.startswith('0x'):
             return Chains.ETH  # or other EVM chain??
-        elif address.startswith('terra'):
-            return Chains.TERRA
+        elif address.startswith('maya') or address.startswith('smaya'):
+            return Chains.MAYA
         elif address.startswith('thor') or address.startswith('tthor') or address.startswith('sthor'):
             return Chains.THOR
         elif address.startswith('bnb') or address.startswith('tbnb'):
@@ -105,7 +109,9 @@ class Chains:
 
     @staticmethod
     def block_time_default(chain: str) -> float:
-        if chain == Chains.ETH:
+        if chain == Chains.MAYA:
+            return THOR_BLOCK_TIME
+        elif chain == Chains.ETH:
             return 13
         elif chain == Chains.BTC or chain == Chains.BCH:
             return 10 * MINUTE
@@ -117,8 +123,6 @@ class Chains:
             return THOR_BLOCK_TIME
         elif chain == Chains.DOGE:
             return MINUTE
-        elif chain == Chains.TERRA:
-            return 6.64
         elif chain == Chains.ATOM:
             return 6.85
         elif chain == Chains.AVAX:
@@ -224,20 +228,16 @@ class THORPort:
 
 BLOCKS_PER_YEAR = 5_256_000
 
-DEFAULT_KILL_RUNE_START_BLOCK = 6_500_000
-DEFAULT_KILL_RUNE_DURATION_BLOCKS = BLOCKS_PER_YEAR
-
 SAVERS_BEGIN_BLOCK = 8_195_056
 
-HTTP_CLIENT_ID = 'thorinfobot'
+HTTP_CLIENT_ID = 'mayainfobot'
 
+# fixme
 THORCHAIN_BIRTHDAY = 1618058210955 * 0.001  # 2021-04-10T12:36:50.955991742Z
 
-STAGENET_RESERVE_ADDRESS = 'sthor1dheycdevq39qlkxs2a6wuuzyn4aqxhvepe6as4'
+DEFAULT_RUNE_FEE = 2000000  # fixme!
 
-DEFAULT_RUNE_FEE = 2000000
-
-DEFAULT_RESERVE_ADDRESS = 'thor1dheycdevq39qlkxs2a6wuuzyn4aqxhve4qxtxt'
+DEFAULT_RESERVE_ADDRESS = 'maya1dheycdevq39qlkxs2a6wuuzyn4aqxhve4hc8sm'
 BOND_MODULE = 'thor17gw75axcnr8747pkanye45pnrwk7p9c3cqncsv'
 POOL_MODULE = 'thor1g98cy3n9mmjrpn0sxmn63lztelera37n8n67c0'
 SYNTH_MODULE = 'thor1v8ppstuf6e3x0r4glqc68d5jqcs2tf38cg2q6y'

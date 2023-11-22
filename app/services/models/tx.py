@@ -2,10 +2,10 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import List, Optional, NamedTuple
 
-from services.lib.constants import RUNE_SYMBOL, Chains, thor_to_float, bp_to_float
+from services.lib.constants import CACAO_SYMBOL, Chains, thor_to_float, bp_to_float
 from services.lib.date_utils import now_ts
 from services.lib.memo import THORMemo
-from services.lib.money import Asset, is_rune
+from services.lib.money import Asset, is_cacao
 from services.lib.texts import safe_sum
 from services.lib.w3.token_record import SwapInOut
 from services.models.cap_info import ThorCapInfo
@@ -58,11 +58,11 @@ class ThorSubTx:
 
     @property
     def rune_coin(self):
-        return next((c for c in self.coins if is_rune(c.asset)), None)
+        return next((c for c in self.coins if is_cacao(c.asset)), None)
 
     @property
     def none_rune_coins(self):
-        return [c for c in self.coins if not is_rune(c.asset)]
+        return [c for c in self.coins if not is_cacao(c.asset)]
 
 
 @dataclass
@@ -292,7 +292,7 @@ class ThorTx:
                 return tx.address
 
             for coin in tx.coins:
-                if is_rune(coin.asset):
+                if is_cacao(coin.asset):
                     return tx.address
 
     @property
@@ -316,7 +316,7 @@ class ThorTx:
             for coin in sub_tx.coins:
                 if asset == coin.asset:
                     return sub_tx
-                elif is_rune(asset) and is_rune(coin.asset):
+                elif is_cacao(asset) and is_cacao(coin.asset):
                     return sub_tx
 
     def coins_of(self, in_only=False, out_only=False):
@@ -329,10 +329,10 @@ class ThorTx:
         return self.sum_of(lambda c: c.asset == asset, in_only, out_only)
 
     def sum_of_non_rune(self, in_only=False, out_only=False):
-        return self.sum_of(lambda c: not is_rune(c.asset), in_only, out_only)
+        return self.sum_of(lambda c: not is_cacao(c.asset), in_only, out_only)
 
     def sum_of_rune(self, in_only=False, out_only=False):
-        return self.sum_of(lambda c: is_rune(c.asset), in_only, out_only)
+        return self.sum_of(lambda c: is_cacao(c.asset), in_only, out_only)
 
     def get_asset_summary(self, in_only=False, out_only=False):
         results = defaultdict(float)
@@ -342,7 +342,7 @@ class ThorTx:
 
     def not_rune_asset(self, in_only=False, out_only=False):
         for coin in self.coins_of(in_only, out_only):
-            if not is_rune(coin.asset):
+            if not is_cacao(coin.asset):
                 return coin
 
     @property
@@ -396,7 +396,7 @@ class ThorTx:
             self.rune_amount = self.sum_of_rune(in_only=True)
             self.asset_amount = self.sum_of_asset(pool, in_only=True)
 
-            rune_sub_tx = self.get_sub_tx(RUNE_SYMBOL, in_only=True)
+            rune_sub_tx = self.get_sub_tx(CACAO_SYMBOL, in_only=True)
             self.address_rune = rune_sub_tx.address if rune_sub_tx else None
             self.tx_hash_rune = rune_sub_tx.tx_id if rune_sub_tx else None
 
@@ -409,10 +409,10 @@ class ThorTx:
             self.rune_amount = self.sum_of_rune(out_only=True)
             self.asset_amount = self.sum_of_asset(pool, out_only=True)
 
-            sub_tx_rune = self.get_sub_tx(RUNE_SYMBOL, in_only=True)
+            sub_tx_rune = self.get_sub_tx(CACAO_SYMBOL, in_only=True)
             self.address_rune = sub_tx_rune.address if sub_tx_rune else self.in_tx[0].address
 
-            out_sub_tx_rune = self.get_sub_tx(RUNE_SYMBOL, out_only=True)
+            out_sub_tx_rune = self.get_sub_tx(CACAO_SYMBOL, out_only=True)
             out_sub_tx_asset = self.get_sub_tx(pool, out_only=True)
             self.tx_hash_rune = out_sub_tx_rune.tx_id if out_sub_tx_rune else None
             self.tx_hash_asset = out_sub_tx_asset.tx_id if out_sub_tx_asset else None
@@ -456,7 +456,7 @@ class ThorTx:
         rune_sum = 0.0
         for tx in realm:
             for coin in tx.coins:
-                if is_rune(coin.asset):
+                if is_cacao(coin.asset):
                     if filter_unknown_runes and not tx.tx_id:
                         continue
                     rune_sum += coin.amount_float

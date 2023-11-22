@@ -1,7 +1,7 @@
 from typing import NamedTuple, Optional, Tuple, Union
 
 from proto.access import DecodedEvent
-from services.lib.constants import POOL_MODULE, NATIVE_RUNE_SYMBOL, thor_to_float, bp_to_float
+from services.lib.constants import POOL_MODULE, NATIVE_CACAO_SYMBOL, thor_to_float, bp_to_float, Chains
 from services.lib.utils import expect_string
 
 
@@ -152,7 +152,7 @@ class EventOutbound(NamedTuple):
 
     @property
     def is_affiliate(self):
-        return self.from_address == POOL_MODULE and self.chain == 'THOR' and self.asset == NATIVE_RUNE_SYMBOL
+        return self.from_address == POOL_MODULE and self.chain == Chains.MAYA and self.asset == NATIVE_CACAO_SYMBOL
 
     @property
     def amount_asset(self) -> Tuple[int, str]:

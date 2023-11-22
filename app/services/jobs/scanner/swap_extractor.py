@@ -8,6 +8,7 @@ from services.jobs.scanner.event_db import EventDatabase
 from services.jobs.scanner.native_scan import BlockResult
 from services.jobs.scanner.swap_props import SwapProps
 from services.jobs.scanner.swap_start_detector import SwapStartDetector
+from services.lib.constants import Chains
 from services.lib.delegates import INotified, WithDelegates
 from services.lib.depcont import DepContainer
 from services.lib.utils import WithLogger, hash_of_string_repr, say
@@ -90,7 +91,7 @@ class SwapExtractorBlock(WithDelegates, INotified, WithLogger):
 
     @staticmethod
     def suspect_outbound_internal(ev: EventOutbound):
-        return ev.out_id == ZERO_HASH and ev.chain == 'THOR'
+        return ev.out_id == ZERO_HASH and ev.chain == Chains.MAYA
 
     def do_write_event(self, tx_id):
         return not self.dbg_watch_swap_id or self.dbg_watch_swap_id == tx_id
@@ -109,21 +110,21 @@ class SwapExtractorBlock(WithDelegates, INotified, WithLogger):
             })
 
             # --8<-- debugging stuff --8<--
-            if isinstance(swap_ev, EventSwap):
-                self.dbg_swaps += 1
-
-            if swap_ev.tx_id == self.dbg_watch_swap_id:
-                self.dbg_print(f'👹 new event for watched TX!!! {swap_ev.__class__} at block #{swap_ev.height}\n')
-                self.dbg_print(swap_ev)
-                self.dbg_print('----------\n')
-
-                if not boom:
-                    await say('Event!!')
-                    boom = True
-
-                if isinstance(swap_ev, EventScheduledOutbound):
-                    await say('Scheduled outbound!')
-                    self.dbg_print('Scheduled outbound!\n')
+            # if isinstance(swap_ev, EventSwap):
+            #     self.dbg_swaps += 1
+            #
+            # if swap_ev.tx_id == self.dbg_watch_swap_id:
+            #     self.dbg_print(f'👹 new event for watched TX!!! {swap_ev.__class__} at block #{swap_ev.height}\n')
+            #     self.dbg_print(swap_ev)
+            #     self.dbg_print('----------\n')
+            #
+            #     if not boom:
+            #         await say('Event!!')
+            #         boom = True
+            #
+            #     if isinstance(swap_ev, EventScheduledOutbound):
+            #         await say('Scheduled outbound!')
+            #         self.dbg_print('Scheduled outbound!\n')
             # --8<-- debugging stuff --8<--
 
     @staticmethod

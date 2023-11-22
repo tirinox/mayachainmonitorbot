@@ -6,6 +6,7 @@ from aioredis import Redis
 
 from services.jobs.scanner.event_db import EventDatabase
 from services.lib.config import SubConfig
+from services.lib.constants import Chains
 from services.lib.date_utils import parse_timespan_to_seconds
 from services.lib.delegates import INotified, WithDelegates
 from services.lib.depcont import DepContainer
@@ -138,7 +139,7 @@ class GenericTxNotifier(INotified, WithDelegates, WithLogger):
 
         summary = " --- Threshold curve evaluation ---\n"
         for pool in pools[:max_pools]:
-            if pool.asset.startswith('THOR'):  # no virtuals
+            if pool.asset.startswith(Chains.MAYA):  # no virtuals
                 continue
             depth_usd = pool.usd_depth(usd_per_rune)
             min_pool_share = self.curve.evaluate(depth_usd) * self.curve_mult

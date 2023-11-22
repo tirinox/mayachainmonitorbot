@@ -86,22 +86,15 @@ def get_explorer_url_to_tx(network_id, pool_or_chain: str, tx_id: str):
 
 
 def get_explorer_url_for_node(address: str):
-    if address.lower().startswith('tthor'):
-        return f'https://testnet.thorchain.net/#/nodes/{address}'
-    else:
-        return f'https://thorchain.net/#/nodes/{address}'
+    return f'https://www.mayascan.org/network'
 
 
 def get_pool_url(pool_name):
     return f'https://app.thorswap.finance/add/{pool_name}'
 
 
-def get_thoryield_address(network: str, address: str, chain: str = Chains.THOR):
-    if network == NetworkIdents.TESTNET_MULTICHAIN:
-        return f'https://mctn.vercel.app/dashboard?{chain}={address}'
-    else:
-        chain = chain.lower()
-        return f'https://app.thoryield.com/lp?{chain}={address}'
+def get_mayacan_address_url(network: str, address: str):
+    return f'https://www.mayascan.org/address/{address}'
 
 
 def get_ip_info_link(ip_address):

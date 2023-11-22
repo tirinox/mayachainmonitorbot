@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from math import sqrt
 from typing import List, Dict
 
-from services.lib.constants import thor_to_float
+from services.lib.constants import thor_to_float, MAYA_PREFIX
 from services.lib.date_utils import DAY, now_ts
 from services.models.base import BaseModelMixin
 from services.models.pool_info import PoolInfo, pool_share
@@ -27,7 +27,7 @@ class LPAddress(BaseModelMixin):
     @classmethod
     def is_thor_prefix(cls, addr: str):
         addr = addr.lower()
-        return addr.startswith('tthor') or addr.startswith('thor')
+        return addr.startswith('smaya') or addr.startswith(MAYA_PREFIX)
 
     @classmethod
     def validate_address(cls, addr: str):

@@ -4,9 +4,7 @@ from pprint import pprint
 from typing import Optional
 
 from aionode.types import ThorPOL
-
 from services.jobs.fetch.pol import POLFetcher
-from services.lib.constants import NetworkIdents, STAGENET_RESERVE_ADDRESS
 from services.lib.date_utils import DAY
 from services.lib.depcont import DepContainer
 from services.lib.money import distort_randomly
@@ -16,7 +14,7 @@ from tools.lib.lp_common import LpAppFramework
 
 
 def get_reserve_address(app: LpAppFramework):
-    reserve_address = STAGENET_RESERVE_ADDRESS if app.deps.cfg.network_id == NetworkIdents.STAGENET_MULTICHAIN else None
+    reserve_address = 'sthor1dheycdevq39qlkxs2a6wuuzyn4aqxhvepe6as4'
     return reserve_address
 
 

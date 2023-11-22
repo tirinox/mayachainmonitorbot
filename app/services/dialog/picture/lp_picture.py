@@ -7,11 +7,11 @@ from PIL import ImageDraw
 
 from localization.manager import BaseLocalization
 from services.dialog.picture.resources import Resources
-from services.lib.constants import RUNE_SYMBOL
+from services.lib.constants import CACAO_SYMBOL
 from services.lib.draw_utils import CATEGORICAL_PALETTE, pos_percent, result_color, hor_line, LIGHT_TEXT_COLOR, \
     TC_WHITE, paste_image_masked, LINE_COLOR
 from services.lib.money import pretty_money, format_percent, pretty_percent, Asset, RAIDO_GLYPH, pretty_rune, \
-    short_dollar, short_money, is_rune
+    short_dollar, short_money, is_cacao
 from services.lib.plot_graph import PlotBarGraph
 from services.lib.texts import bracketify
 from services.lib.utils import async_wrap, grouper
@@ -48,7 +48,7 @@ async def generate_yield_picture(price_holder: LastPriceHolder,
     else:
         # LP position
         rune_image, asset_image = await asyncio.gather(
-            r.logo_downloader.get_or_download_logo_cached(RUNE_SYMBOL),
+            r.logo_downloader.get_or_download_logo_cached(CACAO_SYMBOL),
             r.logo_downloader.get_or_download_logo_cached(asset)
         )
         return await _generate_lp_pool_picture(price_holder, report, loc, rune_image, asset_image, value_hidden)
@@ -415,7 +415,7 @@ def lp_line_segments(draw, asset_values, asset_values_usd, y, value_hidden, colo
                 pos_percent_lp(legend_x + legend_sq_w, legend_y + legend_sq_h)
             ), fill=color)
 
-            asset = RAIDO_GLYPH if is_rune(asset) else Asset(asset).name
+            asset = RAIDO_GLYPH if is_cacao(asset) else Asset(asset).name
 
             if value_hidden:
                 text = asset
@@ -508,10 +508,10 @@ def sync_lp_address_summary_picture(reports: List[LiquidityPoolReport], weekly_c
             r_usd = a_usd = report.current_value(report.USD) * 0.5
 
         asset_values[report.pool.asset] += assets
-        asset_values[RUNE_SYMBOL] += runes
+        asset_values[CACAO_SYMBOL] += runes
 
         asset_values_usd[report.pool.asset] += a_usd
-        asset_values_usd[RUNE_SYMBOL] += r_usd
+        asset_values_usd[CACAO_SYMBOL] += r_usd
 
         total_lp_vs_hold_abs += report.lp_vs_hold[0]
 

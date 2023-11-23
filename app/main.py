@@ -20,7 +20,7 @@ from services.jobs.fetch.cap import CapInfoFetcher
 from services.jobs.fetch.chains import ChainStateFetcher
 from services.jobs.fetch.const_mimir import ConstMimirFetcher
 from services.jobs.fetch.fair_price import RuneMarketInfoFetcher
-from services.jobs.fetch.gecko_price import fill_rune_price_from_gecko
+from services.jobs.fetch.gecko_price import fill_cacao_price_from_gecko
 from services.jobs.fetch.key_stats import KeyStatsFetcher
 from services.jobs.fetch.last_block import LastBlockFetcher
 from services.jobs.fetch.net_stats import NetworkStatisticsFetcher
@@ -142,7 +142,7 @@ class App(WithLogger):
         self.logger.info(f"Log level: {log_level}")
 
         # todo: ART logo
-        self.logger.info(f'Starting THORChainMonitoringBot for "{d.cfg.network_id}".')
+        self.logger.info(f'Starting MayaChain Monitoring Bot for "{d.cfg.network_id}".')
 
         d.loop = asyncio.get_event_loop()
         d.db = DB(d.loop)
@@ -198,7 +198,7 @@ class App(WithLogger):
         await self._some_sleep()
 
         if 'REPLACE_RUNE_TIMESERIES_WITH_GECKOS' in os.environ:
-            await fill_rune_price_from_gecko(d.db)
+            await fill_cacao_price_from_gecko(d.db)
 
         self.logger.info('Loading procedure start.')
 

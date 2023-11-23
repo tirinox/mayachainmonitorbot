@@ -7,7 +7,7 @@ from aioredis import Redis
 
 from services.jobs.fetch.base import BaseFetcher
 from services.lib.config import Config
-from services.lib.constants import RUNE_SYMBOL_DET, RUNE_SYMBOL_POOL, RUNE_SYMBOL_CEX, THOR_BLOCK_TIME
+from services.lib.constants import RUNE_SYMBOL_DET, RUNE_SYMBOL_POOL, RUNE_SYMBOL_CEX, THOR_BLOCK_TIME, CACAO_DENOM
 from services.lib.date_utils import parse_timespan_to_seconds, DAY
 from services.lib.depcont import DepContainer
 from services.lib.midgard.parser import get_parser_by_network_id
@@ -41,7 +41,7 @@ class PoolFetcher(BaseFetcher):
         current_pools = await self.reload_global_pools()
 
         price = self.deps.price_holder.usd_per_rune
-        self.logger.info(f'Fresh rune price is ${price:.3f}, {len(current_pools)} total pools')
+        self.logger.info(f'Fresh {CACAO_DENOM} price is ${price:.3f}, {len(current_pools)} total pools')
 
         rune_market_info: RuneMarketInfo = await self.deps.rune_market_fetcher.get_rune_market_info()
         if rune_market_info:

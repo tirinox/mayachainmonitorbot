@@ -11,14 +11,19 @@ from services.lib.texts import sep
 from tools.lib.lp_common import LpAppFramework
 
 
-async def my_test_circulating_telegram(lp_app: LpAppFramework):
-    rmf = lp_app.deps.rune_market_fetcher
+async def demo_circulation(app: LpAppFramework, publish=False):
+    rmf = app.deps.rune_market_fetcher
     rmf: RuneMarketInfoFetcher
-    # todo: debug
+
+    circ_inf = await rmf._get_circulating_supply()
+    print(circ_inf)
+
     info = await rmf.get_rune_market_info()
-    # loc: BaseLocalization = lp_app.deps.loc_man.default
-    loc: BaseLocalization = lp_app.deps.loc_man.get_from_lang(Language.ENGLISH_TWITTER)
-    await lp_app.send_test_tg_message(loc.text_metrics_supply(info))
+    print(info)
+
+    if publish:
+        loc: BaseLocalization = app.deps.loc_man.get_from_lang(Language.ENGLISH_TWITTER)
+        await app.send_test_tg_message(loc.text_metrics_supply(info))
 
 
 async def my_test_circulating(lp_app: LpAppFramework):
@@ -80,11 +85,11 @@ async def debug_circulating_rune_message(app: LpAppFramework):
 
 async def main():
     lp_app = LpAppFramework(log_level=logging.INFO)
-    async with lp_app():
+    async with lp_app(brief=True):
         # await my_test_circulating(lp_app)
-        # await my_test_circulating_telegram(lp_app)
-        await debug_circulating_rune_message(lp_app)
+        # await debug_circulating_rune_message(lp_app)
         # await debug_circulating_rune_fetcher(lp_app)
+        await demo_circulation(lp_app)
 
 
 if __name__ == '__main__':

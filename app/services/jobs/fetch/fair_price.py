@@ -1,9 +1,9 @@
 import asyncio
 from typing import Optional
 
-from services.jobs.fetch.circulating import RuneCirculatingSupplyFetcher, RuneCirculatingSupply, RuneHoldEntry, \
+from services.jobs.fetch.circulating import RuneCirculatingSupplyFetcher, CacaoCirculatingSupply, RuneHoldEntry, \
     ThorRealms
-from services.jobs.fetch.gecko_price import get_thorchain_coin_gecko_info, gecko_market_cap_rank, gecko_ticker_price, \
+from services.jobs.fetch.gecko_price import get_cacao_coin_gecko_info, gecko_market_cap_rank, gecko_ticker_price, \
     gecko_market_volume
 from services.lib.constants import thor_to_float, DEFAULT_CEX_NAME, DEFAULT_CEX_BASE_ASSET
 from services.lib.date_utils import MINUTE
@@ -12,7 +12,7 @@ from services.lib.midgard.urlgen import free_url_gen
 from services.lib.utils import a_result_cached, WithLogger, retries
 from services.models.price import RuneMarketInfo
 
-RUNE_MARKET_INFO_CACHE_TIME = 3 * MINUTE
+CACAO_MARKET_INFO_CACHE_TIME = 3 * MINUTE
 
 
 class RuneMarketInfoFetcher(WithLogger):
@@ -28,16 +28,18 @@ class RuneMarketInfoFetcher(WithLogger):
         self.cex_pair = deps.cfg.as_str('price.cex_reference.pair', DEFAULT_CEX_BASE_ASSET)
         self.step_delay = 1.0
 
-        self.logger.info(f'Reference is RUNE/${self.cex_pair} at "{self.cex_name}" CEX.')
+        if self.cex_pair:
+            self.logger.info(f'Reference is CACAO/${self.cex_pair} at "{self.cex_name}" CEX.')
 
     @retries(5)
     async def total_pooled_rune(self):
         j = await self.deps.midgard_connector.request(free_url_gen.url_network())
+        # still "rune" even for Maya. Stay alert!
         total_pooled_rune = j.get('totalPooledRune', 0)
         return thor_to_float(total_pooled_rune)
 
     @retries(5)
-    async def _get_circulating_supply(self) -> RuneCirculatingSupply:
+    async def _get_circulating_supply(self) -> CacaoCirculatingSupply:
         supply_fetcher = RuneCirculatingSupplyFetcher(
             self.deps.session,
             thor_node=self.deps.thor_connector.env.thornode_url,
@@ -45,7 +47,7 @@ class RuneMarketInfoFetcher(WithLogger):
 
         return await supply_fetcher.fetch()
 
-    def _enrich_circulating_supply(self, supply: RuneCirculatingSupply) -> RuneCirculatingSupply:
+    def _enrich_circulating_supply(self, supply: CacaoCirculatingSupply) -> CacaoCirculatingSupply:
         ns = self.deps.net_stats
         if ns:
             supply.set_holder(RuneHoldEntry('bond_module', int(ns.total_bond_rune), 'Bonded', ThorRealms.BONDED))
@@ -64,21 +66,22 @@ class RuneMarketInfoFetcher(WithLogger):
             self.logger.warning('No nodes available! Failed to enrich circulating supply data with node info!')
         return supply
 
-    async def get_full_supply(self) -> RuneCirculatingSupply:
+    async def get_full_supply(self) -> CacaoCirculatingSupply:
         supply_info = await self._get_circulating_supply()
         supply_info = self._enrich_circulating_supply(supply_info)
         return supply_info
 
-    async def get_rune_market_info_from_api(self) -> RuneMarketInfo:
+    async def get_cacao_market_info_from_api(self) -> RuneMarketInfo:
+        # todo: work from here
         supply_info = await self.get_full_supply()
         await asyncio.sleep(self.step_delay)
 
-        gecko = await get_thorchain_coin_gecko_info(self.deps.session)
+        gecko = await get_cacao_coin_gecko_info(self.deps.session)
         await asyncio.sleep(self.step_delay)
 
         total_pulled_rune = await self.total_pooled_rune()
 
-        supply_info: RuneCirculatingSupply
+        supply_info: CacaoCirculatingSupply
         circulating_rune = supply_info.circulating
         total_supply = supply_info.total
 
@@ -112,10 +115,10 @@ class RuneMarketInfoFetcher(WithLogger):
         self.logger.info(result)
         return result
 
-    @a_result_cached(RUNE_MARKET_INFO_CACHE_TIME)
+    @a_result_cached(CACAO_MARKET_INFO_CACHE_TIME)
     async def get_rune_market_info_cached(self) -> RuneMarketInfo:
         try:
-            result = await self.get_rune_market_info_from_api()
+            result = await self.get_cacao_market_info_from_api()
             if result.is_valid:
                 self._prev_result = result
             return result

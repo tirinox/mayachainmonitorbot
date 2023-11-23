@@ -8,24 +8,24 @@ from tqdm import tqdm
 from services.lib.constants import RUNE_SYMBOL_DET, RUNE_SYMBOL_POOL, RUNE_SYMBOL_CEX
 from services.models.time_series import PriceTimeSeries
 
-COIN_CHART_GECKO = "https://api.coingecko.com/api/v3/coins/thorchain/market_chart?vs_currency=usd&days={days}"
-COIN_RANK_GECKO = "https://api.coingecko.com/api/v3/coins/thorchain?" \
+COIN_CHART_GECKO = "https://api.coingecko.com/api/v3/coins/maya-protocol/market_chart?vs_currency=usd&days={days}"
+COIN_RANK_GECKO = "https://api.coingecko.com/api/v3/coins/maya-protocol?" \
                   "market_data=true&community_data=false&developer_data=false"
 
 GECKO_TIMEOUT = aiohttp.ClientTimeout(total=25)  # sec
 
 
-async def get_rune_chart(days):
+async def get_cacao_chart(days):
     async with aiohttp.ClientSession() as session:
         async with session.get(COIN_CHART_GECKO.format(days=days), timeout=GECKO_TIMEOUT) as resp:
             j = await resp.json()
             return j['prices']
 
 
-async def fill_rune_price_from_gecko(db, include_fake_det=False, fake_value=0.2):
+async def fill_cacao_price_from_gecko(db, include_fake_det=False, fake_value=0.2):
     logging.warning('fill_rune_price_from_gecko is called!')
-    gecko_data8 = await get_rune_chart(8)
-    gecko_data1 = await get_rune_chart(1)
+    gecko_data8 = await get_cacao_chart(8)
+    gecko_data1 = await get_cacao_chart(1)
 
     if not gecko_data1 or not gecko_data8:
         logging.error('no gecko data!')
@@ -57,7 +57,7 @@ async def fill_rune_price_from_gecko(db, include_fake_det=False, fake_value=0.2)
             pass
 
 
-async def get_thorchain_coin_gecko_info(session):
+async def get_cacao_coin_gecko_info(session):
     async with session.get(COIN_RANK_GECKO, timeout=GECKO_TIMEOUT) as resp:
         j = await resp.json()
         return j

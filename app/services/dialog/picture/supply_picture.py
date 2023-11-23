@@ -7,8 +7,8 @@ from PIL import Image
 from localization.eng_base import BaseLocalization
 from services.dialog.picture.common import BasePictureGenerator, DrawRectPacker, Rect, PackItem
 from services.dialog.picture.resources import Resources
-from services.jobs.fetch.circulating import RuneCirculatingSupply, ThorRealms
-from services.lib.constants import RUNE_IDEAL_SUPPLY
+from services.jobs.fetch.circulating import CacaoCirculatingSupply, ThorRealms
+from services.lib.constants import CACAO_IDEAL_SUPPLY
 from services.lib.draw_utils import font_estimate_size, reduce_alpha, adjust_brightness
 from services.lib.money import short_money
 from services.lib.plot_graph import PlotGraph
@@ -80,13 +80,13 @@ class SupplyPictureGenerator(BasePictureGenerator):
                           anchor=anchor)
 
     def __init__(self, loc: BaseLocalization,
-                 supply: RuneCirculatingSupply,
+                 supply: CacaoCirculatingSupply,
                  net_stats: NetworkStats):
         super().__init__(loc)
 
         self.supply = supply
         self.net_stats = net_stats
-        self.maya_pool = self.supply.total_rune_in_realm(ThorRealms.MAYA_POOL)
+        self.maya_pool = self.supply.total_in_realm(ThorRealms.MAYA_POOL)
 
         self.res = Resources()
 
@@ -231,7 +231,7 @@ class SupplyPictureGenerator(BasePictureGenerator):
 
         # Circulating
         other_circulating = self.supply.circulating - self.supply.treasury - self.supply.in_cex
-        burned_killed_rune = RUNE_IDEAL_SUPPLY - self.supply.total
+        burned_killed_rune = CACAO_IDEAL_SUPPLY - self.supply.total
 
         [cex_rect, other_rect, killed_rect] = self._pack([
             PackItem('', self.supply.in_cex, ''),  # CEX Block
@@ -265,8 +265,8 @@ class SupplyPictureGenerator(BasePictureGenerator):
         ], other_rect, align=DrawRectPacker.INSIDE_LARGEST)
 
         items = []
-        if self.supply.lending_burnt_rune > 0:
-            items.append(PackItem('', abs(self.supply.lending_burnt_rune),
+        if self.supply.lending_burnt_cacao > 0:
+            items.append(PackItem('', abs(self.supply.lending_burnt_cacao),
                                   self.PALETTE[ThorRealms.BURNED], just_value))
         if self.supply.killed_switched > 0:
             items.append(PackItem(self.loc.SUPPLY_PIC_SECTION_KILLED,

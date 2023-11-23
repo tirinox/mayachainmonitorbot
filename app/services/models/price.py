@@ -2,7 +2,7 @@ import logging
 from dataclasses import dataclass
 from typing import List
 
-from services.jobs.fetch.circulating import RuneCirculatingSupply
+from services.jobs.fetch.circulating import CacaoCirculatingSupply
 from services.lib.config import Config
 from services.lib.constants import BNB_BTCB_SYMBOL, BTC_SYMBOL, STABLE_COIN_POOLS, thor_to_float
 from services.lib.date_utils import now_ts
@@ -14,7 +14,7 @@ from services.models.pool_info import PoolInfo, PoolInfoMap
 
 @dataclass
 class RuneMarketInfo:
-    circulating: int = 500_000_000
+    circulating: int = 100_000_000
     rune_vault_locked: int = 0
     pool_rune_price: float = 0.0  # THORChain Pool Price (weighted across stable coins)
     fair_price: float = 0.0  # Deterministic Price
@@ -22,8 +22,8 @@ class RuneMarketInfo:
     tlv_usd: float = 0.0
     rank: int = 0
     total_trade_volume_usd: float = 0.0
-    total_supply: int = 500_000_000
-    supply_info: RuneCirculatingSupply = RuneCirculatingSupply.zero()
+    total_supply: int = 100_000_000
+    supply_info: CacaoCirculatingSupply = CacaoCirculatingSupply.zero()
     pools: PoolInfoMap = None
 
     @property
@@ -104,7 +104,7 @@ class LastPriceHolder:
         return c in self.stable_coins
 
     def load_stable_coins(self, cfg: Config):
-        self.stable_coins = cfg.get('thor.stable_coins', default=STABLE_COIN_POOLS)
+        self.stable_coins = cfg.as_list('thor.stable_coins', default=STABLE_COIN_POOLS)
         logging.info(f'Stable coins are {", ".join(self.stable_coins)}')
 
     def calculate_rune_price_here(self, pool_map: PoolInfoMap) -> float:

@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 from services.dialog.picture.price_picture import price_graph_from_db
-from services.jobs.fetch.gecko_price import fill_rune_price_from_gecko
+from services.jobs.fetch.gecko_price import fill_cacao_price_from_gecko
 from services.jobs.fetch.tx import TxFetcher
 from services.jobs.volume_filler import VolumeFillerUpdater
 from services.jobs.volume_recorder import VolumeRecorder
@@ -34,7 +34,7 @@ async def continuous_volume_recording(lp_app):
 
 async def make_price_graph(lp_app, fill=False):
     if fill:
-        await fill_rune_price_from_gecko(lp_app.deps.db, include_fake_det=True)
+        await fill_cacao_price_from_gecko(lp_app.deps.db, include_fake_det=True)
     loc = lp_app.deps.loc_man.default
     return await price_graph_from_db(lp_app.deps, loc)
 

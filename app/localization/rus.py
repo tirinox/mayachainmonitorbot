@@ -1641,11 +1641,11 @@ class RussianLocalization(BaseLocalization):
     def text_metrics_supply(self, market_info: RuneMarketInfo):
         sp = market_info.supply_info
 
-        burn_amt = short_rune(abs(sp.lending_burnt_rune))
-        burn_pct = format_percent(abs(sp.lending_burnt_rune), sp.total)
-        if sp.lending_burnt_rune > 0:
+        burn_amt = short_rune(abs(sp.lending_burnt_cacao))
+        burn_pct = format_percent(abs(sp.lending_burnt_cacao), sp.total)
+        if sp.lending_burnt_cacao > 0:
             str_burnt = f'🔥 Сожжено Rune (<b>кредитован е</b>) – {code(burn_amt)} ({burn_pct})!\n'
-        elif sp.lending_burnt_rune < 0:
+        elif sp.lending_burnt_cacao < 0:
             str_burnt = f'🪙 Напечатано Rune – {burn_amt} ({burn_pct})\n'
         else:
             str_burnt = ''

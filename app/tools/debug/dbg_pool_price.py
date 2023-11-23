@@ -3,7 +3,7 @@ import asyncio
 from aionode.connector import ThorConnector
 
 from services.dialog.picture.price_picture import price_graph_from_db
-from services.jobs.fetch.gecko_price import fill_rune_price_from_gecko
+from services.jobs.fetch.gecko_price import fill_cacao_price_from_gecko
 from services.jobs.fetch.pool_price import PoolFetcher, PoolInfoFetcherMidgard
 from services.lib.constants import NetworkIdents
 from services.lib.depcont import DepContainer
@@ -67,7 +67,7 @@ async def demo_top_pools(app: LpAppFramework):
 
 async def demo_price_graph(app, fill=False):
     if fill:
-        await fill_rune_price_from_gecko(app.deps.db, include_fake_det=True)
+        await fill_cacao_price_from_gecko(app.deps.db, include_fake_det=True)
     loc = app.deps.loc_man.default
     graph, graph_name = await price_graph_from_db(app.deps, loc)
 

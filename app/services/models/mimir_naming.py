@@ -238,7 +238,6 @@ TRANSLATE_MIMIRS = {
 
 EXCLUDED_VOTE_KEYS = [
     'TEST',
-    'SUPPORTTHORCHAINDOTNETWORK',
 ]
 
 NEXT_CHAIN_VOTING_MAP = invert_dict({
@@ -307,11 +306,13 @@ DICT_WORDS = (
     'thor,anchor,multiple,basis,dofm,pending,vote,voting,in,or,and,the,yield,streaming,stream,tor,top,lending,'
     'supply,multiplier,ETH-USDC,surplus,target,swaps,order,book,books,AVAX-USDC,significant,digits,length,'
     'red,line,lune,fees,affiliate,cut,off,BNB-BUSD-BD1,ETH-USDT,loan,repayment,maturity,lever,slip,pts,'
-    'UST,luna,wide,blame,keygen,assets,derived,round,rounds,prefer,Collateral,ready'
+    'UST,luna,wide,blame,keygen,assets,derived,round,rounds,prefer,Collateral,ready,'
+    'maya,cacao,aztec,mayachain,kuji,dash'
 ).strip(' ,')
 
 WORD_TRANSFORM = {
     'Thorchain': 'THORChain',
+    'Mayachain': 'MayaChain',
     'Thorname': 'THORName',
     'Thornames': 'THORNames',
     'Lp': 'LP',

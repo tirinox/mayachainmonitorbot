@@ -33,6 +33,9 @@ class BlockResult:
     def only_successful(self) -> 'BlockResult':
         # a log is only present when tx's code == 0
         filtered_data = [(tx, log) for tx, log in zip(self.txs, self.tx_logs) if log]
+        if not filtered_data:
+            return self
+
         new_txs, new_logs = tuple(zip(*filtered_data))
 
         return BlockResult(
@@ -119,7 +122,7 @@ class NativeScannerBlock(BaseFetcher):
 
             return BlockResult(block_no, [], decoded_txs, decoded_end_block_events)
         else:
-            self.logger.warn(f'Error fetching block txs results #{block_no}.')
+            self.logger.warning(f'Error fetching block txs results #{block_no}.')
 
     async def _fetch_block_txs_raw(self, block_no):
         return await self.deps.thor_connector.query_tendermint_block_raw(block_no)
@@ -134,7 +137,7 @@ class NativeScannerBlock(BaseFetcher):
             decoded_txs = [self._decode_one_tx(raw) for raw in raw_txs]
             return list(filter(bool, decoded_txs))
         else:
-            self.logger.warn(f'Error fetching block #{block_no}.')
+            self.logger.warning(f'Error fetching block #{block_no}.')
             self.deps.emergency.report(self.NAME, 'Error fetching block', block_no=block_no)
 
     def _decode_one_tx(self, raw):
@@ -209,7 +212,7 @@ class NativeScannerBlock(BaseFetcher):
                         break
 
             except Exception as e:
-                self.logger.error(f'Error while fetching block #{self._last_block}: {e}')
+                self.logger.exception(f'Error while fetching block #{self._last_block}: {e}')
                 self._on_error()
                 break
 

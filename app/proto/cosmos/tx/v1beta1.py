@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import List
 
 import betterproto
+import betterproto.lib.google.protobuf as betterproto_lib_google_protobuf
 
 from ...cosmos.base import v1beta1
 from ...cosmos.crypto.multisig import v1beta1 as crypto_multisig_v1_beta1

@@ -134,7 +134,7 @@ async def main():
     async with app(brief=True):
         # await demo_block_scanner_active(app, send_alerts=False, catch_up=True)
 
-        await demo_debug_personal_transfer(app)
+        # await demo_debug_personal_transfer(app)
 
         # await search_out(app)
 
@@ -143,6 +143,7 @@ async def main():
 
         # await debug_block_tx_status_check(app)
         # await demo_rune_transfers_once(app, )  # block=12929445
+        await demo_rune_transfers_once(app, block=3167226)
 
 
 if __name__ == '__main__':

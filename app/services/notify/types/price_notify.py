@@ -15,11 +15,12 @@ from services.notify.channel import MessageType, BoardMessage
 
 
 class PriceNotifier(INotified, WithLogger):
-    ATH_KEY = 'runeATH'
-    CD_KEY_PRICE_NOTIFIED = 'price_notified'
-    CD_KEY_PRICE_RISE_NOTIFIED = 'price_notified_rise'
-    CD_KEY_PRICE_FALL_NOTIFIED = 'price_notified_fall'
-    CD_KEY_ATH_NOTIFIED = 'ath_notified'
+    # todo: make it universal
+    ATH_KEY = 'Price:Cacao:ATH'
+    CD_KEY_PRICE_NOTIFIED = 'Price:Cacao:Notified'
+    CD_KEY_PRICE_RISE_NOTIFIED = 'Price:Cacao:Rise-Notified'
+    CD_KEY_PRICE_FALL_NOTIFIED = 'Price:Cacao:Fall-Notified'
+    CD_KEY_ATH_NOTIFIED = 'Price:Cacao:ATH-Notified'
 
     def __init__(self, deps: DepContainer):
         super().__init__()

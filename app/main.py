@@ -3,8 +3,8 @@ import logging
 import os
 
 import aioredis.exceptions
-from aionode.connector import ThorConnector
 
+from aionode.connector import ThorConnector
 from localization.admin import AdminMessages
 from localization.manager import LocalizationManager
 from services.dialog.discord.discord_bot import DiscordBot
@@ -16,7 +16,6 @@ from services.dialog.twitter.twitter_bot import TwitterBot, TwitterBotMock
 from services.jobs.achievement.notifier import AchievementsNotifier
 from services.jobs.fetch.account_number import AccountNumberFetcher
 from services.jobs.fetch.borrowers import BorrowersFetcher
-from services.jobs.fetch.cap import CapInfoFetcher
 from services.jobs.fetch.chains import ChainStateFetcher
 from services.jobs.fetch.const_mimir import ConstMimirFetcher
 from services.jobs.fetch.fair_price import RuneMarketInfoFetcher
@@ -68,7 +67,6 @@ from services.notify.personal.price_divergence import PersonalPriceDivergenceNot
 from services.notify.personal.scheduled import PersonalPeriodicNotificationService
 from services.notify.types.best_pool_notify import BestPoolsNotifier
 from services.notify.types.block_notify import BlockHeightNotifier, LastBlockStore
-from services.notify.types.cap_notify import LiquidityCapNotifier
 from services.notify.types.chain_notify import TradingHaltedNotifier
 from services.notify.types.dex_report_notify import DexReportNotifier
 from services.notify.types.key_metrics_notify import KeyMetricsNotifier
@@ -387,12 +385,6 @@ class App(WithLogger):
 
             tasks.append(fetcher_tx)
 
-        if d.cfg.get('cap.enabled', True):
-            fetcher_cap = CapInfoFetcher(d)
-            notifier_cap = LiquidityCapNotifier(d)
-            fetcher_cap.add_subscriber(notifier_cap)
-            tasks.append(fetcher_cap)
-
         if d.cfg.get('queue.enabled', True):
             notifier_queue = QueueNotifier(d)
             store_queue.add_subscriber(notifier_queue)
@@ -517,7 +509,7 @@ class App(WithLogger):
             if achievements_enabled:
                 pol_fetcher.add_subscriber(achievements)
 
-        if d.cfg.get('key_metrics.enabled', True):
+        if d.cfg.get('key_metrics.enabled', False):
             metrics_fetcher = KeyStatsFetcher(d)
             tasks.append(metrics_fetcher)
             d.weekly_stats_notifier = metrics_notifier = KeyMetricsNotifier(d)
@@ -526,7 +518,7 @@ class App(WithLogger):
             if achievements_enabled:
                 metrics_fetcher.add_subscriber(achievements)
 
-        if d.cfg.get('borrowers.enabled', True):
+        if d.cfg.get('borrowers.enabled', False):
             borrowers_fetcher = BorrowersFetcher(d)
             tasks.append(borrowers_fetcher)
             if achievements_enabled:

@@ -64,8 +64,8 @@ class RuneMarketInfo:
         return len([p for p in self.pools.values() if p.is_enabled])
 
 
-REAL_REGISTERED_ATH = 20.87  # $ / Rune
-REAL_REGISTERED_ATH_DATE = 1621418550  # 19 may 2021
+REAL_REGISTERED_ATH = 0.806  # $ / Cacao
+REAL_REGISTERED_ATH_DATE = 1700155613  # 17 nov 2023
 
 
 @dataclass

@@ -86,8 +86,8 @@ class PoolFetcher(BaseFetcher):
             cex_price_series = PriceTimeSeries(RUNE_SYMBOL_CEX, db)
             await cex_price_series.add(price=rune_market_info.cex_price)
             await cex_price_series.trim_oldest(self.history_max_points)
-        else:
-            self.logger.error(f'Odd {rune_market_info.cex_price = }')
+        # else:
+        #     self.logger.warning(f'Odd {rune_market_info.cex_price = }')
 
         # Deterministic price fill
         if rune_market_info.fair_price and rune_market_info.fair_price > 0:
@@ -95,7 +95,7 @@ class PoolFetcher(BaseFetcher):
             await deterministic_price_series.add(price=rune_market_info.fair_price)
             await deterministic_price_series.trim_oldest(self.history_max_points)
         else:
-            self.logger.error(f'Odd {rune_market_info.fair_price = }')
+            self.logger.warning(f'Odd {rune_market_info.fair_price = }')
 
     async def _fetch_current_pool_data_from_thornode(self, height=None) -> PoolInfoMap:
         try:

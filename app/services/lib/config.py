@@ -94,7 +94,7 @@ class SubConfig:
 
 class Config(SubConfig):
     DEFAULT = '../config.yaml'
-    DEFAULT_ENV_FILE = '.env'
+    DEFAULT_ENV_FILE = '../.env'
 
     def __init__(self, name=None, data=None):
         load_dotenv(self.DEFAULT_ENV_FILE)

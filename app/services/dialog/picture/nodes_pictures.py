@@ -251,7 +251,7 @@ class NodePictureGenerator:
 
     @staticmethod
     def proper_name():
-        return f'THORChain-world-{today_str()}.png'
+        return f'MayaChain-world-{today_str()}.png'
 
     def __init__(self, data: NetworkNodeIpInfo, node_stats_points: List[NodeStatsItem],
                  loc: BaseLocalization, max_categories=MAX_CATEGORIES):

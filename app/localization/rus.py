@@ -582,12 +582,12 @@ class RussianLocalization(BaseLocalization):
 
         btc_price = f"₿ {p.btc_pool_rune_price:.8f}"
         pr_text = f"${price:.3f}"
-        message += f"Цена <b>RUNE</b> сейчас {code(pr_text)} ({btc_price}).\n"
+        message += f"Цена <b>CACAO</b> сейчас {code(pr_text)} ({btc_price}).\n"
 
         fp = p.market_info
 
         if fp.cex_price and fp.cex_price > 0.0:
-            message += f"Цена <b>RUNE</b> на централизованной бирже {self.ref_cex_name}: " \
+            message += f"Цена <b>CACAO</b> на централизованной бирже {self.ref_cex_name}: " \
                        f"{bold(pretty_dollar(fp.cex_price))}.\n"
 
             div, div_p = fp.divergence_abs, fp.divergence_percent

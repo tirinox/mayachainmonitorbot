@@ -134,7 +134,7 @@ class InlineBotHandlerDialog(BaseDialog):
 
         # GENERATE A PICTURE
         picture = await generate_yield_picture(self.deps.price_holder, lp_report, self.loc, value_hidden=False)
-        picture_bio = img_to_bio(picture, f'Thorchain_LP_{exact_pool}_{today_str()}.png')
+        picture_bio = img_to_bio(picture, f'MayaChain_LP_{exact_pool}_{today_str()}.png')
 
         # UPLOAD AND SEND RESULT
         ident = unique_ident((address, exact_pool), prec='minute')

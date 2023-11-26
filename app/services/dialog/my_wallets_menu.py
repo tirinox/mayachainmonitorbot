@@ -571,7 +571,7 @@ class MyWalletsMenu(DialogWithSettings):
         value_hidden = not self.data.get(self.KEY_CAN_VIEW_VALUE, True)
 
         picture = await generate_yield_picture(self.deps.price_holder, lp_report, self.loc, value_hidden=value_hidden)
-        picture_bio = img_to_bio(picture, f'Thorchain_LP_{pool}_{today_str()}.png')
+        picture_bio = img_to_bio(picture, f'MayaChain_LP_{pool}_{today_str()}.png')
 
         # ANSWER
         await self._show_wallet_again(query)
@@ -610,7 +610,7 @@ class MyWalletsMenu(DialogWithSettings):
         picture = await lp_address_summary_picture(list(yield_summary.reports),
                                                    yield_summary.charts,
                                                    self.loc, value_hidden=value_hidden)
-        picture_bio = img_to_bio(picture, f'Thorchain_LP_Summary_{today_str()}.png')
+        picture_bio = img_to_bio(picture, f'MayaChain_LP_Summary_{today_str()}.png')
 
         # ANSWER
         await self._show_wallet_again(query)

@@ -420,7 +420,7 @@ class BaseLocalization(ABC):  # == English
 
     # ------ PRICE -------
 
-    PRICE_GRAPH_TITLE = f'THORChain Rune price, USD'
+    PRICE_GRAPH_TITLE = f'MayaChain CACAO price, USD'
     PRICE_GRAPH_LEGEND_DET_PRICE = f'Deterministic {RAIDO_GLYPH} price'
     PRICE_GRAPH_LEGEND_ACTUAL_PRICE = f'Pool {RAIDO_GLYPH} price'
     PRICE_GRAPH_LEGEND_CEX_PRICE = f'CEX {RAIDO_GLYPH} price'
@@ -788,12 +788,12 @@ class BaseLocalization(ABC):  # == English
 
         pr_text = f"${price:.3f}"
         btc_price = f"₿ {p.btc_pool_rune_price:.8f}"
-        message += f"<b>RUNE</b> price is {code(pr_text)} ({btc_price}) now.\n"
+        message += f"<b>CACAO</b> price is {code(pr_text)} ({btc_price}) now.\n"
 
         fp = p.market_info
 
         if fp.cex_price and fp.cex_price > 0.0:
-            message += f"<b>RUNE</b> price at {self.ref_cex_name} (CEX) is {code(pretty_dollar(fp.cex_price))} " \
+            message += f"<b>CACAO</b> price at {self.ref_cex_name} (CEX) is {code(pretty_dollar(fp.cex_price))} " \
                        f"({self.ref_cex_pair} market).\n"
 
             div, div_p = fp.divergence_abs, fp.divergence_percent
@@ -2167,7 +2167,7 @@ class BaseLocalization(ABC):  # == English
     SUPPLY_PIC_SECTION_LOCKED = 'THOR.RUNE locked'
     SUPPLY_PIC_SECTION_KILLED = 'Killed switched'
 
-    SUPPLY_PIC_CAPTION = ital('THORChain Rune supply chart')
+    SUPPLY_PIC_CAPTION = ital('MayaChain CACAO supply chart')
 
     # ---- MY WALLET ALERTS ----
 

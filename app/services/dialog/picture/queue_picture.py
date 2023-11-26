@@ -37,4 +37,4 @@ def queue_graph_sync(event_points, loc: BaseLocalization):
     gr.max_y = max(gr.max_y, 20)
     gr.add_title(loc.TEXT_QUEUE_PLOT_TITLE)
     today = today_str()
-    return gr.finalize(), f'thorchain_queue_{today}.png'
+    return gr.finalize(), f'MayaChain_queue_{today}.png'

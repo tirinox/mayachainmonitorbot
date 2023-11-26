@@ -97,7 +97,7 @@ class PersonalPeriodicNotificationService(WithLogger, INotified):
         loc = await self.deps.loc_man.get_from_db(user, self.deps.db)
 
         picture = await generate_yield_picture(self.deps.price_holder, lp_report, loc, value_hidden=value_hidden)
-        picture_bio = img_to_bio(picture, f'Thorchain_LP_{pool}_{today_str()}.png')
+        picture_bio = img_to_bio(picture, f'MayaChain_LP_{pool}_{today_str()}.png')
 
         local_name = await self.deps.name_service.get_local_service(user).get_wallet_local_name(address)
         unsub_id = await self._retrieve_unsub_id(user, address, pool)

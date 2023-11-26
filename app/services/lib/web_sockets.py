@@ -49,7 +49,7 @@ class WSClient(WithLogger, abc.ABC):
                                     self.logger.info('Ping OK, keeping connection alive...')
                                     continue
                                 else:
-                                    self.logger.warn('Reconnect on timeout!')
+                                    self.logger.warning('Reconnect on timeout!')
                                     break
                             except Exception:
                                 self.logger.info(
@@ -71,7 +71,7 @@ class WSClient(WithLogger, abc.ABC):
                                 self.logger.error(f'Other error: {e!r}')
 
             except socket.gaierror:
-                self.logger.warn(f'Socket error - retrying connection in {self.sleep_time} sec ')
+                self.logger.warning(f'Socket error - retrying connection in {self.sleep_time} sec ')
                 await asyncio.sleep(self.sleep_time)
                 continue
             except ConnectionRefusedError:

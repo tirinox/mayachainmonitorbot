@@ -650,10 +650,10 @@ class TwitterEnglishLocalization(BaseLocalization):
         good_time = e.time_without_blocks is not None and e.time_without_blocks > 1
         str_t = self.seconds_human(e.time_without_blocks) if good_time else self.NA
         if e.state == BlockProduceState.StateStuck:
-            return f'📛 THORChain block height seems to have stopped increasing!\n' \
+            return f'📛 MayaChain block height seems to have stopped increasing!\n' \
                    f'New blocks have not been generated for {str_t}.'
         else:
-            return f"🆗 THORChain is producing blocks again!\n" \
+            return f"🆗 MayaChain is producing blocks again!\n" \
                    f"The failure lasted {str_t}."
 
     def notification_text_block_pace(self, e: EventBlockSpeed):
@@ -790,7 +790,7 @@ class TwitterEnglishLocalization(BaseLocalization):
 
     # ----- SUPPLY ------
 
-    SUPPLY_PIC_CAPTION = 'THORChain Rune supply chart'
+    SUPPLY_PIC_CAPTION = 'MayaChain CACAO supply chart'
 
     def text_metrics_supply(self, market_info: RuneMarketInfo):
         sp = market_info.supply_info

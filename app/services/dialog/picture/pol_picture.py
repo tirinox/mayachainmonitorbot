@@ -20,7 +20,7 @@ class POLPictureGenerator(BasePictureGenerator):
         self.event = event
         self.logos = {}
 
-    FILENAME_PREFIX = 'thorchain_POL'
+    FILENAME_PREFIX = 'MayaChain_POL'
 
     async def prepare(self):
         pass

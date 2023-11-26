@@ -29,7 +29,7 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
         self.eth_logo = None
         self.usdt_logo = self.usdc_logo = self.busd_logo = None
 
-    FILENAME_PREFIX = 'thorchain_weekly_stats'
+    FILENAME_PREFIX = 'MayaChain_weekly_stats'
 
     async def prepare(self):
         self.btc_logo, self.eth_logo, self.usdt_logo, self.usdc_logo, self.busd_logo = await asyncio.gather(

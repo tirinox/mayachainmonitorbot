@@ -17,13 +17,15 @@ class ThorRealms:
     CEX = 'CEX'
     TREASURY = 'Treasury'
 
+    BURNED = 'Burned'
+
 
 THOR_ADDRESS_DICT = {
     # Reserves:
     'maya1dheycdevq39qlkxs2a6wuuzyn4aqxhve4hc8sm': (ThorRealms.RESERVES, ThorRealms.RESERVES),
 
     # Treasury:
-    # 'maya123': ('Treasury Multisig', ThorRealms.TREASURY),
+    'maya1577sz8j7xnthm3cl3vgfvmdmkrp7dqrhd9tafd': ('MayaFund', ThorRealms.TREASURY),
 }
 
 

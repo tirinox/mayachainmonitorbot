@@ -792,7 +792,7 @@ class BaseLocalization(ABC):  # == English
 
         fp = p.market_info
 
-        if fp.cex_price > 0.0:
+        if fp.cex_price and fp.cex_price > 0.0:
             message += f"<b>RUNE</b> price at {self.ref_cex_name} (CEX) is {code(pretty_dollar(fp.cex_price))} " \
                        f"({self.ref_cex_pair} market).\n"
 

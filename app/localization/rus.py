@@ -586,7 +586,7 @@ class RussianLocalization(BaseLocalization):
 
         fp = p.market_info
 
-        if fp.cex_price > 0.0:
+        if fp.cex_price and fp.cex_price > 0.0:
             message += f"Цена <b>RUNE</b> на централизованной бирже {self.ref_cex_name}: " \
                        f"{bold(pretty_dollar(fp.cex_price))}.\n"
 

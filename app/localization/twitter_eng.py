@@ -264,7 +264,7 @@ class TwitterEnglishLocalization(BaseLocalization):
 
         fp = p.market_info
 
-        if fp.cex_price > 0.0:
+        if fp.cex_price and fp.cex_price > 0.0:
             message += f"{self.ref_cex_pair} {self.ref_cex_name}: {pretty_dollar(fp.cex_price)}\n"
 
             div, div_p = fp.divergence_abs, fp.divergence_percent

@@ -8,8 +8,8 @@ from tqdm import tqdm
 from services.lib.constants import RUNE_SYMBOL_DET, RUNE_SYMBOL_POOL, RUNE_SYMBOL_CEX
 from services.models.time_series import PriceTimeSeries
 
-COIN_CHART_GECKO = "https://api.coingecko.com/api/v3/coins/maya-protocol/market_chart?vs_currency=usd&days={days}"
-COIN_RANK_GECKO = "https://api.coingecko.com/api/v3/coins/maya-protocol?" \
+COIN_CHART_GECKO = "https://api.coingecko.com/api/v3/coins/cacao/market_chart?vs_currency=usd&days={days}"
+COIN_RANK_GECKO = "https://api.coingecko.com/api/v3/coins/cacao?" \
                   "market_data=true&community_data=false&developer_data=false"
 
 GECKO_TIMEOUT = aiohttp.ClientTimeout(total=25)  # sec

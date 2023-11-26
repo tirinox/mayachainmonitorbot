@@ -34,7 +34,7 @@ class RuneMarketInfo:
     def is_valid(self):
         return (self.circulating > 0
                 and self.fair_price > 0
-                and self.cex_price > 0
+                # and self.cex_price > 0
                 and self.pool_rune_price > 0
                 and self.pools
                 and self.supply_info

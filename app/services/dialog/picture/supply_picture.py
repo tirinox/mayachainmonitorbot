@@ -115,9 +115,9 @@ class SupplyPictureGenerator(BasePictureGenerator):
             ThorRealms.CIRCULATING: '#dddddd',
             ThorRealms.CEX: '#bbb3ef',
             ThorRealms.TREASURY: '#35f8ec',
-            ThorRealms.KILLED: '#720f01',
+            # ThorRealms.KILLED: '#720f01',
             ThorRealms.BURNED: '#ff4200',
-            ThorRealms.MAYA_POOL: '#255fb0',
+            # ThorRealms.MAYA_POOL: '#255fb0',
             'Binance': '#d0a10d',
             'Kraken': '#7263d6',
         }
@@ -127,7 +127,7 @@ class SupplyPictureGenerator(BasePictureGenerator):
             'Kraken': './data/supply_chart/kraken.png',
             ThorRealms.BONDED: './data/supply_chart/bonded.png',
             ThorRealms.CIRCULATING: './data/supply_chart/circulating.png',
-            ThorRealms.MAYA_POOL: './data/supply_chart/maya.png',
+            # ThorRealms.MAYA_POOL: './data/supply_chart/maya.png',
             ThorRealms.POOLED: './data/supply_chart/wave.png',
             ThorRealms.RESERVES: './data/supply_chart/reserve.png',
             ThorRealms.STANDBY_RESERVES: './data/supply_chart/standby.png',
@@ -253,23 +253,19 @@ class SupplyPictureGenerator(BasePictureGenerator):
         ]
         self._pack(cex_items, cex_rect, align=DrawRectPacker.H)
 
-        # Circulating, Maya, Treasury, Burned, Killed
+        # Circulating, Treasury, Burned, Killed
 
         self._pack([
             PackItem(self.loc.SUPPLY_PIC_CIRCULATING, other_circulating, self.PALETTE[ThorRealms.CIRCULATING],
                      meta(realm=ThorRealms.CIRCULATING)),
             PackItem(self.loc.SUPPLY_PIC_TREASURY, self.supply.treasury, self.PALETTE[ThorRealms.TREASURY],
                      meta(realm=ThorRealms.TREASURY)),
-            PackItem(self.loc.SUPPLY_PIC_MAYA, self.maya_pool, self.PALETTE[ThorRealms.MAYA_POOL],
-                     meta(realm=ThorRealms.MAYA_POOL, label='up')),
+            # PackItem(self.loc.SUPPLY_PIC_MAYA, self.maya_pool, self.PALETTE[ThorRealms.MAYA_POOL],
+            #          meta(realm=ThorRealms.MAYA_POOL, label='up')),
         ], other_rect, align=DrawRectPacker.INSIDE_LARGEST)
 
         items = []
         if self.supply.lending_burnt_cacao > 0:
             items.append(PackItem('', abs(self.supply.lending_burnt_cacao),
                                   self.PALETTE[ThorRealms.BURNED], just_value))
-        if self.supply.killed_switched > 0:
-            items.append(PackItem(self.loc.SUPPLY_PIC_SECTION_KILLED,
-                                  self.supply.killed_switched,
-                                  self.PALETTE[ThorRealms.KILLED], just_value))
         self._pack(items, killed_rect, align=DrawRectPacker.H)

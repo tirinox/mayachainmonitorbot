@@ -612,7 +612,7 @@ class RussianLocalization(BaseLocalization):
                 message += pre(f"{title.rjust(5)}:{adaptive_round_to_str(pc, True).rjust(8)} % "
                                f"{emoji_for_percent_change(pc).ljust(4).rjust(6)}") + "\n"
 
-        if fp.rank >= 1:
+        if fp.rank and fp.rank >= 1:
             message += f"Капитализация: {bold(pretty_dollar(fp.market_cap))} (#{bold(fp.rank)} место)\n"
 
         if fp.total_trade_volume_usd > 0:

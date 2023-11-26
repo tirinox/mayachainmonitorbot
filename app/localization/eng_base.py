@@ -816,7 +816,7 @@ class BaseLocalization(ABC):  # == English
                 message += code(f"{title.rjust(4)}:{adaptive_round_to_str(pc, True).rjust(8)} % "
                                 f"{emoji_for_percent_change(pc).ljust(4).rjust(6)}") + "\n"
 
-        if fp.rank >= 1:
+        if fp.rank and fp.rank >= 1:
             message += f"Coin market cap is {bold(short_dollar(fp.market_cap))} (#{bold(fp.rank)})\n"
 
         if fp.total_trade_volume_usd > 0:

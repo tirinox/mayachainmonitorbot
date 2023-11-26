@@ -287,7 +287,7 @@ class TwitterEnglishLocalization(BaseLocalization):
                 message += f"{title.rjust(4)}: {adaptive_round_to_str(pc, True)}% " \
                            f"{emoji_for_percent_change(pc)}\n"
 
-        if fp.rank >= 1:
+        if fp.rank and fp.rank >= 1:
             message += f"Mrkt. cap: {short_dollar(fp.market_cap)} (#{fp.rank})\n"
 
         if fp.total_trade_volume_usd > 0:

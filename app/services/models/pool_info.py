@@ -9,7 +9,7 @@ from typing import List, Dict, NamedTuple
 
 from aionode.types import ThorPool
 
-from services.lib.constants import thor_to_float
+from services.lib.constants import thor_to_float, cacao_to_float
 from services.lib.money import Asset
 
 
@@ -56,12 +56,12 @@ class PoolInfo:
     STAGED = 'staged'  # bootstrap
 
     def percent_share(self, runes, correction=0.0):
-        full_balance_rune = 2 * thor_to_float(self.balance_rune) + correction
+        full_balance_rune = 2 * cacao_to_float(self.balance_rune) + correction
         return runes / full_balance_rune * 100.0
 
     def get_share_rune_and_asset(self, units: int) -> (float, float):
         r, a = pool_share(self.balance_rune, self.balance_asset, my_units=units, pool_total_units=self.units)
-        return thor_to_float(r), thor_to_float(a)
+        return cacao_to_float(r), thor_to_float(a)
 
     def total_my_capital_of_pool_in_rune(self, units: int) -> float:
         r, _ = self.get_share_rune_and_asset(units)
@@ -79,11 +79,11 @@ class PoolInfo:
 
     @property
     def asset_per_rune(self):
-        return self.balance_asset / self.balance_rune
+        return thor_to_float(self.balance_asset) / cacao_to_float(self.balance_rune)
 
     @property
     def runes_per_asset(self):
-        return self.balance_rune / self.balance_asset
+        return cacao_to_float(self.balance_rune) / thor_to_float(self.balance_asset)
 
     @staticmethod
     def is_status_enabled(status):
@@ -131,23 +131,23 @@ class PoolInfo:
     @property
     def usd_volume_24h(self):
         """ Used for top_pools """
-        return thor_to_float(self.volume_24h) * self.rune_price
+        return cacao_to_float(self.volume_24h) * self.rune_price
 
     @property
     def total_liquidity(self):
         """ Used for top_pools """
-        return 2.0 * thor_to_float(self.balance_rune) * self.rune_price
+        return 2.0 * cacao_to_float(self.balance_rune) * self.rune_price
 
     def get_synth_cap_in_asset_float(self, max_synth_per_pool_depth=0.15):
         return thor_to_float(self.balance_asset * max_synth_per_pool_depth * 2.0)
 
     @property
     def savers_depth_float(self):
-        return thor_to_float(self.savers_depth)
+        return cacao_to_float(self.savers_depth)
 
     @property
     def saver_growth_rune(self):
-        return thor_to_float((self.savers_depth - self.savers_units) * self.runes_per_asset)
+        return cacao_to_float((self.savers_depth - self.savers_units) * self.runes_per_asset)
 
     @property
     def saver_growth(self):
@@ -159,7 +159,7 @@ class PoolInfo:
 
     @property
     def synth_supply_float(self):
-        return thor_to_float(self.synth_supply)
+        return cacao_to_float(self.synth_supply)
 
     def __post_init__(self):
         self.is_virtual = Asset(self.asset).is_virtual

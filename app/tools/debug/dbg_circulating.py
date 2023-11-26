@@ -15,8 +15,7 @@ async def demo_circulation(app: LpAppFramework, publish=False):
     rmf = app.deps.rune_market_fetcher
     rmf: RuneMarketInfoFetcher
 
-    circ_inf = await rmf._get_circulating_supply()
-    print(circ_inf)
+    await app.deps.pool_fetcher.run_once()
 
     info = await rmf.get_rune_market_info()
     print(info)

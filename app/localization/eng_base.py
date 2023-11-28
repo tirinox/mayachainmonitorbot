@@ -909,9 +909,9 @@ class BaseLocalization(ABC):  # == English
         else:
             message += 'Your triggers are\n'
             if min_percent:
-                message += f'→ Rune price divergence &lt;= {pretty_money(min_percent)}%\n'
+                message += f'→ Cacao price divergence &lt;= {pretty_money(min_percent)}%\n'
             if max_percent:
-                message += f'→ Rune price divergence &gt;= {pretty_money(max_percent)}%\n'
+                message += f'→ Cacao price divergence &gt;= {pretty_money(max_percent)}%\n'
         return message.strip()
 
     def notification_text_price_divergence(self, info: RuneMarketInfo, is_low: bool):
@@ -922,8 +922,8 @@ class BaseLocalization(ABC):  # == English
 
         text = (
             f"🖖 {bold(title)}\n"
-            f"CEX Rune price is {code(pretty_dollar(info.cex_price))}\n"
-            f"Weighted average Rune price by liquidity pools is {code(pretty_dollar(info.pool_rune_price))}\n"
+            f"CEX Cacao price is {code(pretty_dollar(info.cex_price))}\n"
+            f"Weighted average Cacao price by liquidity pools is {code(pretty_dollar(info.pool_rune_price))}\n"
             f"<b>Divergence</b> THORChain vs CEX is {code(pretty_dollar(div))} ({div_p:.1f}%{exclamation})."
         )
         return text

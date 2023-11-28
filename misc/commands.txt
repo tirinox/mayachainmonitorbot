@@ -1,7 +1,7 @@
 start - Start/restart the bot
 wallets - List of wallets you follow
 lp - Track LP/Savings yield
-price - Rune price chart
+price - Cacao price chart
 stats - Mayachain stats
 savings - Savings vaults stats
 supply - Rune supply chart

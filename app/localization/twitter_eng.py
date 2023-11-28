@@ -260,7 +260,7 @@ class TwitterEnglishLocalization(BaseLocalization):
         price = p.market_info.pool_rune_price
 
         btc_price = f"₿ {p.btc_pool_rune_price:.8f}"
-        message += f"RUNE price is {price:.3f} ({btc_price}) now\n"
+        message += f"CACAO price is {price:.3f} ({btc_price}) now\n"
 
         fp = p.market_info
 
@@ -308,8 +308,8 @@ class TwitterEnglishLocalization(BaseLocalization):
 
         text = (
             f"🖖 {title}\n"
-            f"CEX Rune price is {pretty_dollar(info.cex_price)}\n"
-            f"Weighted average Rune price over liquidity pools is {pretty_dollar(info.pool_rune_price)}\n"
+            f"CEX Cacao price is {pretty_dollar(info.cex_price)}\n"
+            f"Weighted average Cacao price over liquidity pools is {pretty_dollar(info.pool_rune_price)}\n"
             f"Divergence is {pretty_dollar(div)} ({div_p:.1f}%{exclamation})."
         )
         return text

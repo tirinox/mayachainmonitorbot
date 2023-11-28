@@ -73,7 +73,7 @@ class GenericTxNotifier(INotified, WithDelegates, WithLogger):
 
         usd_per_rune = self.deps.price_holder.usd_per_rune
         if not usd_per_rune:
-            self.logger.error(f'Can not filter Txs, no USD/Rune price')
+            self.logger.error(f'Can not filter Txs, no USD/Cacao price')
             return
 
         min_rune_volume = self.min_usd_total / usd_per_rune

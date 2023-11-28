@@ -1,7 +1,7 @@
 import asyncio
 from typing import NamedTuple, Dict
 
-from services.lib.constants import CACAO_IDEAL_SUPPLY, thor_to_float, CACAO_DENOM
+from services.lib.constants import CACAO_IDEAL_SUPPLY, CACAO_DENOM, cacao_to_float
 from services.lib.utils import WithLogger
 
 
@@ -153,7 +153,7 @@ class RuneCirculatingSupplyFetcher(WithLogger):
     def get_pure_rune_from_thor_array(arr):
         if arr:
             thor_rune = next((item['amount'] for item in arr if item['denom'] == CACAO_DENOM), 0)
-            return int(thor_to_float(thor_rune))
+            return int(cacao_to_float(thor_rune))
         else:
             return 0
 

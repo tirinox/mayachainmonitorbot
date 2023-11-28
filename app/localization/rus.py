@@ -90,7 +90,11 @@ class RussianLocalization(BaseLocalization):
 
     def welcome_message(self, info: ThorCapInfo):
         return (
-            f"Привет! Здесь ты можешь найти метрики THORChain и узнать результаты предоставления ликвидности в пулы.\n"
+            # f"Привет! Здесь ты можешь найти метрики MayaChain и
+            # узнать результаты предоставления ликвидности в пулы.\n"
+            f"Привет! {link(self.MAYAPROTOCOL_LINK, 'MayaChain')} инфобот на связи. "
+            f"Пока что меню бота в разработке."
+            f"Следите за обновлениями!\n\n"
             f"Цена {self.R} сейчас <code>{info.price:.3f} $</code>.\n"
             f"<b>⚠️ Бот теперь уведомляет только в канале {self.alert_channel_name}!</b>\n"
             f"Набери /help, чтобы видеть список команд.\n"

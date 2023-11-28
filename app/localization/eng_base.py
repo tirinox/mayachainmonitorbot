@@ -126,7 +126,10 @@ class BaseLocalization(ABC):  # == English
 
     def welcome_message(self, info: ThorCapInfo):
         return (
-            f"Hello! Here you can find MayaChain metrics and review your liquidity results.\n"
+            # f"Hello! Here you can find MayaChain metrics and review your liquidity results.\n"
+            f"Hello! {link(self.MAYAPROTOCOL_LINK, 'MayaChain')} info bot on the line. "
+            f"For now, the menu is in development."
+            f"Stay tuned for more updates!\n\n"
             f"The {self.R} price is <code>${info.price:.3f}</code> now.\n"
             f"<b>📨 Please follow our Telegram  {self.alert_channel_name} channel!</b>\n"
             f"🤗 Support and feedback: {CREATOR_TG}."

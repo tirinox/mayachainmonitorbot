@@ -1,6 +1,6 @@
 version: "3.3"
 services:
-  thtgbot:
+  mayatgbot:
     build:
       context: .
       dockerfile: Dockerfile
@@ -49,43 +49,43 @@ services:
       - DOZZLE_PASSWORD=${DOZZLE_PASSWORD}
       - DOZZLE_KEY=${DOZZLE_KEY}
       - DOZZLE_TAILSIZE=${DOZZLE_TAILSIZE}
-
-  nginx:
-    image: nginx:alpine
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - api
-    networks:
-      - redis-net
-    volumes:
-      - ./web/frontend/:/web/frontend/
-      - ./web/nginx.conf:/etc/nginx/nginx.conf:ro
-#      - ./web/nginx-test.conf:/etc/nginx/nginx.conf:ro
-      - "./web/letsencrypt:/etc/letsencrypt:ro"
-    environment:
-      CERTBOT_EMAIL: developer@tirinox.ru
-
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile-api
-    restart: always
-    depends_on:
-      - redis
-    ports:
-      - "8077:8077"
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-    networks:
-      - redis-net
-    volumes:
-      - ./app:/app
-      - ./config.yaml:/config/config.yaml
+#
+#  nginx:
+#    image: nginx:alpine
+#    restart: always
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    depends_on:
+#      - api
+#    networks:
+#      - redis-net
+#    volumes:
+#      - ./web/frontend/:/web/frontend/
+#      - ./web/nginx.conf:/etc/nginx/nginx.conf:ro
+##      - ./web/nginx-test.conf:/etc/nginx/nginx.conf:ro
+#      - "./web/letsencrypt:/etc/letsencrypt:ro"
+#    environment:
+#      CERTBOT_EMAIL: developer@tirinox.ru
+#
+#  api:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile-api
+#    restart: always
+#    depends_on:
+#      - redis
+#    ports:
+#      - "8077:8077"
+#    environment:
+#      - REDIS_PASSWORD=${REDIS_PASSWORD}
+#      - REDIS_HOST=${REDIS_HOST}
+#      - REDIS_PORT=${REDIS_PORT}
+#    networks:
+#      - redis-net
+#    volumes:
+#      - ./app:/app
+#      - ./config.yaml:/config/config.yaml
 
 
 networks:

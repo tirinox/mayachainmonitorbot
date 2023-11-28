@@ -38,7 +38,7 @@ from services.models.node_info import NodeSetChanges, NodeInfo, NodeVersionConse
     EventProviderStatus
 from services.models.pol import AlertPOL
 from services.models.pool_info import PoolInfo, PoolChanges, PoolMapPair
-from services.models.price import PriceReport, RuneMarketInfo
+from services.models.price import AlertPrice, RuneMarketInfo
 from services.models.queue import QueueInfo
 from services.models.s_swap import AlertSwapStart
 from services.models.savers import how_much_savings_you_can_add, AlertSaverStats
@@ -72,7 +72,7 @@ class BaseLocalization(ABC):  # == English
     LIST_NEXT_PAGE = 'Next page »'
     LIST_PREV_PAGE = '« Prev. page'
 
-    THORCHAIN_LINK = 'https://www.mayaprotocol.com/'
+    MAYAPROTOCOL_LINK = 'https://www.mayaprotocol.com/'
     R = 'Cacao'
 
     BOT_LOADING = '⌛ Bot has been recently restarted and is still loading. Please try again after 1-2 minutes.'
@@ -108,18 +108,18 @@ class BaseLocalization(ABC):  # == English
     # ---- WELCOME ----
     def help_message(self):
         return (
-            f"This bot is for {link(self.THORCHAIN_LINK, 'THORChain')} monitoring.\n"
+            f"This bot is for {link(self.MAYAPROTOCOL_LINK, 'MayaChain')} monitoring.\n"
             f"Command list:\n"
             f"/help – this help page\n"
             f"/start – start/restart the bot\n"
             f"/lang – set the language\n"
-            f"/cap – the current liquidity cap\n"
-            f"/price – the current Cacao price.\n"
-            f"/queue – TX queue info\n"
-            f"/nodes – list of MayaNodes\n"
-            f"/stats – MayaChain stats\n"
-            f"/chains – Connected chains\n"
-            f"/lp – check your LP yield\n"
+            # f"/cap – the current liquidity cap\n"
+            # f"/price – the current Cacao price.\n"
+            # f"/queue – TX queue info\n"
+            # f"/nodes – list of MayaNodes\n"
+            # f"/stats – MayaChain stats\n"
+            # f"/chains – Connected chains\n"
+            # f"/lp – check your LP yield\n"
             f"<b>📨 Please follow our Telegram {self.alert_channel_name} channel!</b>\n"
             f"🤗 Support and feedback: {CREATOR_TG}."
         )
@@ -772,16 +772,16 @@ class BaseLocalization(ABC):  # == English
 
     TEXT_PRICE_NO_DATA = 'Sorry. No price data available yet. Please try again later.'
 
-    def notification_text_price_update(self, p: PriceReport, ath=False, halted_chains=None):
-        title = bold('Price update') if not ath else bold('🚀 A new all-time high has been achieved!')
+    def notification_text_price_update(self, p: AlertPrice):
+        title = bold('Price update') if not p.is_ath else bold('🚀 A new all-time high has been achieved!')
 
-        c_gecko_url = 'https://www.coingecko.com/en/coins/thorchain'
-        c_gecko_link = link(c_gecko_url, 'RUNE')
+        c_gecko_url = 'https://www.coingecko.com/en/coins/maya-protocol'
+        c_gecko_link = link(c_gecko_url, 'CACAO')
 
         message = f"{title} | {c_gecko_link}\n\n"
 
-        if halted_chains:
-            hc = pre(', '.join(halted_chains))
+        if p.halted_chains:
+            hc = pre(', '.join(p.halted_chains))
             message += f"🚨 <code>Trading is still halted on {hc}.</code>\n\n"
 
         price = p.market_info.pool_rune_price
@@ -801,7 +801,7 @@ class BaseLocalization(ABC):  # == English
             message += f"<b>Divergence</b> vs CEX is {code(pretty_dollar(div))} ({div_p:.1f}%{exclamation}).\n"
 
         last_ath = p.last_ath
-        if last_ath is not None and ath:
+        if last_ath is not None and p.is_ath:
             last_ath_pr = f'{last_ath.ath_price:.2f}'
             ago_str = self.format_time_ago(now_ts() - last_ath.ath_date)
             message += f"Last ATH was ${pre(last_ath_pr)} ({ago_str}).\n"
@@ -826,8 +826,8 @@ class BaseLocalization(ABC):  # == English
 
         if fp.tlv_usd >= 1:
             det_link = link(self.DET_PRICE_HELP_PAGE, 'deterministic price')
-            message += (f"TVL of non-RUNE assets: {bold(short_dollar(fp.tlv_usd))}\n"
-                        f"So {det_link} of RUNE is {code(pretty_dollar(fp.fair_price))}\n"
+            message += (f"TVL of non-CACAO assets: {bold(short_dollar(fp.tlv_usd))}\n"
+                        f"So {det_link} of CACAO is {code(pretty_dollar(fp.fair_price))}\n"
                         f"Speculative multiplier is {pre(x_ses(fp.fair_price, price))}\n")
 
         return message.rstrip()

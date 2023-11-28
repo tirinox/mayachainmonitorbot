@@ -33,7 +33,7 @@ from services.models.node_info import NodeSetChanges, NodeInfo, NodeVersionConse
     NodeEventType, EventBlockHeight, EventProviderStatus, EventProviderBondChange
 from services.models.pol import AlertPOL
 from services.models.pool_info import PoolInfo, PoolChanges, PoolMapPair
-from services.models.price import PriceReport, RuneMarketInfo
+from services.models.price import AlertPrice, RuneMarketInfo
 from services.models.queue import QueueInfo
 from services.models.s_swap import AlertSwapStart
 from services.models.savers import AlertSaverStats
@@ -72,19 +72,19 @@ class RussianLocalization(BaseLocalization):
     # ---- WELCOME ----
     def help_message(self):
         return (
-            f"Этот бот уведомляет о крупных движениях с сети {link(self.THORCHAIN_LINK, 'THORChain')}.\n"
+            f"Этот бот уведомляет о крупных движениях с сети {link(self.MAYAPROTOCOL_LINK, 'MayaProtocol')}.\n"
             f"Команды:\n"
             f"/help – эта помощь\n"
             f"/start – запуск и перезапуск бота\n"
             f"/lang – изменить язык\n"
-            f"/cap – текущий кап для ликвидности в пулах THORChain\n"
-            f"/price – текущая цена {self.R}\n"
-            f"/queue – размер очереди транзакций\n"
-            f"/nodes – список нод\n"
-            f"/stats – THORChain статистика сети\n"
-            f"/chains – Подключенные блокчейны\n"
-            f"/lp – мониторинг ваших пулов\n"
-            f"<b>⚠️ Бот теперь уведомляет только в канале {self.alert_channel_name}!</b>\n"
+            # f"/cap – текущий кап для ликвидности в пулах\n"
+            # f"/price – текущая цена {self.R}\n"
+            # f"/queue – размер очереди транзакций\n"
+            # f"/nodes – список нод\n"
+            # f"/stats – THORChain статистика сети\n"
+            # f"/chains – Подключенные блокчейны\n"
+            # f"/lp – мониторинг ваших пулов\n"
+            f"<b>📨 Подписывайтесь на наш канал с уведомлениями {self.alert_channel_name}!</b>\n"
             f"🤗 Отзывы и поддержка: {CREATOR_TG}."
         )
 
@@ -565,17 +565,16 @@ class RussianLocalization(BaseLocalization):
 
     TEXT_PRICE_NO_DATA = 'Извините. Пока что нет данных о цене. Попробуйте позже.'
 
-    def notification_text_price_update(self, p: PriceReport, ath=False, halted_chains=None):
-        title = bold('Обновление цены') if not ath else bold('🚀 Достигнуть новый исторический максимум!')
+    def notification_text_price_update(self, p: AlertPrice):
+        title = bold('Обновление цены') if not p.is_ath else bold('🚀 Достигнуть новый исторический максимум!')
 
-        c_gecko_url = 'https://www.coingecko.com/ru/' \
-                      '%D0%9A%D1%80%D0%B8%D0%BF%D1%82%D0%BE%D0%B2%D0%B0%D0%BB%D1%8E%D1%82%D1%8B/thorchain'
-        c_gecko_link = link(c_gecko_url, 'RUNE')
+        c_gecko_url = 'https://www.coingecko.com/en/coins/maya-protocol'
+        c_gecko_link = link(c_gecko_url, 'CACAO')
 
         message = f"{title} | {c_gecko_link}\n\n"
 
-        if halted_chains:
-            hc = pre(', '.join(halted_chains))
+        if p.halted_chains:
+            hc = pre(', '.join(p.halted_chains))
             message += f"🚨 <code>Торговля по-прежнему остановлена на {hc}.</code>\n\n"
 
         price = p.market_info.pool_rune_price
@@ -594,7 +593,7 @@ class RussianLocalization(BaseLocalization):
             message += f"<b>Расхождение</b> с центр. Биржей: {code(pretty_dollar(div))} ({div_p:.1f}%).\n"
 
         last_ath = p.last_ath
-        if last_ath is not None and ath:
+        if last_ath is not None and p.is_ath:
             if isinstance(last_ath.ath_date, float):
                 last_ath_pr = f'{last_ath.ath_price:.2f}'
             else:
@@ -621,7 +620,7 @@ class RussianLocalization(BaseLocalization):
         message += '\n'
 
         if fp.tlv_usd >= 1:
-            message += (f"TVL (не-RUNE активов): ${bold(pretty_money(fp.tlv_usd))}\n"
+            message += (f"TVL (не-CACAO активов): ${bold(pretty_money(fp.tlv_usd))}\n"
                         f"Детерминистическая цена: {code(pretty_money(fp.fair_price, prefix='$'))}\n"
                         f"Спекулятивый множитель: {pre(x_ses(fp.fair_price, price))}\n")
 

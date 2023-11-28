@@ -14,10 +14,10 @@ from services.dialog.metrics_menu import MetricsDialog
 from services.dialog.my_wallets_menu import MyWalletsMenu, LPMenuStates
 from services.dialog.node_op_menu import NodeOpDialog
 from services.dialog.settings_menu import SettingsDialog
-from services.lib.date_utils import DAY
+# from services.lib.date_utils import DAY
 from services.lib.depcont import DepContainer
 from services.lib.new_feature import Features
-from services.lib.texts import kbd
+# from services.lib.texts import kbd
 from services.notify.personal.scheduled import PersonalPeriodicNotificationService
 from services.notify.types.cap_notify import LiquidityCapNotifier
 from services.notify.user_registry import UserRegistry
@@ -51,16 +51,19 @@ class MainMenuDialog(BaseDialog):
             info = await LiquidityCapNotifier.get_last_cap_from_db(self.deps.db)
             info.price = self.deps.price_holder.usd_per_rune
 
-            keyboard = kbd([
-                # 1st row
-                [self.my_wallets_button_text, self.loc.BUTTON_MM_METRICS],
-                # 2nd row
-                [self.loc.BUTTON_MM_MAKE_AVATAR] + (
-                    [self.loc.BUTTON_MM_NODE_OP] if NodeOpDialog.is_enabled(self.deps.cfg) else []
-                ),
-                # 3rd row
-                [self.settings_button_text]
-            ])
+            # todo: make appropriate keyboard
+            # keyboard = kbd([
+            #     # 1st row
+            #     [self.my_wallets_button_text, self.loc.BUTTON_MM_METRICS],
+            #     # 2nd row
+            #     [self.loc.BUTTON_MM_MAKE_AVATAR] + (
+            #         [self.loc.BUTTON_MM_NODE_OP] if NodeOpDialog.is_enabled(self.deps.cfg) else []
+            #     ),
+            #     # 3rd row
+            #     [self.settings_button_text]
+            # ])
+
+            keyboard = ReplyKeyboardRemove()
 
             await message.answer(self.loc.welcome_message(info),
                                  reply_markup=keyboard,
@@ -84,68 +87,73 @@ class MainMenuDialog(BaseDialog):
             external=True
         )
 
-    @message_handler(commands='cap', state='*')
-    async def cmd_cap(self, message: Message):
-        await self.build_metrics_dialog().show_cap(message)
-
-    @message_handler(commands='price', state='*')
-    async def cmd_price(self, message: Message):
-        await self.build_metrics_dialog().show_price(message, 7 * DAY)
-
-    @message_handler(commands='nodes', state='*')
-    async def cmd_nodes(self, message: Message):
-        await self.build_metrics_dialog().show_node_list(message)
-
-    @message_handler(commands='stats', state='*')
-    async def cmd_stats(self, message: Message):
-        await self.build_metrics_dialog().show_last_stats(message)
-
-    @message_handler(commands='queue', state='*')
-    async def cmd_queue(self, message: Message):
-        await self.build_metrics_dialog().show_queue(message, DAY)
-
-    @message_handler(commands='chains', state='*')
-    async def cmd_chains(self, message: Message):
-        await self.build_metrics_dialog().show_chain_info(message)
-
-    @message_handler(commands='mimir', state='*')
-    async def cmd_mimir(self, message: Message):
-        await self.build_metrics_dialog().show_mimir_info(message)
-
-    @message_handler(commands='cexflow', state='*')
-    async def cmd_cex_flow(self, message: Message):
-        message.text = ''
-        await self.build_metrics_dialog().show_cex_flow(message)
-
-    @message_handler(commands='lp', state='*')
-    async def cmd_lp(self, message: Message):
-        message.text = ''
-        await MyWalletsMenu.easy_enter(self)
-
-    @message_handler(commands='wallets', state='*')
-    async def cmd_wallets(self, message: Message):
-        message.text = ''
-        await MyWalletsMenu.easy_enter(self)
-
-    @message_handler(commands='supply', state='*')
-    async def cmd_supply(self, message: Message):
-        message.text = ''
-        await self.build_metrics_dialog().show_rune_supply(message)
-
-    @message_handler(commands='savings', state='*')
-    async def cmd_savings(self, message: Message):
-        message.text = ''
-        await self.build_metrics_dialog().show_savers(message)
-
-    @message_handler(commands='voting', state='*')
-    async def cmd_voting(self, message: Message):
-        message.text = ''
-        await self.build_metrics_dialog().show_voting_info(message)
-
-    @message_handler(commands='pools', state='*')
-    async def cmd_top_pools(self, message: Message):
-        message.text = ''
-        await self.build_metrics_dialog().show_top_pools(message)
+    #
+    # @message_handler(commands='cap', state='*')
+    # async def cmd_cap(self, message: Message):
+    #     await self.build_metrics_dialog().show_cap(message)
+    #
+    # @message_handler(commands='price', state='*')
+    # async def cmd_price(self, message: Message):
+    #     await self.build_metrics_dialog().show_price(message, 7 * DAY)
+    #
+    # @message_handler(commands='nodes', state='*')
+    # async def cmd_nodes(self, message: Message):
+    #     await self.build_metrics_dialog().show_node_list(message)
+    #
+    # @message_handler(commands='stats', state='*')
+    # async def cmd_stats(self, message: Message):
+    #     await self.build_metrics_dialog().show_last_stats(message)
+    #
+    # @message_handler(commands='queue', state='*')
+    # async def cmd_queue(self, message: Message):
+    #     await self.build_metrics_dialog().show_queue(message, DAY)
+    #
+    # @message_handler(commands='chains', state='*')
+    # async def cmd_chains(self, message: Message):
+    #     await self.build_metrics_dialog().show_chain_info(message)
+    #
+    # @message_handler(commands='mimir', state='*')
+    # async def cmd_mimir(self, message: Message):
+    #     await self.build_metrics_dialog().show_mimir_info(message)
+    #
+    # @message_handler(commands='cexflow', state='*')
+    # async def cmd_cex_flow(self, message: Message):
+    #     message.text = ''
+    #     await self.build_metrics_dialog().show_cex_flow(message)
+    #
+    # @message_handler(commands='lp', state='*')
+    # async def cmd_lp(self, message: Message):
+    #     message.text = ''
+    #     await MyWalletsMenu.easy_enter(self)
+    #
+    # @message_handler(commands='wallets', state='*')
+    # async def cmd_wallets(self, message: Message):
+    #     message.text = ''
+    #     await MyWalletsMenu.easy_enter(self)
+    #
+    # @message_handler(commands='supply', state='*')
+    # async def cmd_supply(self, message: Message):
+    #     message.text = ''
+    #     await self.build_metrics_dialog().show_rune_supply(message)
+    #
+    # @message_handler(commands='savings', state='*')
+    # async def cmd_savings(self, message: Message):
+    #     message.text = ''
+    #     await self.build_metrics_dialog().show_savers(message)
+    #
+    # @message_handler(commands='voting', state='*')
+    # async def cmd_voting(self, message: Message):
+    #     message.text = ''
+    #     await self.build_metrics_dialog().show_voting_info(message)
+    #
+    # @message_handler(commands='pools', state='*')
+    # async def cmd_top_pools(self, message: Message):
+    #     message.text = ''
+    #     await self.build_metrics_dialog().show_top_pools(message)
+    #
+    # @message_handler(commands='weekly', state='*')
+    # async def cmd_weekly(self, message: Message):
+    #     await self.build_metrics_dialog().show_weekly_stats(message)
 
     @message_handler(commands='help', state='*')
     async def cmd_help(self, message: Message):
@@ -157,10 +165,6 @@ class MainMenuDialog(BaseDialog):
     async def cmd_debug(self, message: Message):
         await self.require_admin(message)
         await AdminDialog.from_other_dialog(self).show_main_menu(message)
-
-    @message_handler(commands='weekly', state='*')
-    async def cmd_weekly(self, message: Message):
-        await self.build_metrics_dialog().show_weekly_stats(message)
 
     @message_handler(filters.RegexpCommandsFilter(regexp_commands=[r'^/unsub_.*']), state='*')
     async def on_unsubscribe_command(self, message: Message):
@@ -191,4 +195,3 @@ class MainMenuDialog(BaseDialog):
 
     def build_metrics_dialog(self):
         return MetricsDialog.from_other_dialog(self)
-

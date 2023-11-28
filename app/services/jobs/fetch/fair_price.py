@@ -93,7 +93,8 @@ class RuneMarketInfoFetcher(WithLogger):
 
         tlv_usd = total_pulled_rune * price_holder.usd_per_rune  # == tlv of non-rune assets
 
-        fair_price = 3 * tlv_usd / circulating_rune  # The main formula of wealth!
+        # 1.0 for Maya. Explain this?
+        fair_price = 1.0 * tlv_usd / circulating_rune  # The main formula of wealth!
 
         cex_price = gecko_ticker_price(gecko, self.cex_name, self.cex_pair)
         rank = gecko_market_cap_rank(gecko)

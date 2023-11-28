@@ -762,7 +762,7 @@ class BaseLocalization(ABC):  # == English
 
     # ------- PRICE -------
 
-    DET_PRICE_HELP_PAGE = 'https://thorchain.org/rune#what-influences-it'
+    DET_PRICE_HELP_PAGE = 'https://docs.mayaprotocol.com/introduction/readme/cacao#deterministic-value-of-cacao'
 
     @property
     def ref_cex_name(self):

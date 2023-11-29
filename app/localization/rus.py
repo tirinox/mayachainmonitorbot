@@ -229,7 +229,7 @@ class RussianLocalization(BaseLocalization):
 
     LP_PIC_TITLE = 'ликвидность'
     LP_PIC_POOL = 'ПУЛ'
-    LP_PIC_RUNE = 'RUNE'
+    LP_PIC_RUNE = 'Cacao'
     LP_PIC_ADDED = 'Добавлено'
     LP_PIC_WITHDRAWN = 'Выведено'
     LP_PIC_REDEEM = 'Можно забрать'

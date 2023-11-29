@@ -771,7 +771,7 @@ class BaseLocalization(ABC):  # == English
     @property
     def ref_cex_pair(self):
         pair = self.cfg.as_str('price.cex_reference.pair', DEFAULT_CEX_BASE_ASSET)
-        return f'RUNE/{pair}'
+        return f'CACAO/{pair}'
 
     TEXT_PRICE_NO_DATA = 'Sorry. No price data available yet. Please try again later.'
 

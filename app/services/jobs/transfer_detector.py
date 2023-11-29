@@ -5,7 +5,7 @@ from proto.access import NativeThorTx, parse_thor_address, DecodedEvent, thor_de
 from proto.types import MsgSend, MsgDeposit
 from services.jobs.scanner.native_scan import BlockResult
 from services.lib.constants import thor_to_float, DEFAULT_RESERVE_ADDRESS, BOND_MODULE, DEFAULT_RUNE_FEE, \
-    CACAO_DENOM, CACAO_SYMBOL, MAYA_PREFIX, Chains
+    CACAO_DENOM, CACAO_SYMBOL, MAYA_PREFIX, Chains, NATIVE_CACAO_SYMBOL
 from services.lib.delegates import WithDelegates, INotified
 from services.lib.money import Asset, is_cacao
 from services.lib.utils import WithLogger
@@ -37,7 +37,6 @@ class RuneTransferDetectorNativeTX(WithDelegates, INotified):
                     from_addr = self.address_parse(message.from_address)
                     to_addr = self.address_parse(message.to_address)
                     for coin in message.amount:
-                        # todo: problem: he may want to Deposit something stupid, that he don't have, lika a trillion of TGT
                         asset = str(coin.denom)
                         if is_cacao(asset):
                             asset = CACAO_SYMBOL
@@ -92,7 +91,7 @@ class RuneTransferDetectorTxLogs(WithDelegates, INotified, WithLogger):
         if ev.type == 'outbound' and ev.attributes.get('chain') == Chains.THOR:
             asset = ev.attributes.get('asset', '')
             if is_cacao(asset):
-                asset = 'THOR.RUNE'
+                asset = NATIVE_CACAO_SYMBOL
             memo = ev.attributes.get('memo', '')
 
             if 'amount' in ev.attributes:

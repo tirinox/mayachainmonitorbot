@@ -271,7 +271,7 @@ class Asset:
         else:
             str_me = str(self)
             if is_cacao(str_me):
-                return 'Rune ᚱ'
+                return '$Cacao'
             elif str_me in self.ABBREVIATE_GAS_ASSETS:
                 return self.name  # Not ETH.ETH, just ETH
             else:

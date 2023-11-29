@@ -5,12 +5,19 @@ from proto.access import NativeThorTx, parse_thor_address, DecodedEvent, thor_de
 from proto.types import MsgSend, MsgDeposit
 from services.jobs.scanner.native_scan import BlockResult
 from services.lib.constants import thor_to_float, DEFAULT_RESERVE_ADDRESS, BOND_MODULE, DEFAULT_RUNE_FEE, \
-    CACAO_DENOM, CACAO_SYMBOL, MAYA_PREFIX, Chains, NATIVE_CACAO_SYMBOL
+    CACAO_DENOM, CACAO_SYMBOL, MAYA_PREFIX, Chains, NATIVE_CACAO_SYMBOL, cacao_to_float
 from services.lib.delegates import WithDelegates, INotified
-from services.lib.money import Asset, is_cacao
+from services.lib.money import Asset, is_cacao, AssetCACAO
 from services.lib.utils import WithLogger
-from services.models.transfer import RuneTransfer
+from services.models.transfer import TokenTransfer
 
+
+def convert_amount(amount, asset: Asset):
+    amount = int(amount)
+    if asset == AssetCACAO:
+        return cacao_to_float(amount)
+    else:
+        return thor_to_float(amount)
 
 # This one is used
 class RuneTransferDetectorNativeTX(WithDelegates, INotified):
@@ -41,12 +48,12 @@ class RuneTransferDetectorNativeTX(WithDelegates, INotified):
                         if is_cacao(asset):
                             asset = CACAO_SYMBOL
                         # do not announce
-                        transfers.append(RuneTransfer(
+                        transfers.append(TokenTransfer(
                             from_addr=from_addr,
                             to_addr=to_addr,
                             block=block_no,
                             tx_hash=tx.hash,
-                            amount=thor_to_float(coin.amount),
+                            amount=convert_amount(coin.amount, asset),
                             is_native=True,
                             asset=asset,
                             comment=comment,
@@ -54,13 +61,18 @@ class RuneTransferDetectorNativeTX(WithDelegates, INotified):
                         ))
                 elif isinstance(message, MsgDeposit):
                     for coin in message.coins:
-                        asset = Asset.from_coin(coin).to_canonical
-                        transfers.append(RuneTransfer(
+                        asset = str(coin.denom)
+                        if is_cacao(asset):
+                            asset = CACAO_SYMBOL
+                        else:
+                            asset = Asset.from_coin(coin).to_canonical
+
+                        transfers.append(TokenTransfer(
                             from_addr=self.address_parse(message.signer),
                             to_addr='',
                             block=block_no,
                             tx_hash=tx.hash,
-                            amount=thor_to_float(coin.amount),
+                            amount=convert_amount(coin.amount, asset),
                             is_native=True,
                             asset=asset,
                             comment=comment,
@@ -104,7 +116,7 @@ class RuneTransferDetectorTxLogs(WithDelegates, INotified, WithLogger):
                 else:
                     return
 
-            return RuneTransfer(
+            return TokenTransfer(
                 ev.attributes['from'],
                 ev.attributes['to'],
                 block=block_no,
@@ -157,7 +169,7 @@ class RuneTransferDetectorTxLogs(WithDelegates, INotified, WithLogger):
         await self.pass_data_to_listeners(transfers)
 
     @classmethod
-    def connect_transactions_together(cls, transfers: List[RuneTransfer]):
+    def connect_transactions_together(cls, transfers: List[TokenTransfer]):
         hash_map = defaultdict(list)
         for tr in transfers:
             if tr.tx_hash:
@@ -169,12 +181,12 @@ class RuneTransferDetectorTxLogs(WithDelegates, INotified, WithLogger):
         return transfers
 
     @staticmethod
-    def set_comment(transfers: List[RuneTransfer], comment):
+    def set_comment(transfers: List[TokenTransfer], comment):
         for t in transfers:
             t.comment = comment
 
     @classmethod
-    def make_connection(cls, transfers: List[RuneTransfer]):
+    def make_connection(cls, transfers: List[TokenTransfer]):
         # some special cases
         if any(t.memo.lower().startswith('unbond:') for t in transfers):
             cls.set_comment(transfers, 'unbond')
@@ -206,12 +218,12 @@ class RuneTransferDetectorBlockEvents(WithDelegates, INotified):
             if event.type == 'transfer':
                 amount, asset = event.attributes['amount']
                 asset = asset.upper()
-                transfers.append(RuneTransfer(
+                transfers.append(TokenTransfer(
                     event.attributes['sender'],
                     event.attributes['recipient'],
                     block=block_no,
                     tx_hash='',
-                    amount=thor_to_float(amount),
+                    amount=convert_amount(amount, asset),
                     usd_per_asset=1.0,
                     is_native=True,
                     asset=asset
@@ -239,10 +251,10 @@ class RuneTransferDetectorFromTxResult(WithDelegates, INotified):
                 if is_fee_tx(amount, asset, recipient, self.reserve_address):
                     continue
 
-                transfers.append(RuneTransfer(
+                transfers.append(TokenTransfer(
                     sender, recipient,
                     height, tx_hash,
-                    thor_to_float(amount),
+                    convert_amount(amount, asset),
                     asset=asset,
                     is_native=True
                 ))

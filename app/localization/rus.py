@@ -37,7 +37,7 @@ from services.models.price import AlertPrice, RuneMarketInfo
 from services.models.queue import QueueInfo
 from services.models.s_swap import AlertSwapStart
 from services.models.savers import AlertSaverStats
-from services.models.transfer import RuneTransfer, RuneCEXFlow
+from services.models.transfer import TokenTransfer, TokenCexFlow
 from services.models.tx import ThorTx
 from services.models.tx_type import TxType
 
@@ -1620,7 +1620,7 @@ class RussianLocalization(BaseLocalization):
 
     # ----- RUNE FLOW ------
 
-    def notification_text_cex_flow(self, cex_flow: RuneCEXFlow):
+    def notification_text_cex_flow(self, cex_flow: TokenCexFlow):
         emoji = self.cex_flow_emoji(cex_flow)
         period_string = self.format_period(cex_flow.period_sec)
         return (
@@ -1686,7 +1686,7 @@ class RussianLocalization(BaseLocalization):
         'OutboundTx': 'Исходящая',
     }
 
-    def notification_text_rune_transfer(self, t: RuneTransfer, my_addresses, name_map):
+    def notification_text_rune_transfer(self, t: TokenTransfer, my_addresses, name_map):
         asset, comment, from_my, to_my, tx_link, usd_amt, memo = self._native_transfer_prepare_stuff(
             my_addresses, t,
             name_map=name_map
@@ -1697,7 +1697,7 @@ class RussianLocalization(BaseLocalization):
                f'от {from_my} ' \
                f'➡️ к {to_my}{memo}.'
 
-    def notification_text_rune_transfer_public(self, t: RuneTransfer, name_map):
+    def notification_text_rune_transfer_public(self, t: TokenTransfer, name_map):
         asset, comment, from_my, to_my, tx_link, usd_amt, memo = self._native_transfer_prepare_stuff(
             None, t,
             tx_title='',

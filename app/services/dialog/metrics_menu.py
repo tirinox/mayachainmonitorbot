@@ -25,7 +25,7 @@ from services.notify.types.cap_notify import LiquidityCapNotifier
 from services.notify.types.node_churn_notify import NodeChurnNotifier
 from services.notify.types.price_notify import PriceNotifier
 from services.notify.types.stats_notify import NetworkStatsNotifier
-from services.notify.types.transfer_notify import RuneMoveNotifier
+from services.notify.types.transfer_notify import TokenTransferNotifier
 
 
 class MetricsStates(StatesGroup):
@@ -292,7 +292,7 @@ class MetricsDialog(BaseDialog):
         await message.answer(text, disable_notification=True, disable_web_page_preview=True)
 
     async def show_cex_flow(self, message: Message, period=DAY):
-        notifier: RuneMoveNotifier = self.deps.rune_move_notifier
+        notifier: TokenTransferNotifier = self.deps.token_transfer_notifier
         flow = await notifier.tracker.read_within_period(period=period)
         flow.usd_per_rune = self.deps.price_holder.usd_per_rune
         text = self.loc.notification_text_cex_flow(flow)

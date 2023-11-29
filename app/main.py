@@ -82,7 +82,7 @@ from services.notify.types.s_swap_notify import StreamingSwapStartTxNotifier
 from services.notify.types.savers_stats_notify import SaversStatsNotifier
 from services.notify.types.stats_notify import NetworkStatsNotifier
 from services.notify.types.supply_notify import SupplyNotifier
-from services.notify.types.transfer_notify import RuneMoveNotifier
+from services.notify.types.transfer_notify import TokenTransferNotifier
 from services.notify.types.tx_notify import GenericTxNotifier, LiquidityTxNotifier, SwapTxNotifier
 from services.notify.types.version_notify import VersionNotifier
 from services.notify.types.voting_notify import VotingNotifier
@@ -289,10 +289,10 @@ class App(WithLogger):
             user_counter = UserCounter(d)
             d.block_scanner.add_subscriber(user_counter)
 
-            if d.cfg.get('rune_transfer.enabled', True):
-                d.rune_move_notifier = RuneMoveNotifier(d)
-                d.rune_move_notifier.add_subscriber(d.alert_presenter)
-                decoder.add_subscriber(d.rune_move_notifier)
+            if d.cfg.get('token_transfer.enabled', True):
+                d.token_transfer_notifier = TokenTransferNotifier(d)
+                d.token_transfer_notifier.add_subscriber(d.alert_presenter)
+                decoder.add_subscriber(d.token_transfer_notifier)
 
         if d.cfg.get('tx.enabled', True):
             main_tx_types = [

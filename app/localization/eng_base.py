@@ -42,7 +42,7 @@ from services.models.price import AlertPrice, RuneMarketInfo
 from services.models.queue import QueueInfo
 from services.models.s_swap import AlertSwapStart
 from services.models.savers import how_much_savings_you_can_add, AlertSaverStats
-from services.models.transfer import RuneTransfer, RuneCEXFlow
+from services.models.transfer import TokenTransfer, TokenCexFlow
 from services.models.tx import ThorTx, ThorSubTx
 from services.models.tx_type import TxType
 from services.notify.channel import Messengers
@@ -2120,11 +2120,11 @@ class BaseLocalization(ABC):  # == English
     # ----- FLOW ------
 
     @staticmethod
-    def cex_flow_emoji(cex_flow: RuneCEXFlow):
+    def cex_flow_emoji(cex_flow: TokenCexFlow):
         limit = 1000.0
         return '🟢' if cex_flow.netflow_usd < -limit else ('🔴' if cex_flow.netflow_usd > limit else '⚪️')
 
-    def notification_text_cex_flow(self, cex_flow: RuneCEXFlow):
+    def notification_text_cex_flow(self, cex_flow: TokenCexFlow):
         emoji = self.cex_flow_emoji(cex_flow)
         period_string = self.format_period(cex_flow.period_sec)
         return (f'🌬️ <b>Rune CEX flow last {period_string}</b>\n'
@@ -2184,7 +2184,7 @@ class BaseLocalization(ABC):  # == English
         caption = add_thor_suffix(name) if name else short_address(addr)
         return link(url, caption)
 
-    def _native_transfer_prepare_stuff(self, my_addresses, t: RuneTransfer, tx_title='TX', name_map=None):
+    def _native_transfer_prepare_stuff(self, my_addresses, t: TokenTransfer, tx_title='TX', name_map=None):
         my_addresses = my_addresses or []
         name_map = name_map or {}
 
@@ -2222,7 +2222,7 @@ class BaseLocalization(ABC):  # == English
 
         return asset, comment, from_my, to_my, tx_link, usd_amt, memo
 
-    def notification_text_rune_transfer(self, t: RuneTransfer, my_addresses, name_map):
+    def notification_text_rune_transfer(self, t: TokenTransfer, my_addresses, name_map):
         asset, comment, from_my, to_my, tx_link, usd_amt, memo = self._native_transfer_prepare_stuff(
             my_addresses, t,
             name_map=name_map
@@ -2232,7 +2232,7 @@ class BaseLocalization(ABC):  # == English
                f'from {from_my} ' \
                f'➡️ {to_my}{memo}.'
 
-    def notification_text_rune_transfer_public(self, t: RuneTransfer, name_map):
+    def notification_text_rune_transfer_public(self, t: TokenTransfer, name_map):
         asset, comment, from_my, to_my, tx_link, usd_amt, memo = self._native_transfer_prepare_stuff(
             None, t,
             tx_title='',

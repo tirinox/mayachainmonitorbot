@@ -9,9 +9,9 @@ from services.jobs.transfer_detector import RuneTransferDetectorTxLogs
 from services.lib.delegates import INotified
 from services.lib.depcont import DepContainer
 from services.lib.texts import sep
-from services.models.transfer import RuneTransfer
+from services.models.transfer import TokenTransfer
 from services.notify.personal.balance import PersonalBalanceNotifier
-from services.notify.types.transfer_notify import RuneMoveNotifier
+from services.notify.types.transfer_notify import TokenTransferNotifier
 from tools.lib.lp_common import LpAppFramework, Receiver
 
 
@@ -23,7 +23,7 @@ class ReceiverPublicText(INotified):
     # noinspection PyTypeChecker
     async def on_data(self, sender, data):
         for tr in data:
-            tr: RuneTransfer
+            tr: TokenTransfer
             print(self.loc.notification_text_rune_transfer_public(tr, {}))
             sep()
 
@@ -52,7 +52,7 @@ async def demo_block_scanner_active(app, send_alerts=False, catch_up=False):
         scanner.last_block -= 30
 
     if send_alerts:
-        notifier = RuneMoveNotifier(app.deps)
+        notifier = TokenTransferNotifier(app.deps)
         detector.add_subscriber(notifier)
         notifier.add_subscriber(app.deps.alert_presenter)
     await scanner.run()
@@ -74,7 +74,7 @@ async def demo_rune_transfers_once(app, block=12_918_080):
         print(tr)
     sep()
 
-    notifier = RuneMoveNotifier(app.deps)
+    notifier = TokenTransferNotifier(app.deps)
     notifier.add_subscriber(app.deps.alert_presenter)
     await notifier.on_data(None, transfers)
 
@@ -119,7 +119,7 @@ async def debug_block_tx_status_check(app):
 async def demo_debug_personal_transfer(app):
     balance_notifier = PersonalBalanceNotifier(app.deps)
     await balance_notifier.on_data(None, [
-        RuneTransfer(
+        TokenTransfer(
             'thor136askulc04d0ek9yra6860vsaaamequv2l0jwh',
             'thor1tcet6mxe80x89a8dlpynehlj4ya7cae4v3hmce',
             13_300_000, '9E29B0D4E356DBA2B865AB129E22C4FA905C4720B3CCCAF7E0B2E0F4D9BDCF31',

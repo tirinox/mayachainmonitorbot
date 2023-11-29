@@ -7,10 +7,10 @@ from services.lib.depcont import DepContainer
 from services.lib.money import Asset
 from services.lib.utils import WithLogger
 from services.models.time_series import TimeSeries
-from services.models.transfer import RuneTransfer, RuneCEXFlow
+from services.models.transfer import TokenTransfer, TokenCexFlow
 
 
-class RuneMoveNotifier(INotified, WithDelegates, WithLogger):
+class TokenTransferNotifier(INotified, WithDelegates, WithLogger):
     IGNORE_COMMENTS = (
         'deposit',
         'outbound',
@@ -26,10 +26,10 @@ class RuneMoveNotifier(INotified, WithDelegates, WithLogger):
         cfg = deps.cfg.get('token_transfer')
 
         move_cd_sec = parse_timespan_to_seconds(cfg.as_str('cooldown', 1))
-        self.move_cd = Cooldown(self.deps.db, 'RuneMove', move_cd_sec, max_times=5)
+        self.move_cd = Cooldown(self.deps.db, 'TokenMove', move_cd_sec, max_times=5)
 
         summary_cd_sec = parse_timespan_to_seconds(cfg.as_str('flow_summary.cooldown', 1))
-        self.summary_cd = Cooldown(self.deps.db, 'RuneMove.Summary', summary_cd_sec)
+        self.summary_cd = Cooldown(self.deps.db, 'TokenMove.Summary', summary_cd_sec)
 
         self.min_usd_native = cfg.as_float('min_usd.native', 1000)
 
@@ -37,10 +37,10 @@ class RuneMoveNotifier(INotified, WithDelegates, WithLogger):
         self.ignore_cex2cex = bool(cfg.get('ignore_cex2cex', True))
         self.tracker = CEXFlowTracker(deps)
 
-    def is_cex2cex(self, transfer: RuneTransfer):
+    def is_cex2cex(self, transfer: TokenTransfer):
         return self.is_cex(transfer.from_addr) and self.is_cex(transfer.to_addr)
 
-    async def handle_big_transfer(self, transfer: RuneTransfer, usd_per_rune):
+    async def handle_big_transfer(self, transfer: TokenTransfer, usd_per_rune):
         min_usd_amount = self.min_usd_native
 
         if transfer.amount * usd_per_rune >= min_usd_amount:
@@ -53,7 +53,7 @@ class RuneMoveNotifier(INotified, WithDelegates, WithLogger):
                 await self.move_cd.do()
                 await self.pass_data_to_listeners(transfer)
 
-    def _is_to_be_ignored(self, transfer: RuneTransfer):
+    def _is_to_be_ignored(self, transfer: TokenTransfer):
         if transfer.comment:
             comment = transfer.comment.lower()
             for ignore_comment in self.IGNORE_COMMENTS:
@@ -62,12 +62,12 @@ class RuneMoveNotifier(INotified, WithDelegates, WithLogger):
 
         return False
 
-    def _filter_transfers(self, transfers: List[RuneTransfer]):
+    def _filter_transfers(self, transfers: List[TokenTransfer]):
         for transfer in transfers:
             if not self._is_to_be_ignored(transfer):
                 yield transfer
 
-    def _fill_asset_prices(self, transfers: List[RuneTransfer]):
+    def _fill_asset_prices(self, transfers: List[TokenTransfer]):
         usd_per_rune = self.deps.price_holder.usd_per_rune
         for transfer in transfers:
             if transfer.is_cacao:
@@ -77,7 +77,7 @@ class RuneMoveNotifier(INotified, WithDelegates, WithLogger):
                 transfer.usd_per_asset = self.deps.price_holder.usd_per_asset(pool_name)
         return transfers
 
-    async def on_data(self, sender, transfers: List[RuneTransfer]):
+    async def on_data(self, sender, transfers: List[TokenTransfer]):
         usd_per_rune = self.deps.price_holder.usd_per_rune
 
         transfers = list(self._filter_transfers(transfers))
@@ -100,7 +100,7 @@ class RuneMoveNotifier(INotified, WithDelegates, WithLogger):
     def is_cex(self, addr):
         return addr in self.cex_list
 
-    async def _store_transfer(self, transfer: RuneTransfer):
+    async def _store_transfer(self, transfer: TokenTransfer):
         if not transfer.is_cacao:
             return
 
@@ -128,13 +128,13 @@ class CEXFlowTracker:
 
         await self.series.trim_oldest(self.MAX_POINTS)
 
-    async def read_within_period(self, period=DAY) -> RuneCEXFlow:
+    async def read_within_period(self, period=DAY) -> TokenCexFlow:
         points = await self.series.get_last_values_json(period, max_points=self.MAX_POINTS)
         inflow, outflow = 0.0, 0.0
         for p in points:
             inflow += float(p['in'])
             outflow += float(p['out'])
         overflow = len(points) >= self.MAX_POINTS
-        return RuneCEXFlow(inflow, outflow, len(points), overflow,
-                           usd_per_rune=self.deps.price_holder.usd_per_rune,
-                           period_sec=period)
+        return TokenCexFlow(inflow, outflow, len(points), overflow,
+                            usd_per_rune=self.deps.price_holder.usd_per_rune,
+                            period_sec=period)

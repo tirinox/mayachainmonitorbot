@@ -7,7 +7,7 @@ from services.jobs.scanner.native_scan import NativeScannerBlock
 from services.jobs.transfer_detector import RuneTransferDetectorTxLogs
 from services.lib.constants import thor_to_float
 from services.lib.texts import sep
-from services.models.transfer import RuneTransfer
+from services.models.transfer import TokenTransfer
 from tools.lib.lp_common import LpAppFramework
 
 
@@ -26,7 +26,7 @@ async def get_transfers_from_block(app, block_index):
     return transfers
 
 
-def find_transfer(transfers: List[RuneTransfer],
+def find_transfer(transfers: List[TokenTransfer],
                   from_addr=None,
                   to_addr=None, amount=None, memo=None,
                   asset=None,

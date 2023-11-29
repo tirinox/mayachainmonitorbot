@@ -6,7 +6,7 @@ from services.lib.money import is_cacao
 
 
 @dataclass
-class RuneTransfer:
+class TokenTransfer:
     from_addr: str
     to_addr: str
     block: int
@@ -38,7 +38,7 @@ class RuneTransfer:
 
 
 @dataclass
-class RuneCEXFlow:
+class TokenCexFlow:
     rune_cex_inflow: float
     rune_cex_outflow: float
     total_transfers: int

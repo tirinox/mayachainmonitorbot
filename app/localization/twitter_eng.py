@@ -30,7 +30,7 @@ from services.models.pool_info import PoolMapPair, PoolChanges, PoolInfo
 from services.models.price import RuneMarketInfo, AlertPrice
 from services.models.s_swap import AlertSwapStart
 from services.models.savers import AlertSaverStats
-from services.models.transfer import RuneCEXFlow, RuneTransfer
+from services.models.transfer import TokenCexFlow, TokenTransfer
 from services.models.tx import ThorTx
 from services.models.tx_type import TxType
 from services.notify.channel import MESSAGE_SEPARATOR
@@ -754,7 +754,7 @@ class TwitterEnglishLocalization(BaseLocalization):
         caption = add_thor_suffix(name) if name else short_address(addr, 0, 4)
         return f'[{caption}]'
 
-    def notification_text_cex_flow(self, cex_flow: RuneCEXFlow):
+    def notification_text_cex_flow(self, cex_flow: TokenCexFlow):
         emoji = self.cex_flow_emoji(cex_flow)
         period_string = self.format_period(cex_flow.period_sec)
         return (
@@ -767,7 +767,7 @@ class TwitterEnglishLocalization(BaseLocalization):
             f'({short_dollar(cex_flow.netflow_usd)})'
         )
 
-    def notification_text_rune_transfer_public(self, t: RuneTransfer, name_map):
+    def notification_text_rune_transfer_public(self, t: TokenTransfer, name_map):
         asset, comment, from_my, to_my, tx_link, usd_amt, memo = self._native_transfer_prepare_stuff(
             None, t,
             tx_title='',

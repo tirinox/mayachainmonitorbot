@@ -24,7 +24,7 @@ from services.models.pool_info import PoolChanges
 from services.models.price import AlertPrice
 from services.models.s_swap import AlertSwapStart
 from services.models.savers import AlertSaverStats
-from services.models.transfer import RuneCEXFlow, RuneTransfer
+from services.models.transfer import TokenCexFlow, TokenTransfer
 from services.models.tx import EventLargeTransaction
 from services.notify.broadcast import Broadcaster
 from services.notify.channel import BoardMessage, MessageType
@@ -40,9 +40,9 @@ class AlertPresenter(INotified):
         asyncio.create_task(self._handle_async(data))
 
     async def _handle_async(self, data):
-        if isinstance(data, RuneCEXFlow):
+        if isinstance(data, TokenCexFlow):
             await self._handle_rune_cex_flow(data)
-        elif isinstance(data, RuneTransfer):
+        elif isinstance(data, TokenTransfer):
             await self._handle_rune_transfer(data)
         elif isinstance(data, EventBlockSpeed):
             await self._handle_block_speed(data)
@@ -86,7 +86,7 @@ class AlertPresenter(INotified):
             txs_event.mimir,
         )
 
-    async def _handle_rune_transfer(self, transfer: RuneTransfer):
+    async def _handle_rune_transfer(self, transfer: TokenTransfer):
         name_map = await self.load_names([
             transfer.from_addr, transfer.to_addr
         ])
@@ -95,7 +95,7 @@ class AlertPresenter(INotified):
             BaseLocalization.notification_text_rune_transfer_public,
             transfer, name_map)
 
-    async def _handle_rune_cex_flow(self, flow: RuneCEXFlow):
+    async def _handle_rune_cex_flow(self, flow: TokenCexFlow):
         await self.broadcaster.notify_preconfigured_channels(BaseLocalization.notification_text_cex_flow, flow)
 
     @staticmethod

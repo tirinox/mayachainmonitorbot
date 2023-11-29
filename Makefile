@@ -34,7 +34,8 @@ restart:
 	@make -s start
 
 poke:
-	@docker-compose restart $(BOTNAME) api
+	# @docker-compose restart $(BOTNAME) api
+	@docker-compose restart $(BOTNAME)
 	@make -s logs
 
 pull:

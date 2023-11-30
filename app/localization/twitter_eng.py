@@ -214,7 +214,7 @@ class TwitterEnglishLocalization(BaseLocalization):
                 if (saved_usd is not None) and saved_usd > 0.0:
                     content += f'\n🫰Est. savings vs CEX: {pretty_dollar(saved_usd)}'
 
-        link = get_explorer_url_to_tx(self.cfg.network_id, Chains.THOR, tx.first_input_tx_hash) \
+        link = get_explorer_url_to_tx(self.cfg.network_id, Chains.MAYA, tx.first_input_tx_hash) \
             if tx and tx.first_input_tx_hash else ''
 
         msg = f"{heading}\n" \
@@ -748,7 +748,7 @@ class TwitterEnglishLocalization(BaseLocalization):
                           ]])
         return text
 
-    def link_to_address(self, addr, name_map, chain=Chains.THOR):
+    def link_to_address(self, addr, name_map, chain=Chains.MAYA):
         # without a link, just a caption
         name = name_map.by_address.get(addr)
         caption = add_thor_suffix(name) if name else short_address(addr, 0, 4)
@@ -779,7 +779,7 @@ class TwitterEnglishLocalization(BaseLocalization):
         if t.memo:
             memo = f' (MEMO: "{shorten_text(t.memo, 21)}")'
 
-        link = get_explorer_url_to_tx(self.cfg.network_id, Chains.THOR, t.tx_hash) if t and t.tx_hash else ''
+        link = get_explorer_url_to_tx(self.cfg.network_id, Chains.MAYA, t.tx_hash) if t and t.tx_hash else ''
 
         return (
             f'💸 Large transfer{comment}: '

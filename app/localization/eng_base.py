@@ -313,7 +313,7 @@ class BaseLocalization(ABC):  # == English
         return f'{self.TEXT_PLEASE_WAIT}\n' \
                f'Loading pools information for {pre(address)}...'
 
-    def explorer_link_to_address_with_domain(self, address, chain=Chains.THOR):
+    def explorer_link_to_address_with_domain(self, address, chain=Chains.MAYA):
         net = self.cfg.network_id
         return link_with_domain_text(get_explorer_url_to_address(net, chain, address))
 
@@ -444,9 +444,9 @@ class BaseLocalization(ABC):  # == English
             if tx_id:
                 # todo use self.pretty_asset
                 a = Asset(tx.first_asset)
-                chain = a.chain if a.chain else Chains.THOR
+                chain = a.chain if a.chain else Chains.MAYA
                 if a.is_synth:
-                    chain = Chains.THOR
+                    chain = Chains.MAYA
                 url = get_explorer_url_to_tx(net, chain, tx_id)
                 items.append(link(url, text=a.pretty_str_no_emoji))
 
@@ -459,7 +459,7 @@ class BaseLocalization(ABC):  # == English
 
     def link_to_explorer_user_address_for_tx(self, tx: ThorTx, name_map):
         address, _ = tx.sender_address_and_chain
-        return self.link_to_address(tx.sender_address, name_map)  # Chains.THOR is always here, that is deliberate!
+        return self.link_to_address(tx.sender_address, name_map)  # Chains.MAYA is always here, that is deliberate!
 
     @staticmethod
     def lp_tx_calculations(usd_per_rune, pool_info: PoolInfo, tx: ThorTx):
@@ -1256,7 +1256,7 @@ class BaseLocalization(ABC):  # == English
         else:
             node_ip_link = node.ip_address or 'no IP'
 
-        thor_explore_url = get_explorer_url_to_address(self.cfg.network_id, Chains.THOR, node.node_address)
+        thor_explore_url = get_explorer_url_to_address(self.cfg.network_id, Chains.MAYA, node.node_address)
         node_thor_link = link(thor_explore_url, short_address(node.node_address, 0))
         extra = ''
         if extended_info:
@@ -2178,7 +2178,7 @@ class BaseLocalization(ABC):  # == English
     def _is_my_address_tag(address, my_addresses):
         return ' ★' if my_addresses and address in my_addresses else ''
 
-    def link_to_address(self, addr, name_map, chain=Chains.THOR):
+    def link_to_address(self, addr, name_map, chain=Chains.MAYA):
         url = get_explorer_url_to_address(self.cfg.network_id, chain, addr)
         name = name_map.by_address.get(addr)
         caption = add_thor_suffix(name) if name else short_address(addr)
@@ -2209,7 +2209,7 @@ class BaseLocalization(ABC):  # == English
         # TX link
         if t.tx_hash:
             tx_title = tx_title or comment
-            tx_link = ' ' + link(get_explorer_url_to_tx(self.cfg.network_id, Chains.THOR, t.tx_hash), tx_title)
+            tx_link = ' ' + link(get_explorer_url_to_tx(self.cfg.network_id, Chains.MAYA, t.tx_hash), tx_title)
         else:
             tx_link = ''
 
@@ -2258,7 +2258,7 @@ class BaseLocalization(ABC):  # == English
     def _regular_report_variables(self, address, local_name, pool):
         pool_asset = Asset(pool)
         pretty_pool = pool_asset.l1_asset.pretty_str
-        explorer_url = get_explorer_url_to_address(self.cfg.network_id, Chains.THOR, address)
+        explorer_url = get_explorer_url_to_address(self.cfg.network_id, Chains.MAYA, address)
         explorer_link = link(explorer_url, short_address(address, 10, 5))
         thor_yield_url = get_mayacan_address_url(self.cfg.network_id, address)
         thor_yield_link = link(thor_yield_url, 'THORYield')
@@ -2449,7 +2449,7 @@ class BaseLocalization(ABC):  # == English
         asset = ' ' + Asset(l.collateral_asset).pretty_str
         target_asset = Asset(l.target_asset).pretty_str
         db_link = link(self.LENDING_DASHBOARD_URL, "Dashboard")
-        # tx_link = link(get_explorer_url_to_tx(self.cfg.network_id, Chains.THOR, event.tx_id), "TX")
+        # tx_link = link(get_explorer_url_to_tx(self.cfg.network_id, Chains.MAYA, event.tx_id), "TX")
         return (
             '🏦→ <b>Loan open</b>\n'
             f'Collateral deposited: {code(pretty_money(l.collateral_float, postfix=asset))}'
@@ -2464,7 +2464,7 @@ class BaseLocalization(ABC):  # == English
         user_link = self.link_to_address(event.loan.owner, name_map)
         asset = ' ' + Asset(event.loan.collateral_asset).pretty_str
         db_link = link(self.LENDING_DASHBOARD_URL, "Dashboard")
-        # tx_link = link(get_explorer_url_to_tx(self.cfg.network_id, Chains.THOR, event.tx_id), "TX")
+        # tx_link = link(get_explorer_url_to_tx(self.cfg.network_id, Chains.MAYA, event.tx_id), "TX")
         return (
             '🏦← <b>Loan repayment</b>\n'
             f'Collateral withdrawn: {code(pretty_money(event.loan.collateral_float, postfix=asset))}'

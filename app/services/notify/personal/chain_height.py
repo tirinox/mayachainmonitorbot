@@ -80,7 +80,7 @@ class ChainHeightTracker(BaseChangeTracker):
             if not node.observe_chains:
                 node.observe_chains = []
             node.observe_chains.append({
-                'chain': Chains.THOR,
+                'chain': Chains.MAYA,
                 'height': node.active_block_height
             })
         return nodes

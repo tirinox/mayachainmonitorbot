@@ -188,9 +188,9 @@ class HomebrewLPConnector(AsgardConsumerConnectorBase):
 
         txs = self._apply_pool_filter(txs, pool_filter)
 
-        if Chains.detect_chain(address) != Chains.THOR:
+        if Chains.detect_chain(address) != Chains.MAYA:
             # It is not THOR address! So perhaps there are not all TXS!
-            self.logger.info('It is not THOR address. I must find it and load its Txs too!')
+            self.logger.info('It is not MAYA address. I must find it and load its Txs too!')
 
             thor_address = self._find_thor_address_in_tx_list(txs)
 

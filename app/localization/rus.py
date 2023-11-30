@@ -1032,7 +1032,7 @@ class RussianLocalization(BaseLocalization):
         else:
             node_ip_link = node.ip_address or 'no IP'
 
-        thor_explore_url = get_explorer_url_to_address(self.cfg.network_id, Chains.THOR, node.node_address)
+        thor_explore_url = get_explorer_url_to_address(self.cfg.network_id, Chains.MAYA, node.node_address)
         node_thor_link = link(thor_explore_url, short_address(node.node_address, 0))
 
         node_status = node.status.lower()
@@ -1849,7 +1849,7 @@ class RussianLocalization(BaseLocalization):
         asset = ' ' + Asset(l.collateral_asset).pretty_str
         target_asset = Asset(l.target_asset).pretty_str
         db_link = link(self.LENDING_DASHBOARD_URL, "Инфопанель")
-        # tx_link = link(get_explorer_url_to_tx(self.cfg.network_id, Chains.THOR, event.tx_id), "TX")
+        # tx_link = link(get_explorer_url_to_tx(self.cfg.network_id, Chains.MAYA, event.tx_id), "TX")
         return (
             '🏦→ <b>Заём открыт</b>\n'
             f'Внесен залог: {code(pretty_money(l.collateral_float, postfix=asset))}'
@@ -1865,7 +1865,7 @@ class RussianLocalization(BaseLocalization):
         user_link = self.link_to_address(l.owner, name_map)
         asset = ' ' + Asset(l.collateral_asset).pretty_str
         db_link = link(self.LENDING_DASHBOARD_URL, "Инфопанель")
-        # tx_link = link(get_explorer_url_to_tx(self.cfg.network_id, Chains.THOR, event.tx_id), "TX")
+        # tx_link = link(get_explorer_url_to_tx(self.cfg.network_id, Chains.MAYA, event.tx_id), "TX")
         return (
             '🏦← <b>Заём погашен</b>\n'
             f'Залог: {code(pretty_money(l.collateral_float, postfix=asset))}'

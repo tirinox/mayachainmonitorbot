@@ -130,7 +130,7 @@ async def demo_find_last_savers_additions(app: LpAppFramework):
     txs = await fetcher_tx.fetch_all_tx(liquidity_change_only=True, max_pages=5)
     for tx in txs:
         if tx.first_pool == 'BTC/BTC':
-            url = get_explorer_url_to_address(d.cfg.network_id, Chains.THOR, tx.sender_address)
+            url = get_explorer_url_to_address(d.cfg.network_id, Chains.MAYA, tx.sender_address)
             amt = thor_to_float(tx.first_input_tx.first_amount)
             print(f'{tx.first_pool} ({url}) amount = {amt} {tx.first_input_tx.first_asset}')
             sep()
@@ -298,7 +298,7 @@ async def demo_find_missed_txs_swap(app: LpAppFramework):
         txs = await fetcher_tx.fetch_one_batch(page, tx_types=(TxType.SWAP,))
         for tx in txs.txs:
             if 'ETH.ETH' in tx.pools and tx.rune_amount > 100_000:
-                url = get_explorer_url_to_tx(d.cfg.network_id, Chains.THOR, tx.tx_hash)
+                url = get_explorer_url_to_tx(d.cfg.network_id, Chains.MAYA, tx.tx_hash)
                 amt = thor_to_float(tx.first_input_tx.first_amount)
                 print(f'{tx.first_pool} ({url}) amount = {amt} {tx.first_input_tx.first_asset}')
                 sep()

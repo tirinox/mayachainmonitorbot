@@ -100,7 +100,7 @@ class RuneTransferDetectorTxLogs(WithDelegates, INotified, WithLogger):
 
     @staticmethod
     def _build_transfer_from_event(ev: DecodedEvent, block_no):
-        if ev.type == 'outbound' and ev.attributes.get('chain') == Chains.THOR:
+        if ev.type == 'outbound' and ev.attributes.get('chain') == Chains.MAYA:
             asset = ev.attributes.get('asset', '')
             if is_cacao(asset):
                 asset = NATIVE_CACAO_SYMBOL

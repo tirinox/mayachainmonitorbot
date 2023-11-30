@@ -127,7 +127,7 @@ class NameService(WithLogger):
     def get_thor_address_of_thorname(thor: ThorName) -> Optional[str]:
         if thor:
             try:
-                return next(alias.address for alias in thor.aliases if alias.chain == Chains.THOR)
+                return next(alias.address for alias in thor.aliases if alias.chain == Chains.MAYA)
             except StopIteration:
                 pass
 
@@ -305,7 +305,7 @@ class LocalWalletNameDB:
                 owner=address,
                 aliases=[
                     # chain is unknown here
-                    ThorNameAlias(Chains.THOR, address)
+                    ThorNameAlias(Chains.MAYA, address)
                 ]
             )
             by_name[name] = thor_name

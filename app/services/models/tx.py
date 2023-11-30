@@ -273,7 +273,7 @@ class ThorTx:
     @property
     def input_thor_address(self) -> Optional[str]:
         for in_tx in self.in_tx:
-            if Chains.detect_chain(in_tx.address) == Chains.THOR:
+            if Chains.detect_chain(in_tx.address) == Chains.MAYA:
                 return in_tx.address
 
     @property
@@ -299,7 +299,7 @@ class ThorTx:
     def sender_address_and_chain(self):
         rune_address = self.rune_input_address
         if rune_address:
-            return rune_address, Chains.THOR
+            return rune_address, Chains.MAYA
         elif self.in_tx:
             first_tx = self.first_input_tx
             for coin in first_tx.coins:

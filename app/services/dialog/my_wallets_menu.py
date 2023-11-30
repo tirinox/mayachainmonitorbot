@@ -102,7 +102,7 @@ class MyWalletsMenu(DialogWithSettings):
         if thor_name:
             logging.info(f'Whoa! A user adds THORName "{thor_name.name}"!')
             address = self.deps.name_service.get_thor_address_of_thorname(thor_name)
-            chain = Chains.THOR
+            chain = Chains.MAYA
 
         if not LPAddress.validate_address(address):
             await message.answer(self.loc.TEXT_INVALID_ADDRESS, disable_notification=True)
@@ -399,7 +399,7 @@ class MyWalletsMenu(DialogWithSettings):
             ])
 
         row2 = []
-        if chain == Chains.THOR and not external:
+        if chain == Chains.MAYA and not external:
             # Track balance ON/OFF toggle switch
             text = self.loc.BUTTON_TRACK_BALANCE_ON if track_balance else self.loc.BUTTON_TRACK_BALANCE_OFF
             text = self.text_new_feature(text, Features.F_PERSONAL_TRACK_BALANCE)
@@ -416,7 +416,7 @@ class MyWalletsMenu(DialogWithSettings):
         # ---------------------------- ROW 3 ------------------------------
 
         row3 = []
-        if chain == Chains.THOR and not external:
+        if chain == Chains.MAYA and not external:
             text = self.loc.BUTTON_TRACK_BOND_ON if track_bond else self.loc.BUTTON_TRACK_BOND_OFF
             text = self.text_new_feature(text, Features.F_BOND_PROVIDER)
             row3.append(InlineKeyboardButton(text, callback_data=self.QUERY_BOND_PROVIDER))

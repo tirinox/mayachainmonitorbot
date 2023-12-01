@@ -143,7 +143,7 @@ async def main():
 
         # await debug_block_tx_status_check(app)
         # await demo_rune_transfers_once(app, )  # block=12929445
-        await demo_rune_transfers_once(app, block=3167226)
+        await demo_rune_transfers_once(app, block=3916977)
 
 
 if __name__ == '__main__':

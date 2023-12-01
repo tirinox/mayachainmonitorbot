@@ -220,4 +220,3 @@ class AlertPresenter(INotified):
             await self.broadcaster.notify_preconfigured_channels(BoardMessage(event.ath_sticker, MessageType.STICKER))
 
         await self.broadcaster.notify_preconfigured_channels(price_graph_gen)
-

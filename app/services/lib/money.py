@@ -4,10 +4,10 @@ import random
 from copy import copy
 from dataclasses import dataclass
 from math import floor, log10
-from typing import List
+from typing import List, Union
 
 from proto.common import Coin
-from services.lib.constants import Chains, NATIVE_CACAO_SYMBOL, CACAO_DENOM
+from services.lib.constants import Chains, NATIVE_CACAO_SYMBOL, CACAO_DENOM, cacao_to_float, thor_to_float
 from services.lib.utils import linear_transform
 
 EMOJI_SCALE = [
@@ -359,8 +359,16 @@ AssetCACAO = Asset.from_string('MAYA.CACAO')
 
 
 def is_cacao(asset: str):
-    asset = asset.strip()
+    asset = str(asset).strip()
     return asset.lower() in ('r', CACAO_DENOM) or asset.upper() == NATIVE_CACAO_SYMBOL
+
+
+def convert_amount(amount, asset: Union[Asset, str]):
+    amount = int(amount)
+    if is_cacao(asset):
+        return cacao_to_float(amount)
+    else:
+        return thor_to_float(amount)
 
 
 def weighted_mean(values, weights):

@@ -4,20 +4,13 @@ from typing import List
 from proto.access import NativeThorTx, parse_thor_address, DecodedEvent, thor_decode_amount_field
 from proto.types import MsgSend, MsgDeposit
 from services.jobs.scanner.native_scan import BlockResult
-from services.lib.constants import thor_to_float, DEFAULT_RESERVE_ADDRESS, BOND_MODULE, DEFAULT_RUNE_FEE, \
-    CACAO_DENOM, CACAO_SYMBOL, MAYA_PREFIX, Chains, NATIVE_CACAO_SYMBOL, cacao_to_float
+from services.lib.constants import DEFAULT_RESERVE_ADDRESS, BOND_MODULE, DEFAULT_RUNE_FEE, \
+    CACAO_DENOM, CACAO_SYMBOL, MAYA_PREFIX, Chains, NATIVE_CACAO_SYMBOL
 from services.lib.delegates import WithDelegates, INotified
-from services.lib.money import Asset, is_cacao, AssetCACAO
+from services.lib.money import Asset, is_cacao, convert_amount
 from services.lib.utils import WithLogger
 from services.models.transfer import TokenTransfer
 
-
-def convert_amount(amount, asset: Asset):
-    amount = int(amount)
-    if asset == AssetCACAO:
-        return cacao_to_float(amount)
-    else:
-        return thor_to_float(amount)
 
 # This one is used
 class RuneTransferDetectorNativeTX(WithDelegates, INotified):
@@ -121,7 +114,7 @@ class RuneTransferDetectorTxLogs(WithDelegates, INotified, WithLogger):
                 ev.attributes['to'],
                 block=block_no,
                 tx_hash=ev.attributes.get('in_tx_id', ''),
-                amount=thor_to_float(amt),
+                amount=convert_amount(amt, asset),
                 asset=asset,
                 is_native=True,
                 comment=ev.type,

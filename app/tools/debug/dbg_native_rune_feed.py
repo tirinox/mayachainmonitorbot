@@ -49,7 +49,7 @@ async def demo_block_scanner_active(app, send_alerts=False, catch_up=False):
 
     if catch_up:
         await scanner.ensure_last_block()
-        scanner.last_block -= 30
+        scanner.last_block -= 3
 
     if send_alerts:
         notifier = TokenTransferNotifier(app.deps)
@@ -132,7 +132,7 @@ async def demo_debug_personal_transfer(app):
 async def main():
     app = LpAppFramework()
     async with app(brief=True):
-        # await demo_block_scanner_active(app, send_alerts=False, catch_up=True)
+        await demo_block_scanner_active(app, send_alerts=False, catch_up=True)
 
         # await demo_debug_personal_transfer(app)
 
@@ -143,7 +143,8 @@ async def main():
 
         # await debug_block_tx_status_check(app)
         # await demo_rune_transfers_once(app, )  # block=12929445
-        await demo_rune_transfers_once(app, block=3916977)
+        # await demo_rune_transfers_once(app, block=3922464)
+        # await demo_rune_transfers_once(app, block=13922464)
 
 
 if __name__ == '__main__':

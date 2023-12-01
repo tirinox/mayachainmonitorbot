@@ -54,11 +54,9 @@ class RuneTransferDetectorNativeTX(WithDelegates, INotified):
                         ))
                 elif isinstance(message, MsgDeposit):
                     for coin in message.coins:
-                        asset = str(coin.denom)
+                        asset = Asset.from_coin(coin).to_canonical
                         if is_cacao(asset):
                             asset = CACAO_SYMBOL
-                        else:
-                            asset = Asset.from_coin(coin).to_canonical
 
                         transfers.append(TokenTransfer(
                             from_addr=self.address_parse(message.signer),

@@ -235,12 +235,13 @@ class NativeScannerBlock(BaseFetcher):
                 if block_result.is_error:
                     if self.allow_jumps:
                         if block_result.is_behind:
-                            self.logger.warning(f'It seems that no blocks available before {block_result.block_no}. '
+                            self.logger.warning(f'It seems that no blocks available before '
+                                                f'{block_result.last_available_block}. '
                                                 f'Jumping to it!')
                             self.deps.emergency.report(self.NAME, 'Jump block',
                                                        from_block=self._last_block,
-                                                       to_block=block_result.block_no)
-                            self._last_block = block_result.block_no
+                                                       to_block=block_result.last_available_block)
+                            self._last_block = block_result.last_available_block
                             self._this_block_attempts = 0
                         elif block_result.is_ahead:
                             self.logger.debug(f'We are running ahead of real block height. '

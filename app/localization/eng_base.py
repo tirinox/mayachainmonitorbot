@@ -12,7 +12,7 @@ from proto.types import ThorName
 from services.jobs.fetch.circulating import ThorRealms
 from services.lib.config import Config
 from services.lib.constants import thor_to_float, THOR_BLOCK_TIME, DEFAULT_CEX_NAME, \
-    DEFAULT_CEX_BASE_ASSET, bp_to_percent
+    DEFAULT_CEX_BASE_ASSET, bp_to_percent, cacao_to_float
 from services.lib.date_utils import format_time_ago, now_ts, seconds_human, MINUTE, DAY
 from services.lib.explorers import get_explorer_url_to_address, Chains, get_explorer_url_to_tx, \
     get_explorer_url_for_node, get_pool_url, get_mayacan_address_url, get_ip_info_link
@@ -1468,8 +1468,8 @@ class BaseLocalization(ABC):  # == English
             if not units:
                 return str(v)
 
-        if units == MimirUnits.UNITS_RUNES:
-            return short_money(thor_to_float(v), localization=self.SHORT_MONEY_LOC, postfix=f' {self.R}')
+        if units == MimirUnits.UNITS_CACAO:
+            return short_money(cacao_to_float(v), localization=self.SHORT_MONEY_LOC, postfix=f' {self.R}')
         elif units == MimirUnits.UNITS_BLOCKS:
             blocks = int(v)
             seconds = blocks * THOR_BLOCK_TIME

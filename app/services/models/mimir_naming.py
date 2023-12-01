@@ -40,7 +40,7 @@ BLOCK_CONSTANTS = {
     MIMIR_KEY_KILL_SWITCH_DURATION, MIMIR_KEY_KILL_SWITCH_DURATION,
 }
 
-RUNE_CONSTANTS = {
+CACAO_CONSTANTS = {
     'OUTBOUNDTRANSACTIONFEE',
     'NATIVETRANSACTIONFEE',
     'STAGEDPOOLCOST',
@@ -258,7 +258,7 @@ NEXT_CHAIN_KEY = 'NextChain'.upper()
 
 
 class MimirUnits:
-    UNITS_RUNES = 'runes'
+    UNITS_CACAO = 'cacao'
     UNITS_BLOCKS = 'blocks'
     UNITS_BOOL = 'bool'
     UNITS_NEXT_CHAIN = 'next_chain'
@@ -268,8 +268,8 @@ class MimirUnits:
     @staticmethod
     def get_mimir_units(name):
         name = name.upper()
-        if name in RUNE_CONSTANTS:
-            return MimirUnits.UNITS_RUNES
+        if name in CACAO_CONSTANTS:
+            return MimirUnits.UNITS_CACAO
         elif name in BLOCK_CONSTANTS:
             return MimirUnits.UNITS_BLOCKS
         elif name in BOOL_CONSTANTS:
@@ -307,7 +307,7 @@ DICT_WORDS = (
     'supply,multiplier,ETH-USDC,surplus,target,swaps,order,book,books,AVAX-USDC,significant,digits,length,'
     'red,line,lune,fees,affiliate,cut,off,BNB-BUSD-BD1,ETH-USDT,loan,repayment,maturity,lever,slip,pts,'
     'UST,luna,wide,blame,keygen,assets,derived,round,rounds,prefer,Collateral,ready,'
-    'maya,cacao,aztec,mayachain,kuji,dash'
+    'maya,cacao,aztec,mayachain,kuji,dash,ibc,receive,send,control,auction'
 ).strip(' ,')
 
 WORD_TRANSFORM = {
@@ -334,6 +334,7 @@ WORD_TRANSFORM = {
     'Pol': 'POL',
     'Tor': 'TOR',
     'Dofm': 'Dynamic Outbound Fee Multiplier',
+    'Ibc': 'IBC',
 }
 
 DICT_WORDS_SORTED = list(sorted(map(str.upper, DICT_WORDS.split(',')), key=len, reverse=True))

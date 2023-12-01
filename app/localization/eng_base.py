@@ -272,7 +272,7 @@ class BaseLocalization(ABC):  # == English
     LP_PIC_GAIN_LOSS = 'Gain / Loss'
     LP_PIC_IN_USD = 'in USD'
     LP_PIC_IN_USD_CAP = 'or in USD'
-    LP_PIC_R_RUNE = f'In {RAIDO_GLYPH}une'
+    LP_PIC_R_RUNE = f'In Cacao'
     LP_PIC_IN_ASSET = 'or in {0}'
     LP_PIC_ADDED_VALUE = 'Added value'
     LP_PIC_WITHDRAWN_VALUE = 'Withdrawn value'
@@ -296,7 +296,7 @@ class BaseLocalization(ABC):  # == English
     LP_PIC_SUMMARY_CURRENT_VALUE = 'Current value'
     LP_PIC_SUMMARY_TOTAL_GAIN_LOSS = 'Total gain/loss'
     LP_PIC_SUMMARY_TOTAL_GAIN_LOSS_PERCENT = 'Total gain/loss %'
-    LP_PIC_SUMMARY_AS_IF_IN_RUNE = f'Total as {RAIDO_GLYPH}'
+    LP_PIC_SUMMARY_AS_IF_IN_RUNE = f'Total as Cacao'
     LP_PIC_SUMMARY_AS_IF_IN_USD = 'Total as $'
     LP_PIC_SUMMARY_TOTAL_LP_VS_HOLD = 'Total LP vs Hold $'
     LP_PIC_SUMMARY_NO_WEEKLY_CHART = "No weekly chart, sorry"
@@ -424,9 +424,9 @@ class BaseLocalization(ABC):  # == English
     # ------ PRICE -------
 
     PRICE_GRAPH_TITLE = f'MayaChain CACAO price, USD'
-    PRICE_GRAPH_LEGEND_DET_PRICE = f'Deterministic {RAIDO_GLYPH} price'
-    PRICE_GRAPH_LEGEND_ACTUAL_PRICE = f'Pool {RAIDO_GLYPH} price'
-    PRICE_GRAPH_LEGEND_CEX_PRICE = f'CEX {RAIDO_GLYPH} price'
+    PRICE_GRAPH_LEGEND_DET_PRICE = f'Deterministic price'
+    PRICE_GRAPH_LEGEND_ACTUAL_PRICE = f'Pool Cacao price'
+    PRICE_GRAPH_LEGEND_CEX_PRICE = f'CEX Cacao price'
     PRICE_GRAPH_VOLUME_SWAP_NORMAL = 'Swap volume'
     PRICE_GRAPH_VOLUME_SWAP_SYNTH = 'Synth volume'
     PRICE_GRAPH_VOLUME_SWAP_ADD = 'Add volume'
@@ -924,7 +924,7 @@ class BaseLocalization(ABC):  # == English
             f"🖖 {bold(title)}\n"
             f"CEX Cacao price is {code(pretty_dollar(info.cex_price))}\n"
             f"Weighted average Cacao price by liquidity pools is {code(pretty_dollar(info.pool_rune_price))}\n"
-            f"<b>Divergence</b> THORChain vs CEX is {code(pretty_dollar(div))} ({div_p:.1f}%{exclamation})."
+            f"<b>Divergence</b> MayaChain vs CEX is {code(pretty_dollar(div))} ({div_p:.1f}%{exclamation})."
         )
         return text
 
@@ -952,7 +952,7 @@ class BaseLocalization(ABC):  # == English
 
     TEXT_METRICS_INTRO = 'What metrics would you like to know?'
 
-    TEXT_QUEUE_PLOT_TITLE = 'THORChain Queue'
+    TEXT_QUEUE_PLOT_TITLE = 'MayaChain Queue'
 
     def cap_message(self, info: ThorCapInfo):
         return (
@@ -994,12 +994,12 @@ class BaseLocalization(ABC):  # == English
 
     # ------- AVATAR -------
 
-    TEXT_AVA_WELCOME = '🖼️ Drop me a picture and I make you THORChain-styled avatar with a gradient frame. ' \
+    TEXT_AVA_WELCOME = '🖼️ Drop me a picture and I make you MayaChain-styled avatar with a gradient frame. ' \
                        'You can send me a picture as a file (or document) to avoid compression issues.'
 
     TEXT_AVA_ERR_INVALID = '⚠️ Your picture has invalid format!'
     TEXT_AVA_ERR_NO_PIC = '⚠️ You have no user pic...'
-    TEXT_AVA_READY = '🥳 <b>Your THORChain avatar is ready!</b> Download this image and set it as a profile picture' \
+    TEXT_AVA_READY = '🥳 <b>Your MayaChain avatar is ready!</b> Download this image and set it as a profile picture' \
                      ' at Telegram and other social networks.'
 
     BUTTON_AVA_FROM_MY_USERPIC = '😀 From my userpic'
@@ -1036,7 +1036,7 @@ class BaseLocalization(ABC):  # == English
                                           old: NetworkStats, new: NetworkStats,
                                           market: RuneMarketInfo,
                                           nodes: List[NodeInfo]):
-        message = bold('🌐 THORChain stats') + '\n'
+        message = bold('🌐 MayaChain stats') + '\n'
 
         message += '\n'
 
@@ -1223,7 +1223,7 @@ class BaseLocalization(ABC):  # == English
         return f'{start_date.strftime(date_format)} – {end_date.strftime(date_format)}'
 
     def notification_text_key_metrics_caption(self, data: AlertKeyStats):
-        return 'THORChain weekly stats'
+        return 'MayaChain weekly stats'
 
     TEXT_WEEKLY_STATS_NO_DATA = '😩 No data for this period.'
 
@@ -1248,7 +1248,7 @@ class BaseLocalization(ABC):  # == English
     TEXT_PIC_MEDIAN_BOND = 'Median'
     TEXT_PIC_MAX_BOND = 'Max'
 
-    PIC_NODE_DIVERSITY_BY_PROVIDER_CAPTION = ital('THORChain nodes')
+    PIC_NODE_DIVERSITY_BY_PROVIDER_CAPTION = ital('MayaChain nodes')
 
     def _format_node_text(self, node: NodeInfo, add_status=False, extended_info=False, expand_link=False):
         if expand_link:
@@ -1359,7 +1359,7 @@ class BaseLocalization(ABC):  # == English
     def notification_text_version_upgrade_progress(self,
                                                    data: NodeSetChanges,
                                                    ver_con: NodeVersionConsensus):
-        msg = bold('🕖 THORChain version upgrade progress') + '\n\n'
+        msg = bold('🕖 MayaChain version upgrade progress') + '\n\n'
 
         progress = ver_con.ratio * 100.0
         pb = progressbar(progress, 100.0, 14)
@@ -1379,7 +1379,7 @@ class BaseLocalization(ABC):  # == English
                                           new_versions: List[VersionInfo],
                                           old_active_ver: VersionInfo,
                                           new_active_ver: VersionInfo):
-        msg = bold('💫 THORChain protocol version update') + '\n\n'
+        msg = bold('💫 MayaChain protocol version update') + '\n\n'
 
         def version_and_nodes(v, v_all=False):
             realm = data.nodes_all if v_all else data.active_only_nodes
@@ -1419,7 +1419,7 @@ class BaseLocalization(ABC):  # == English
     # --------- CHAIN INFO SUMMARY ------------
 
     def text_chain_info(self, chain_infos: List[ThorChainInfo]):
-        text = '⛓️ ' + bold('Chains connected to THORChain') + '\n\n'
+        text = '⛓️ ' + bold('Chains connected to MayaChain') + '\n\n'
         for c in chain_infos:
             address_link = link(get_explorer_url_to_address(self.cfg.network_id, c.chain, c.address), 'SCAN')
             status = '🛑 Halted' if c.halted else '🆗 Active'
@@ -1648,7 +1648,7 @@ class BaseLocalization(ABC):  # == English
 
     # ---------- BLOCK HEIGHT -----------
 
-    TEXT_BLOCK_HEIGHT_CHART_TITLE = 'THORChain block speed'
+    TEXT_BLOCK_HEIGHT_CHART_TITLE = 'MayaChain block speed'
     TEXT_BLOCK_HEIGHT_LEGEND_ACTUAL = 'Actual blocks/min'
     TEXT_BLOCK_HEIGHT_LEGEND_EXPECTED = 'Expected (10 blocks/min or 6 sec/block)'
 
@@ -1656,10 +1656,10 @@ class BaseLocalization(ABC):  # == English
         good_time = e.time_without_blocks is not None and e.time_without_blocks > 1
         str_t = ital(self.seconds_human(e.time_without_blocks) if good_time else self.NA)
         if e.state == BlockProduceState.StateStuck:
-            return f'📛 {bold("THORChain block height seems to have stopped increasing")}!\n' \
+            return f'📛 {bold("MayaChain block height seems to have stopped increasing")}!\n' \
                    f'New blocks have not been generated for {str_t}.'
         else:
-            return f"🆗 {bold('THORChain is producing blocks again!')}\n" \
+            return f"🆗 {bold('MayaChain is producing blocks again!')}\n" \
                    f"The failure lasted {str_t}."
 
     @staticmethod
@@ -1694,7 +1694,7 @@ class BaseLocalization(ABC):  # == English
         block_per_minute = self.format_bps(e.block_speed)
 
         return (
-            f'<b>THORChain block generation speed update.</b>\n'
+            f'<b>MayaChain block generation speed update.</b>\n'
             f'{phrase}\n'
             f'Presently <code>{block_per_minute}</code> blocks per minute or '
             f'it takes <code>{self.format_block_time(e.block_speed)} sec</code> to generate a new block.'
@@ -1705,11 +1705,11 @@ class BaseLocalization(ABC):  # == English
         ago = self.format_time_ago(last_block_ts)
         block_str = f"#{last_block}"
         return (
-            f'<b>THORChain block generation speed.</b>\n'
+            f'<b>MayaChain block generation speed.</b>\n'
             f'{phrase}\n'
             f'Presently <code>{self.format_bps(recent_bps)}</code> blocks per minute or '
             f'it takes <code>{self.format_block_time(recent_bps)} sec</code> to generate a new block.\n'
-            f'Last THORChain block number is {code(block_str)} (updated: {ago}).'
+            f'Last MayaChain block number is {code(block_str)} (updated: {ago}).'
         )
 
     # --------- MIMIR CHANGED -----------
@@ -1802,7 +1802,7 @@ class BaseLocalization(ABC):  # == English
         else:
             text += '🟢'
 
-        mon_link = 'https://thorchain.network/'
+        mon_link = 'https://www.mayascan.org/network'
         text += f'\n\nRealtime monitoring: {link(mon_link, mon_link)}'
 
         return text
@@ -1996,17 +1996,17 @@ class BaseLocalization(ABC):  # == English
                           f'on the {pre(data.chain)} chain (≈{self.seconds_human(data.how_long_behind)})!'
         elif c.type == NodeEventType.PRESENCE:
             if c.data:
-                message = f'🙋 Node {short_addr} is back is the THORChain network.'
+                message = f'🙋 Node {short_addr} is back is the MayaChain network.'
             else:
-                message = f'⁉️ Node {short_addr} has disappeared from the THORChain network.'
+                message = f'⁉️ Node {short_addr} has disappeared from the MayaChain network.'
         elif c.type == NodeEventType.TEXT_MESSAGE:
             text = str(c.data)[:self.NODE_OP_MAX_TEXT_MESSAGE_LENGTH]
             message = f'⚠️ Message for all: {code(text)}'
         elif c.type == NodeEventType.CABLE_DISCONNECT:
-            message = f'💔️ NodeOp tools service has <b>disconnected</b> from THORChain network.\n' \
+            message = f'💔️ NodeOp tools service has <b>disconnected</b> from MayaChain network.\n' \
                       f'Please use an alternative service to monitor nodes until we get it fixed.'
         elif c.type == NodeEventType.CABLE_RECONNECT:
-            message = f'💚 NodeOp tools has reconnected to THORChain network.'
+            message = f'💚 NodeOp tools has reconnected to MayaChain network.'
 
         return message
 
@@ -2103,10 +2103,10 @@ class BaseLocalization(ABC):  # == English
     INLINE_INTERNAL_ERROR_TITLE = 'Internal error!'
     INLINE_INTERNAL_ERROR_CONTENT = f'Sorry, something went wrong! Please report it to {CREATOR_TG}.'
 
-    INLINE_TOP_POOLS_TITLE = '🏊 THORChain Top Pools'
+    INLINE_TOP_POOLS_TITLE = '🏊 MayaChain Top Pools'
     INLINE_TOP_POOLS_DESC = 'Top 5 by APY, volume and liquidity'
 
-    INLINE_STATS_TITLE = '📊 THORChain Statistics'
+    INLINE_STATS_TITLE = '📊 MayaChain Statistics'
     INLINE_STATS_DESC = 'Last 24h summary of key stats'
 
     # ---- MISC ----
@@ -2317,7 +2317,7 @@ class BaseLocalization(ABC):  # == English
     MIN_PERCENT_TO_SHOW_VAULT_FILL = 10
 
     def notification_text_saver_stats(self, event: AlertSaverStats):
-        message = f'💰 <b>THORChain Savers Vaults summary</b>\n'
+        message = f'💰 <b>MayaChain Savers Vaults summary</b>\n'
 
         savers, prev = event.current_stats, event.previous_stats
 

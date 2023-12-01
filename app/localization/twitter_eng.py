@@ -48,7 +48,7 @@ class TwitterEnglishLocalization(BaseLocalization):
         parts = twitter_intelligent_text_splitter(parts)
         return MESSAGE_SEPARATOR.join(parts).strip()
 
-    PIC_NODE_DIVERSITY_BY_PROVIDER_CAPTION = 'THORChain nodes'
+    PIC_NODE_DIVERSITY_BY_PROVIDER_CAPTION = 'MayaChain nodes'
 
     def notification_text_cap_change(self, old: ThorCapInfo, new: ThorCapInfo):
         up = old.cap < new.cap
@@ -338,7 +338,7 @@ class TwitterEnglishLocalization(BaseLocalization):
         if pc.pools_changed:
             message += '🔄 Pools changed:\n' + '\n'.join([pool_text(*a) for a in pc.pools_changed]) + '\n'
 
-        message += 'https://thorchain.net/pools/'
+        message += 'https://www.mayascan.org/pools'
 
         return message.rstrip()
 
@@ -348,7 +348,7 @@ class TwitterEnglishLocalization(BaseLocalization):
                                           nodes: List[NodeInfo]):
         parts = []
 
-        message = '🌐 THORChain stats\n'
+        message = '🌐 MayaChain stats\n'
 
         sec_ratio = self.get_network_security_ratio(new, nodes)
         if sec_ratio > 0:
@@ -594,7 +594,7 @@ class TwitterEnglishLocalization(BaseLocalization):
 
     def notification_text_version_upgrade(self, data: NodeSetChanges, new_versions: List[VersionInfo],
                                           old_active_ver: VersionInfo, new_active_ver: VersionInfo):
-        msg = '💫 THORChain protocol version update\n'
+        msg = '💫 MayaChain protocol version update\n'
 
         def version_and_nodes(v, nodes_all=False):
             realm = data.nodes_all if nodes_all else data.active_only_nodes
@@ -853,7 +853,7 @@ class TwitterEnglishLocalization(BaseLocalization):
         return self.smart_split(parts)
 
     def notification_text_saver_stats(self, event: AlertSaverStats):
-        parts = [f'💰 THORChain Savers\n']
+        parts = [f'💰 MayaChain Savers\n']
 
         savers, prev = event.current_stats, event.previous_stats
         total_earned_usd = savers.total_rune_earned * event.price_holder.usd_per_rune
@@ -925,7 +925,7 @@ class TwitterEnglishLocalization(BaseLocalization):
         return self.smart_split(parts)
 
     def notification_text_key_metrics_caption(self, data: AlertKeyStats):
-        return '.@THORChain weekly stats $RUNE'
+        return '.@MayaChain weekly stats $RUNE'
 
     # ----- LOANS ------
 

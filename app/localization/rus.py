@@ -81,7 +81,7 @@ class RussianLocalization(BaseLocalization):
             # f"/price – текущая цена {self.R}\n"
             # f"/queue – размер очереди транзакций\n"
             # f"/nodes – список нод\n"
-            # f"/stats – THORChain статистика сети\n"
+            # f"/stats – MayaChain статистика сети\n"
             # f"/chains – Подключенные блокчейны\n"
             # f"/lp – мониторинг ваших пулов\n"
             f"<b>📨 Подписывайтесь на наш канал с уведомлениями {self.alert_channel_name}!</b>\n"
@@ -236,7 +236,7 @@ class RussianLocalization(BaseLocalization):
     LP_PIC_GAIN_LOSS = 'Доход / убыток'
     LP_PIC_IN_USD = 'в USD'
     LP_PIC_IN_USD_CAP = 'или в USD'
-    LP_PIC_R_RUNE = f'В {RAIDO_GLYPH}une'
+    LP_PIC_R_RUNE = f'В Cacao'
     LP_PIC_IN_ASSET = 'или в {0}'
     LP_PIC_ADDED_VALUE = 'Добавлено всего'
     LP_PIC_WITHDRAWN_VALUE = 'Выведено всего'
@@ -365,7 +365,7 @@ class RussianLocalization(BaseLocalization):
 
     # ------ PRICE -------
 
-    PRICE_GRAPH_TITLE = f'THORChain {RAIDO_GLYPH}une цена'
+    PRICE_GRAPH_TITLE = f'MayaChain Cacao цена'
     PRICE_GRAPH_LEGEND_DET_PRICE = 'Детерминистская цена'
     PRICE_GRAPH_LEGEND_ACTUAL_PRICE = 'Цена в пухал'
     PRICE_GRAPH_LEGEND_CEX_PRICE = f'Цена на бирже'
@@ -718,7 +718,7 @@ class RussianLocalization(BaseLocalization):
             f"🖖 {bold(title)}\n"
             f"Цена Руны (на биржах): {code(pretty_dollar(info.cex_price))}\n"
             f"Взвешенная цена Руны в пулах: {code(pretty_dollar(info.pool_rune_price))}\n"
-            f"<b>Расхождение</b> цены THORChain и биржы: {code(pretty_dollar(div))} ({div_p:.1f}%)."
+            f"<b>Расхождение</b> цены MayaChain и биржы: {code(pretty_dollar(div))} ({div_p:.1f}%)."
         )
 
         return text
@@ -775,13 +775,13 @@ class RussianLocalization(BaseLocalization):
 
     # ------- AVATAR -------
 
-    TEXT_AVA_WELCOME = '🖼️ Скинь мне квадратное фото, и я сделаю для тебя аватар в стиле THORChain ' \
+    TEXT_AVA_WELCOME = '🖼️ Скинь мне квадратное фото, и я сделаю для тебя аватар в стиле MayaChain ' \
                        'с градиентной рамкой. Можешь отправить мне картинку как документ, ' \
                        'чтобы избежать проблем потерей качества из-за сжатия.'
 
     TEXT_AVA_ERR_INVALID = '⚠️ Фото неправильного формата!'
     TEXT_AVA_ERR_NO_PIC = '⚠️ Не удалось загрузить твое фото из профиля!'
-    TEXT_AVA_READY = '🥳 <b>Твой THORChain аватар готов!</b> ' \
+    TEXT_AVA_READY = '🥳 <b>Твой MayaChain аватар готов!</b> ' \
                      'Скачай это фото и установи его в Телеграм и социальных сетях.'
 
     BUTTON_AVA_FROM_MY_USERPIC = '😀 Из фото профиля'
@@ -806,7 +806,7 @@ class RussianLocalization(BaseLocalization):
                                           old: NetworkStats, new: NetworkStats,
                                           market: RuneMarketInfo,
                                           nodes: List[NodeInfo]):
-        message = bold('🌐 THORChain статистика') + '\n'
+        message = bold('🌐 MayaChain статистика') + '\n'
 
         message += '\n'
 
@@ -1001,7 +1001,7 @@ class RussianLocalization(BaseLocalization):
         return translate(f'{start_date.strftime(date_format)} – {end_date.strftime(date_format)}', month_names)
 
     def notification_text_key_metrics_caption(self, data: AlertKeyStats):
-        return 'THORChain недельная статистика'
+        return 'MayaChain недельная статистика'
 
     TEXT_WEEKLY_STATS_NO_DATA = '😩 Нет данных по статистике за этот период.'
 
@@ -1129,7 +1129,7 @@ class RussianLocalization(BaseLocalization):
     def notification_text_version_upgrade_progress(self,
                                                    data: NodeSetChanges,
                                                    ver_con: NodeVersionConsensus):
-        msg = bold('🕖 Прогресс обновления протокола THORChain\n\n')
+        msg = bold('🕖 Прогресс обновления протокола MayaChain\n\n')
 
         progress = ver_con.ratio * 100.0
         pb = progressbar(progress, 100.0, 14)
@@ -1150,7 +1150,7 @@ class RussianLocalization(BaseLocalization):
                                           old_active_ver: VersionInfo,
                                           new_active_ver: VersionInfo):
 
-        msg = bold('💫 Обновление версии протокола THORChain') + '\n\n'
+        msg = bold('💫 Обновление версии протокола MayaChain') + '\n\n'
 
         def version_and_nodes(v, all=False):
             realm = data.nodes_all if all else data.active_only_nodes
@@ -1190,7 +1190,7 @@ class RussianLocalization(BaseLocalization):
     # --------- CHAIN INFO SUMMARY ------------
 
     def text_chain_info(self, chain_infos: List[ThorChainInfo]):
-        text = '⛓️ ' + bold('THORChain подключен к блокчейнам:') + '\n\n'
+        text = '⛓️ ' + bold('MayaChain подключен к блокчейнам:') + '\n\n'
         for c in chain_infos:
             address_link = link(get_explorer_url_to_address(self.cfg.network_id, c.chain, c.address), 'СКАН')
             status = '🛑 Остановлен' if c.halted else '🆗 Активен'
@@ -1260,7 +1260,7 @@ class RussianLocalization(BaseLocalization):
 
     # ---------- BLOCK HEIGHT -----------
 
-    TEXT_BLOCK_HEIGHT_CHART_TITLE = 'THORChain блоков в минут'
+    TEXT_BLOCK_HEIGHT_CHART_TITLE = 'MayaChain блоков в минут'
     TEXT_BLOCK_HEIGHT_LEGEND_ACTUAL = 'Фактически блоков в минуту'
     TEXT_BLOCK_HEIGHT_LEGEND_EXPECTED = 'Ожидаемая (10 бл/мин или 6 сек на блок)'
 
@@ -1268,10 +1268,10 @@ class RussianLocalization(BaseLocalization):
         good_time = e.time_without_blocks is not None and e.time_without_blocks > 1
         str_t = ital(self.seconds_human(e.time_without_blocks) if good_time else self.NA)
         if e.state == BlockProduceState.StateStuck:
-            return f'📛 {bold("THORChain высота блоков перестала увеличиваться")}!\n' \
+            return f'📛 {bold("MayaChain высота блоков перестала увеличиваться")}!\n' \
                    f'Новые блоки не генерируются уже {str_t}.'
         else:
-            return f"🆗 {bold('THORChain снова генерирует блоки!')}\n" \
+            return f"🆗 {bold('MayaChain снова генерирует блоки!')}\n" \
                    f"Сбой длился {str_t}"
 
     @staticmethod
@@ -1293,7 +1293,7 @@ class RussianLocalization(BaseLocalization):
         block_per_minute = self.format_bps(e.block_speed)
 
         return (
-            f'<b>Обновление по скорости производства блоков THORChain</b>\n'
+            f'<b>Обновление по скорости производства блоков MayaChain</b>\n'
             f'{phrase}\n'
             f'В настоящий момент <code>{block_per_minute}</code> блоков в минуту, другими словами '
             f'нужно <code>{self.format_block_time(e.block_speed)} сек</code> на создание блока.'
@@ -1305,11 +1305,11 @@ class RussianLocalization(BaseLocalization):
         ago = self.format_time_ago(last_block_ts)
         block_str = f"#{last_block}"
         return (
-            f'<b>THORChain темпы производства блоков.</b>\n'
+            f'<b>MayaChain темпы производства блоков.</b>\n'
             f'{phrase}\n'
             f'В настоящее время <code>{block_per_minute}</code> блоков в минуту, другими словами'
             f'нужно <code>{self.format_block_time(block_per_minute)} сек</code> на создание блока.\n'
-            f'Последний номер блока THORChain: {code(block_str)} (обновлено: {ago}).'
+            f'Последний номер блока MayaChain: {code(block_str)} (обновлено: {ago}).'
         )
 
     # --------- MIMIR CHANGED -----------
@@ -1571,18 +1571,18 @@ class RussianLocalization(BaseLocalization):
                           f'на блокчейне {pre(data.chain)} (≈{self.seconds_human(data.how_long_behind)})!'
         elif c.type == NodeEventType.PRESENCE:
             if c.data:
-                message = f'🙋 Нода {short_addr} снова вернулась в сеть THORChain!'
+                message = f'🙋 Нода {short_addr} снова вернулась в сеть MayaChain!'
             else:
-                message = f'⁉️ Нода {short_addr} исчезла из сети THORChain!'
+                message = f'⁉️ Нода {short_addr} исчезла из сети MayaChain!'
         elif c.type == NodeEventType.TEXT_MESSAGE:
             text = str(c.data)[:self.NODE_OP_MAX_TEXT_MESSAGE_LENGTH]
             message = f'⚠️ Сообщение всем: {code(text)}'
         elif c.type == NodeEventType.CABLE_DISCONNECT:
-            message = f'💔️ NodeOp инструменты <b>отключились</b> от сети THORChain.\n' \
+            message = f'💔️ NodeOp инструменты <b>отключились</b> от сети MayaChain.\n' \
                       f'Пожалуйста, воспользуйтсь альтернативными сервисами для мониторинга нод, ' \
                       f'пока мы не исправим проблему.'
         elif c.type == NodeEventType.CABLE_RECONNECT:
-            message = f'💚 NodeOp инструменты снова подключились к THORChain.'
+            message = f'💚 NodeOp инструменты снова подключились к MayaChain.'
 
         return message
 
@@ -1758,7 +1758,7 @@ class RussianLocalization(BaseLocalization):
         ).strip()
 
     def notification_text_saver_stats(self, event: AlertSaverStats):
-        message = f'💰 <b>THORChain сбережения</b>\n\n'
+        message = f'💰 <b>MayaChain сбережения</b>\n\n'
 
         savers, prev = event.current_stats, event.previous_stats
 

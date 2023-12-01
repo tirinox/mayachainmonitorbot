@@ -14,6 +14,7 @@ from services.dialog.metrics_menu import MetricsDialog
 from services.dialog.my_wallets_menu import MyWalletsMenu, LPMenuStates
 from services.dialog.node_op_menu import NodeOpDialog
 from services.dialog.settings_menu import SettingsDialog
+from services.lib.date_utils import DAY
 # from services.lib.date_utils import DAY
 from services.lib.depcont import DepContainer
 from services.lib.new_feature import Features
@@ -92,10 +93,10 @@ class MainMenuDialog(BaseDialog):
     # async def cmd_cap(self, message: Message):
     #     await self.build_metrics_dialog().show_cap(message)
     #
-    # @message_handler(commands='price', state='*')
-    # async def cmd_price(self, message: Message):
-    #     await self.build_metrics_dialog().show_price(message, 7 * DAY)
-    #
+    @message_handler(commands='price', state='*')
+    async def cmd_price(self, message: Message):
+        await self.build_metrics_dialog().show_price(message, 7 * DAY)
+
     # @message_handler(commands='nodes', state='*')
     # async def cmd_nodes(self, message: Message):
     #     await self.build_metrics_dialog().show_node_list(message)
@@ -112,9 +113,10 @@ class MainMenuDialog(BaseDialog):
     # async def cmd_chains(self, message: Message):
     #     await self.build_metrics_dialog().show_chain_info(message)
     #
-    # @message_handler(commands='mimir', state='*')
-    # async def cmd_mimir(self, message: Message):
-    #     await self.build_metrics_dialog().show_mimir_info(message)
+    @message_handler(commands='mimir', state='*')
+    async def cmd_mimir(self, message: Message):
+        await self.build_metrics_dialog().show_mimir_info(message)
+
     #
     # @message_handler(commands='cexflow', state='*')
     # async def cmd_cex_flow(self, message: Message):

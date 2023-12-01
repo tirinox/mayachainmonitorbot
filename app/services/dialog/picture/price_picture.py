@@ -38,7 +38,7 @@ def price_graph(pool_price_df, det_price_df, cex_prices_df, volumes, loc: BaseLo
     graph.legend_x = 20
 
     graph.add_legend(LINE_COLOR_POOL_PRICE, loc.PRICE_GRAPH_LEGEND_ACTUAL_PRICE)
-    graph.add_legend(LINE_COLOR_CEX_PRICE, loc.PRICE_GRAPH_LEGEND_CEX_PRICE)
+    # graph.add_legend(LINE_COLOR_CEX_PRICE, loc.PRICE_GRAPH_LEGEND_CEX_PRICE)  # Now cex for now
     graph.add_legend(LINE_COLOR_DET_PRICE, loc.PRICE_GRAPH_LEGEND_DET_PRICE)
 
     graph.bar_height_limit = 200

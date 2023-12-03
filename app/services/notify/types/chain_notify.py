@@ -1,18 +1,20 @@
 import json
 import random
-from typing import Dict
+from typing import Dict, NamedTuple, List
 
 from aionode.types import ThorChainInfo
-
-from localization.manager import BaseLocalization
-from services.lib.delegates import INotified
+from services.lib.delegates import INotified, WithDelegates
 from services.lib.depcont import DepContainer
 from services.lib.utils import WithLogger
 
 EXCLUDE_CHAINS_FROM_HALTED = ('TERRA',)
 
 
-class TradingHaltedNotifier(INotified, WithLogger):
+class AlertChainHalt(NamedTuple):
+    changed_chains: List[ThorChainInfo]
+
+
+class TradingHaltedNotifier(INotified, WithDelegates, WithLogger):
     def __init__(self, deps: DepContainer):
         super().__init__()
         self.deps = deps
@@ -45,10 +47,7 @@ class TradingHaltedNotifier(INotified, WithLogger):
                 self._update_global_state(chain, new_info.halted)
 
         if changed_chains:
-            await self.deps.broadcaster.notify_preconfigured_channels(
-                BaseLocalization.notification_text_trading_halted_multi,
-                changed_chains
-            )
+            await self.pass_data_to_listeners(AlertChainHalt(changed_chains))
 
     KEY_CHAIN_HALTED = 'Chain:LastInfo'
 

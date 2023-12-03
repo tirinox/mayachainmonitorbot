@@ -463,6 +463,7 @@ class App(WithLogger):
             fetcher_chain_state = ChainStateFetcher(d)
             notifier_trade_halt = TradingHaltedNotifier(d)
             fetcher_chain_state.add_subscriber(notifier_trade_halt)
+            notifier_trade_halt.add_subscriber(d.alert_presenter)
             tasks.append(fetcher_chain_state)
 
         if d.cfg.get('constants.mimir_change.enabled', True):

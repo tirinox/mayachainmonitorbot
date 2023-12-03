@@ -109,9 +109,10 @@ class MainMenuDialog(BaseDialog):
     # async def cmd_queue(self, message: Message):
     #     await self.build_metrics_dialog().show_queue(message, DAY)
     #
-    # @message_handler(commands='chains', state='*')
-    # async def cmd_chains(self, message: Message):
-    #     await self.build_metrics_dialog().show_chain_info(message)
+    @message_handler(commands='chains', state='*')
+    async def cmd_chains(self, message: Message):
+        await self.build_metrics_dialog().show_chain_info(message)
+
     #
     @message_handler(commands='mimir', state='*')
     async def cmd_mimir(self, message: Message):

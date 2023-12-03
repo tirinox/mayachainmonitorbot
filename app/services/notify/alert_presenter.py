@@ -28,6 +28,7 @@ from services.models.transfer import TokenCexFlow, TokenTransfer
 from services.models.tx import EventLargeTransaction
 from services.notify.broadcast import Broadcaster
 from services.notify.channel import BoardMessage, MessageType
+from services.notify.types.chain_notify import AlertChainHalt
 
 
 class AlertPresenter(INotified):
@@ -68,6 +69,8 @@ class AlertPresenter(INotified):
             await self._handle_loans(data)
         elif isinstance(data, AlertPrice):
             await self._handle_price(data)
+        elif isinstance(data, AlertChainHalt):
+            await self._handle_chain_halt(data)
 
     async def load_names(self, addresses):
         if not (isinstance(addresses, (list, tuple))):
@@ -220,3 +223,9 @@ class AlertPresenter(INotified):
             await self.broadcaster.notify_preconfigured_channels(BoardMessage(event.ath_sticker, MessageType.STICKER))
 
         await self.broadcaster.notify_preconfigured_channels(price_graph_gen)
+
+    async def _handle_chain_halt(self, event: AlertChainHalt):
+        await self.broadcaster.notify_preconfigured_channels(
+            BaseLocalization.notification_text_trading_halted_multi,
+            event.changed_chains
+        )

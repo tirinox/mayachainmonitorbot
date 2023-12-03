@@ -277,9 +277,6 @@ class MimirHolder:
             if entry and ts > 0:
                 entry.changed_ts = ts
 
-    def current_old_rune_kill_progress(self, current_block):
-        return 1.0
-
     def get_max_synth_per_pool_depth(self) -> float:
         value = self.get_constant(MIMIR_KEY_MAX_SYNTH_PER_POOL_DEPTH, 1500)
         return bp_to_float(value)

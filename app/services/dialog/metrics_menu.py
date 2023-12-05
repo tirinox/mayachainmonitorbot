@@ -288,7 +288,7 @@ class MetricsDialog(BaseDialog):
 
     async def show_top_pools(self, message: Message):
         notifier: BestPoolsNotifier = self.deps.best_pools_notifier
-        text = self.loc.notification_text_best_pools(notifier.last_pool_detail, notifier.n_pools)
+        text = self.loc.notification_text_best_pools(notifier.last_pool_detail, n_pools=7)
         await message.answer(text, disable_notification=True, disable_web_page_preview=True)
 
     async def show_cex_flow(self, message: Message, period=DAY):

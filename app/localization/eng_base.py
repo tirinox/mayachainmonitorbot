@@ -1440,7 +1440,7 @@ class BaseLocalization(ABC):  # == English
 
     # --------- MIMIR INFO ------------
 
-    MIMIR_DOC_LINK = "https://docs.thorchain.org/how-it-works/governance#mimir"
+    MIMIR_DOC_LINK = "https://docs.mayaprotocol.com/deep-dive/how-it-works/constants-and-mimir"
     MIMIR_ENTRIES_PER_MESSAGE = 20
 
     MIMIR_STANDARD_VALUE = 'default:'

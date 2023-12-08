@@ -2069,6 +2069,7 @@ class BaseLocalization(ABC):  # == English
 
     def notification_text_best_pools(self, pd: PoolMapPair, n_pools):
         no_pool_text = 'Nothing yet. Maybe still loading...'
+
         text = '\n\n'.join([self.format_pool_top(top_pools, pd, title, no_pool_text, n_pools) for title, top_pools in [
             ('💎 Best APY', pd.BY_APY),
             ('💸 Top volume', pd.BY_VOLUME_24h),

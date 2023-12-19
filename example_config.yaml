@@ -396,6 +396,7 @@ node_info:
 constants:
   mimir_change:
     enabled: true
+    cooldown: 10m  # (!) new
   fetch_period: 130s
 
   voting:

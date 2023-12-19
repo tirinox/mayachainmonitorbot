@@ -201,21 +201,25 @@ async def find_affiliate_txs(app: LpAppFramework, desired_count=5, tx_types=None
         page += 1
 
 
-async def demo_swap_1(app):
-    q_path = free_url_gen.url_for_tx(
-        0, 50, tx_type=TxType.SWAP,
-        # txid='5C74163486D8A8AB36C3595A25E53C3FE07501D0772201B2F846F676A841DF33',
-        txid='3C2CFED5355E5A478B5B9E3D0C4D2CC672870AA7B4F442A56E79C1714800ACBB',
-    )
+async def show_tx_by_hash(app, tx_id):
+    q_path = free_url_gen.url_for_tx(0, 50, txid=tx_id, )
     await present_one_aff_tx(app, q_path)
-    # q_path = free_url_gen.url_for_tx(0, 50, address='bnb10gh0p6thzjz54jqy9lg0rv733fnl0vqmc789pp')
+
+
+async def demo_swap_1(app):
+    await show_tx_by_hash(app, '3C2CFED5355E5A478B5B9E3D0C4D2CC672870AA7B4F442A56E79C1714800ACBB')
+
+
+async def demo_add_liq(app):
+    await show_tx_by_hash(app, '5FD68A320E462D9E6E18F125DF057E8B1A13ABBEC8D569951012843EF3E67CB7')
 
 
 async def main():
     app = LpAppFramework()
     await app.prepare(brief=True)
 
-    await demo_swap_1(app)
+    # await demo_swap_1(app)
+    await demo_add_liq(app)
 
 
 if __name__ == '__main__':

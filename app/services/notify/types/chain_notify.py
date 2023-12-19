@@ -28,7 +28,6 @@ class TradingHaltedNotifier(INotified, WithDelegates, WithLogger):
             item.halted = random.uniform(0, 1) > 0.5
         return data
 
-
     def _make_spam_control(self, chain: str):
         return Cooldown(self.deps.db, f'TradingHalted:{chain}', self.cooldown_sec)
 
@@ -39,7 +38,6 @@ class TradingHaltedNotifier(INotified, WithDelegates, WithLogger):
         if not can_do:
             self.logger.warning(f"Attention! {chain} halt state changed again, but spam control didn't let it through")
         return can_do
-
 
     async def on_data(self, sender, data: Dict[str, ThorChainInfo]):
         # data = self._dbg_randomize_chain_dic_halted(data)

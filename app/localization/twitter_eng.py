@@ -726,7 +726,10 @@ class TwitterEnglishLocalization(BaseLocalization):
             if delta and abs(delta) < 1:
                 delta = 0
 
-            delta_p = bracketify(format_percent(delta, 100, signed=True)) if delta else ''
+            try:
+                delta_p = bracketify(pretty_money(delta, signed=True, postfix=' pp')) if delta else ''
+            except ValueError:
+                delta_p = ''
 
             asset = self.pretty_asset(pool.asset)
 

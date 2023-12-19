@@ -13,11 +13,12 @@ from services.lib.constants import THOR_BLOCKS_PER_MINUTE
 from services.lib.delegates import INotified
 from services.lib.depcont import DepContainer
 from services.lib.draw_utils import img_to_bio
-from services.lib.midgard.name_service import NameService
+from services.lib.midgard.name_service import NameService, NameMap
 from services.lib.w3.dex_analytics import DexReport
 from services.models.flipside import AlertKeyStats
 from services.models.last_block import EventBlockSpeed, BlockProduceState
 from services.models.loans import AlertLoanOpen, AlertLoanRepayment
+from services.models.mimir import AlertMimirChange
 from services.models.node_info import AlertNodeChurn
 from services.models.pol import AlertPOL
 from services.models.pool_info import PoolChanges
@@ -38,6 +39,7 @@ class AlertPresenter(INotified):
         self.name_service: NameService = deps.name_service
 
     async def on_data(self, sender, data):
+        # noinspection PyAsyncCall
         asyncio.create_task(self._handle_async(data))
 
     async def _handle_async(self, data):
@@ -69,12 +71,15 @@ class AlertPresenter(INotified):
             await self._handle_loans(data)
         elif isinstance(data, AlertPrice):
             await self._handle_price(data)
+        elif isinstance(data, AlertMimirChange):
+            await self._handle_mimir(data)
         elif isinstance(data, AlertChainHalt):
             await self._handle_chain_halt(data)
 
-    async def load_names(self, addresses):
+    async def load_names(self, addresses) -> NameMap:
         if not (isinstance(addresses, (list, tuple))):
             addresses = (addresses,)
+
         return await self.name_service.safely_load_thornames_from_address_set(addresses)
 
         # ---- PARTICULARLY ----
@@ -228,4 +233,11 @@ class AlertPresenter(INotified):
         await self.broadcaster.notify_preconfigured_channels(
             BaseLocalization.notification_text_trading_halted_multi,
             event.changed_chains
+        )
+
+    async def _handle_mimir(self, data: AlertMimirChange):
+        await self.deps.broadcaster.notify_preconfigured_channels(
+            BaseLocalization.notification_text_mimir_changed,
+            data.changes,
+            data.holder,
         )

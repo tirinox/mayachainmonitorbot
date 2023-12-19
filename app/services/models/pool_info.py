@@ -94,7 +94,7 @@ class PoolInfo:
         return self.is_status_enabled(self.status)
 
     def usd_depth(self, usd_per_rune):
-        pool_depth_usd = 2 * thor_to_float(self.balance_rune) * usd_per_rune  # note: * 2 as in off. frontend
+        pool_depth_usd = 2 * cacao_to_float(self.balance_rune) * usd_per_rune  # note: * 2 as in off. frontend
         return pool_depth_usd
 
     def calculate_pool_units_rune_asset(self, add_rune: int, add_asset: int) -> PoolUnitsAdjustment:

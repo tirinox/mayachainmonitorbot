@@ -214,12 +214,17 @@ async def demo_add_liq(app):
     await show_tx_by_hash(app, '5FD68A320E462D9E6E18F125DF057E8B1A13ABBEC8D569951012843EF3E67CB7')
 
 
+async def demo_withdraw_liq(app):
+    await show_tx_by_hash(app, '3A46546F66FBBCD7C24E3737A782C3830420E02D423F95FABED7E897C8BEAF2E')
+
+
 async def main():
     app = LpAppFramework()
     await app.prepare(brief=True)
 
     # await demo_swap_1(app)
-    await demo_add_liq(app)
+    # await demo_add_liq(app)
+    await demo_withdraw_liq(app)
 
 
 if __name__ == '__main__':

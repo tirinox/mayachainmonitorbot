@@ -255,6 +255,7 @@ tx:
     enabled: true
     min_usd_total: 50000
     curve_mult: 0.1
+    cooldown: 20m  # (!) new
 
   dex_aggregator_update:
     enabled: true
@@ -406,6 +407,7 @@ constants:
 chain_halt_state:
   enabled: true
   fetch_period: 67s
+  cooldown: 5m  # (!) new
 
 
 last_block:

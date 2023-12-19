@@ -3,6 +3,8 @@ import random
 from typing import Dict, NamedTuple, List
 
 from aionode.types import ThorChainInfo
+from services.lib.cooldown import Cooldown
+from services.lib.date_utils import MINUTE
 from services.lib.delegates import INotified, WithDelegates
 from services.lib.depcont import DepContainer
 from services.lib.utils import WithLogger
@@ -18,12 +20,26 @@ class TradingHaltedNotifier(INotified, WithDelegates, WithLogger):
     def __init__(self, deps: DepContainer):
         super().__init__()
         self.deps = deps
-        # self.spam_cd = Cooldown(self.deps.db, 'TradingHalted', 30 * MINUTE)
+
+        self.cooldown_sec = self.deps.cfg.as_interval('chain_halt_state.cooldown', 10 * MINUTE)
 
     def _dbg_randomize_chain_dic_halted(self, data: Dict[str, ThorChainInfo]):
         for item in data.values():
             item.halted = random.uniform(0, 1) > 0.5
         return data
+
+
+    def _make_spam_control(self, chain: str):
+        return Cooldown(self.deps.db, f'TradingHalted:{chain}', self.cooldown_sec)
+
+    async def _can_notify_on_chain(self, chain: str):
+        if not chain:
+            return False
+        can_do = await self._make_spam_control(chain).can_do()
+        if not can_do:
+            self.logger.warning(f"Attention! {chain} halt state changed again, but spam control didn't let it through")
+        return can_do
+
 
     async def on_data(self, sender, data: Dict[str, ThorChainInfo]):
         # data = self._dbg_randomize_chain_dic_halted(data)
@@ -41,13 +57,19 @@ class TradingHaltedNotifier(INotified, WithDelegates, WithLogger):
                 old_info = await self._get_saved_chain_state(chain)
                 if old_info and old_info.is_ok:
                     if old_info.halted != new_info.halted:
-                        changed_chains.append(new_info)
+                        if await self._can_notify_on_chain(chain):
+                            changed_chains.append(new_info)
 
                 await self._save_chain_state(new_info)
                 self._update_global_state(chain, new_info.halted)
 
         if changed_chains:
             await self.pass_data_to_listeners(AlertChainHalt(changed_chains))
+
+            # after notification trigger the involved cooldown timers
+            for chain_info in changed_chains:
+                chain_info: ThorChainInfo
+                await self._make_spam_control(chain_info.chain).do()
 
     KEY_CHAIN_HALTED = 'Chain:LastInfo'
 

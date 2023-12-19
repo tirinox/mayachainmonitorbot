@@ -728,7 +728,7 @@ class BaseLocalization(ABC):  # == English
         amount_more = how_much_savings_you_can_add(pool, max_synth_per_asset_ratio)
         saver_pb = self._cap_progress_bar(ThorCapInfo(cap, pool.synth_supply_float, usd_per_rune))
         saver_pct = asset_amount / pool.savers_depth_float * 100.0 if pool.savers_depth else 100
-        return amount_more, Asset(pool.asset).name, saver_pb, thor_to_float(cap), saver_pct
+        return amount_more, Asset(pool.asset).name, saver_pb, cacao_to_float(cap), saver_pct
 
     def notification_text_streaming_swap_started(self, e: AlertSwapStart, name_map: NameMap):
         user_link = self.link_to_address(e.from_address, name_map)

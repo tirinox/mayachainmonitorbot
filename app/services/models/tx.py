@@ -2,10 +2,10 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import List, Optional, NamedTuple
 
-from services.lib.constants import CACAO_SYMBOL, Chains, thor_to_float, bp_to_float
+from services.lib.constants import CACAO_SYMBOL, Chains, thor_to_float, bp_to_float, cacao_to_float
 from services.lib.date_utils import now_ts
 from services.lib.memo import THORMemo
-from services.lib.money import Asset, is_cacao
+from services.lib.money import Asset, is_cacao, convert_amount
 from services.lib.texts import safe_sum
 from services.lib.w3.token_record import SwapInOut
 from services.models.cap_info import ThorCapInfo
@@ -23,7 +23,7 @@ class ThorCoin(NamedTuple):
 
     @property
     def amount_float(self):
-        return thor_to_float(self.amount)
+        return convert_amount(self.amount, self.asset)
 
     @staticmethod
     def merge_two(a: 'ThorCoin', b: 'ThorCoin'):
@@ -98,7 +98,7 @@ class ThorMetaSwap:
 
     @property
     def liquidity_fee_rune_float(self):
-        return thor_to_float(self.liquidity_fee)
+        return cacao_to_float(self.liquidity_fee)
 
     @staticmethod
     def merge_two(a: 'ThorMetaSwap', b: 'ThorMetaSwap'):
@@ -137,7 +137,7 @@ class ThorMetaWithdraw:
 
     @property
     def ilp_rune(self):
-        return thor_to_float(self.impermanent_loss_protection)
+        return cacao_to_float(self.impermanent_loss_protection)
 
     @classmethod
     def parse(cls, j):

@@ -5,11 +5,10 @@ from typing import List
 from localization.languages import Language
 from localization.manager import BaseLocalization
 from services.jobs.affiliate_merge import AffiliateTXMerger, ZERO_HASH
-from services.jobs.fetch.profit_against_cex import StreamingSwapVsCexProfitCalculator
 from services.jobs.fetch.tx import TxFetcher
 from services.jobs.volume_filler import VolumeFillerUpdater
 from services.lib.constants import Chains, thor_to_float
-from services.lib.explorers import get_explorer_url_to_address, get_explorer_url_to_tx
+from services.lib.explorers import get_explorer_url_to_address
 from services.lib.midgard.name_service import NameMap
 from services.lib.midgard.parser import get_parser_by_network_id
 from services.lib.midgard.urlgen import free_url_gen
@@ -21,87 +20,6 @@ from services.models.tx import ThorTx
 from services.models.tx_type import TxType
 from services.notify.types.tx_notify import SwapTxNotifier, LiquidityTxNotifier
 from tools.lib.lp_common import LpAppFramework, load_sample_txs, Receiver
-
-
-async def midgard_test_1(app):
-    q_path = free_url_gen.url_for_tx(0, 50,
-                                     tx_type=TxType.ADD_LIQUIDITY,
-                                     txid='58B3D28E121A34BCE2D31018C00C660942088BC548171A427A51F6825ED77142')
-    await present_one_aff_tx(app, q_path)
-    q_path = free_url_gen.url_for_tx(0, 50,
-                                     tx_type=TxType.SWAP,
-                                     txid='7F98B4867018DC97C1DC8A6C34E1E597641FC306093B70AB41F156C85D0CD01E')
-    await present_one_aff_tx(app, q_path)
-    q_path = free_url_gen.url_for_tx(0, 50, address='bnb10gh0p6thzjz54jqy9lg0rv733fnl0vqmc789pp')
-    await present_one_aff_tx(app, q_path, find_aff=True)
-
-
-async def demo_midgard_test_large_ilp(app):
-    q_path = free_url_gen.url_for_tx(0, 50,
-                                     tx_type=TxType.WITHDRAW,
-                                     txid='C3BC98CB15022DBA8C5BAEC3C3637FD0BBD55CB7F7000BB62594C234C219E798')
-    await present_one_aff_tx(app, q_path)
-
-
-async def demo_savers_add(app):
-    q_path = free_url_gen.url_for_tx(0, 50,
-                                     tx_type=TxType.ADD_LIQUIDITY,
-                                     txid='B380846D04AFB83961D2728177B10D593E1C144A534A21A443366D233971A135')
-    # txid='413768826A02E8EA4068A2F35A7941008A15A18F7E76E49B8602BD99D840B721')
-    await present_one_aff_tx(app, q_path)
-
-
-async def demo_test_savers_vaults(app):
-    q_path = free_url_gen.url_for_tx(0, 50, txid='050000225130CE9C5DBDDF0D1821036FC1CB7473A01EA41BB4F1EB5E3431A036')
-    await present_one_aff_tx(app, q_path, find_aff=False)
-
-
-async def demo_test_aff_add_liq(app):
-    q_path = free_url_gen.url_for_tx(0, 50,
-                                     tx_type=TxType.ADD_LIQUIDITY,
-                                     txid='CBC44B4E2A6332692BD1A3CCE7817F0CBE8AB2CFDC10470327B3057FA1CD8017')
-    await present_one_aff_tx(app, q_path)
-
-
-async def demo_aggr_aff(app):
-    # A3C95CE6146AA7A4651F34E12E1DAAB65AF399563CA7CBB3DC51EF5B623B0270
-    q_path = free_url_gen.url_for_tx(0, 50, txid='DD68C004C448E0813BDB8BACED6F6A3D62298FDB74D6882D9887662DCF284EA3')
-    await present_one_aff_tx(app, q_path)
-
-
-async def demo_aggr_aff_2(app):
-    """
-    Midgard URL: https://midgard.ninerealms.com/v2/actions?txid=E6885BE2566B5D6BF49532CE97E65F1BBA3C9EDCA1BD95B9D34F3619AA41F656
-    Viewblock URL: https://viewblock.io/thorchain/tx/E6885BE2566B5D6BF49532CE97E65F1BBA3C9EDCA1BD95B9D34F3619AA41F656
-    """
-    q_path = free_url_gen.url_for_tx(0, 50, txid='E6885BE2566B5D6BF49532CE97E65F1BBA3C9EDCA1BD95B9D34F3619AA41F656')
-    await present_one_aff_tx(app, q_path)
-
-
-async def demo_test_2(app):
-    q_path = free_url_gen.url_for_tx(0, 50, txid='7D72CBE466F8E817B700D11D0EDB8FE6183B8DD13912F0810FFD87BE708363E9')
-    await present_one_aff_tx(app, q_path)
-
-
-async def demo_same_merge_swap(app):
-    # 4931F82A96196AD5393BB27A32F9EF98B7D80E46035EC6700E4BADF1B75129AC
-    q_path = free_url_gen.url_for_tx(0, 50, txid='4931F82A96196AD5393BB27A32F9EF98B7D80E46035EC6700E4BADF1B75129AC')
-    await present_one_aff_tx(app, q_path)
-
-
-async def demo_withdraw_savers(app):
-    q_path = free_url_gen.url_for_tx(0, 50,
-                                     txid='C24DF9D0A379519EBEEF2DBD50F5AD85AB7A5B75A2F3C571E185202EE2E9876F',
-                                     # txid='59A5981184350A481F02FC9D8782FF114A4A010E0FE9C26630089D0944DC42AF',
-                                     tx_type=TxType.WITHDRAW)
-    await present_one_aff_tx(app, q_path)
-
-
-async def demo_add_savers(app):
-    q_path = free_url_gen.url_for_tx(0, 50,
-                                     txid='2A36FD67A32D47C9B7B1821197A8EF9F3C688CAB8979C43F235B8664563009CF',
-                                     tx_type=TxType.ADD_LIQUIDITY)
-    await present_one_aff_tx(app, q_path)
 
 
 async def midgard_test_donate(app, mdg, tx_parser):
@@ -151,8 +69,8 @@ async def send_tx_notification(app, ex_tx, loc: BaseLocalization = None):
     pool_info: PoolInfo = app.deps.price_holder.pool_info_map.get(pool)
     full_rune = ex_tx.calc_full_rune_amount(app.deps.price_holder.pool_info_map)
 
-    profit_calc = StreamingSwapVsCexProfitCalculator(app.deps)
-    await profit_calc.get_cex_data_v2(ex_tx)
+    # profit_calc = StreamingSwapVsCexProfitCalculator(app.deps)
+    # await profit_calc.get_cex_data_v2(ex_tx)
 
     print(f'{ex_tx.affiliate_fee = }')
     rune_price = app.deps.price_holder.usd_per_rune
@@ -283,72 +201,21 @@ async def find_affiliate_txs(app: LpAppFramework, desired_count=5, tx_types=None
         page += 1
 
 
-async def demo_find_missed_txs_swap(app: LpAppFramework):
-    d = app.deps
-    fetcher_tx = TxFetcher(d, tx_types=(TxType.SWAP,))
-
-    aggregator = AggregatorDataExtractor(d)
-    fetcher_tx.add_subscriber(aggregator)
-
-    volume_filler = VolumeFillerUpdater(d)
-    aggregator.add_subscriber(volume_filler)
-
-    page = 50
-    while True:
-        txs = await fetcher_tx.fetch_one_batch(page, tx_types=(TxType.SWAP,))
-        for tx in txs.txs:
-            if 'ETH.ETH' in tx.pools and tx.rune_amount > 100_000:
-                url = get_explorer_url_to_tx(d.cfg.network_id, Chains.MAYA, tx.tx_hash)
-                amt = thor_to_float(tx.first_input_tx.first_amount)
-                print(f'{tx.first_pool} ({url}) amount = {amt} {tx.first_input_tx.first_asset}')
-                sep()
-        page += 1
-
-
-async def demo_swap_synth(app):
-    q_path = free_url_gen.url_for_tx(0, 50,
-                                     txid='CD95B08C68AD0EC93E13A586F04A7F6BC6EE4B70471F84F1BD3D4933EA86FAA2',
-                                     tx_type=TxType.SWAP)
+async def demo_swap_1(app):
+    q_path = free_url_gen.url_for_tx(
+        0, 50, tx_type=TxType.SWAP,
+        # txid='5C74163486D8A8AB36C3595A25E53C3FE07501D0772201B2F846F676A841DF33',
+        txid='3C2CFED5355E5A478B5B9E3D0C4D2CC672870AA7B4F442A56E79C1714800ACBB',
+    )
     await present_one_aff_tx(app, q_path)
-
-
-async def demo_swap_with_refund_and_incorrect_savings_vs_cex(app):
-    # txid = '98A0E24728729721BC6295A85991D28BF4A26A8767D773FD6BA53E6742F70631'  # no refund, synth
-    # txid = 'E22E41745A9422B12C02E26F12BE79D621DDCB3CA1BC954CCAD2AB4792DE5AC7'  # with refund BTC -> ETH + BTC
-    txid = '6604B9BC94BC50158BE5B4486178AE880F01E6532893F357C4ACBA1E83FFCB9F'  # normal SS
-
-    q_path = free_url_gen.url_for_tx(0, 50,
-                                     txid=txid,
-                                     tx_type=TxType.SWAP)
-    await present_one_aff_tx(app, q_path)
+    # q_path = free_url_gen.url_for_tx(0, 50, address='bnb10gh0p6thzjz54jqy9lg0rv733fnl0vqmc789pp')
 
 
 async def main():
     app = LpAppFramework()
     await app.prepare(brief=True)
 
-    # await midgard_test_donate(app, mdg, tx_parser)
-    # await midgard_test_1(app, mdg, tx_parser)
-    # await refund_full_rune(app)
-    # await demo_midgard_test_large_ilp(app)
-    # await demo_full_tx_pipeline(app, announce=True)
-    # await demo_test_savers_vaults(app)
-    # await demo_aggr_aff_2(app)
-    # await demo_test_aff_add_liq(app)
-    # await demo_test_2(app)
-    # await demo_aggr_aff(app)
-    # await demo_same_merge_swap(app)
-    # await demo_withdraw_savers(app)
-    # await demo_add_savers(app)
-    # await demo_find_last_savers_additions(app)
-    # await demo_midgard_test_large_ilp(app)
-    # await demo_savers_add(app)
-    # await demo_verify_tx_scanner_in_the_past(app)
-    # await find_affiliate_txs(app, 1, (ThorTxType.TYPE_SWAP,))
-    # await demo_find_aggregator_error(app)
-    # await demo_find_missed_txs_swap(app)
-    # await demo_swap_synth(app)
-    await demo_swap_with_refund_and_incorrect_savings_vs_cex(app)
+    await demo_swap_1(app)
 
 
 if __name__ == '__main__':

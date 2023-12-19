@@ -83,7 +83,7 @@ from services.notify.types.savers_stats_notify import SaversStatsNotifier
 from services.notify.types.stats_notify import NetworkStatsNotifier
 from services.notify.types.supply_notify import SupplyNotifier
 from services.notify.types.transfer_notify import TokenTransferNotifier
-from services.notify.types.tx_notify import GenericTxNotifier, LiquidityTxNotifier, SwapTxNotifier
+from services.notify.types.tx_notify import GenericTxNotifier, LiquidityTxNotifier, SwapTxNotifier, RefundTxNotifier
 from services.notify.types.version_notify import VersionNotifier
 from services.notify.types.voting_notify import VotingNotifier
 
@@ -367,7 +367,7 @@ class App(WithLogger):
                     stream_swap_notifier.add_subscriber(d.alert_presenter)
 
             if d.cfg.tx.refund.get('enabled', True):
-                self.refund_notifier_tx = GenericTxNotifier(d, d.cfg.tx.refund, tx_types=(TxType.REFUND,), curve=curve)
+                self.refund_notifier_tx = RefundTxNotifier(d, d.cfg.tx.refund, curve=curve)
 
                 volume_filler.add_subscriber(self.refund_notifier_tx)
                 self.refund_notifier_tx.add_subscriber(d.alert_presenter)
@@ -469,6 +469,7 @@ class App(WithLogger):
         if d.cfg.get('constants.mimir_change.enabled', True):
             notifier_mimir_change = MimirChangedNotifier(d)
             d.mimir_const_fetcher.add_subscriber(notifier_mimir_change)
+            notifier_mimir_change.add_subscriber(d.alert_presenter)
 
         if d.cfg.get('constants.voting.enabled', True):
             voting_notifier = VotingNotifier(d)
@@ -582,6 +583,7 @@ class App(WithLogger):
         await asyncio.sleep(self.sleep_step)
 
         # todo: debug
+        # noinspection PyAsyncCall
         asyncio.create_task(self._debug_command())
 
         # start background jobs

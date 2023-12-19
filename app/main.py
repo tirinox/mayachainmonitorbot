@@ -372,16 +372,16 @@ class App(WithLogger):
                 volume_filler.add_subscriber(self.refund_notifier_tx)
                 self.refund_notifier_tx.add_subscriber(d.alert_presenter)
 
-            if d.cfg.tx.loans.get('enabled', True):
-                loan_extractor = LoanExtractorBlock(d)
-                d.block_scanner.add_subscriber(loan_extractor)
-
-                if achievements_enabled:
-                    loan_extractor.add_subscriber(achievements)
-
-                loan_notifier = LoanTxNotifier(d, curve=curve)
-                loan_extractor.add_subscriber(loan_notifier)
-                loan_notifier.add_subscriber(d.alert_presenter)
+            # if d.cfg.tx.loans.get('enabled', True):
+            #     loan_extractor = LoanExtractorBlock(d)
+            #     d.block_scanner.add_subscriber(loan_extractor)
+            #
+            #     if achievements_enabled:
+            #         loan_extractor.add_subscriber(achievements)
+            #
+            #     loan_notifier = LoanTxNotifier(d, curve=curve)
+            #     loan_extractor.add_subscriber(loan_notifier)
+            #     loan_notifier.add_subscriber(d.alert_presenter)
 
             tasks.append(fetcher_tx)
 

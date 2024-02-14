@@ -35,7 +35,7 @@ class RuneMarketInfoFetcher(WithLogger):
     async def total_pooled_rune(self):
         try:
             j = await self.deps.midgard_connector.request(free_url_gen.url_network())
-        # still "rune" even for Maya. Stay alert!
+            # still "rune" even for Maya. Stay alert!
             total_pooled_rune = j.get('totalPooledRune', 0)
             return cacao_to_float(total_pooled_rune)
         except (TypeError, ValueError):

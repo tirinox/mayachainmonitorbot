@@ -208,7 +208,17 @@ class NativeScannerBlock(BaseFetcher):
 
     @property
     def should_run_aggressive_scan(self):
-        return now_ts() - self._last_block_ts > self._time_tolerance_for_aggressive_scan
+        time_since_last_block = now_ts() - self._last_block_ts
+        if time_since_last_block > self._time_tolerance_for_aggressive_scan:
+            self.logger.info(f'😡 time_since_last_block = {time_since_last_block:.3f} sec. Go aggrrh!')
+            return True
+
+        lag_behind_node_block = int(self.deps.last_block_store) - self._last_block
+        if lag_behind_node_block > 2:
+            self.logger.info(f"😡 {lag_behind_node_block = }. Go aggrrh!")
+            return True
+
+        return False
 
     async def fetch(self):
         await self.ensure_last_block()
@@ -220,7 +230,7 @@ class NativeScannerBlock(BaseFetcher):
 
         self._block_cycle = 0
 
-        aggressive = self.should_run_aggressive_scan
+        aggressive = self.should_run_aggressive_scan()
         if aggressive:
             self.logger.info('Aggressive scan will be run at this tick.')
 
@@ -260,8 +270,6 @@ class NativeScannerBlock(BaseFetcher):
                 self._on_error(str(e))
                 break
 
-            await self.pass_data_to_listeners(block_result)
-
             self._last_block_ts = now_ts()
             self._last_block += 1
             self._this_block_attempts = 0
@@ -289,3 +297,4 @@ class NativeScannerBlock(BaseFetcher):
             return
 
         return block_result.only_successful
+f

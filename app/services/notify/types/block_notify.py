@@ -1,7 +1,6 @@
 from typing import Dict, Optional
 
 from aionode.types import ThorLastBlock
-
 from services.jobs.fetch.last_block import LastBlockFetcher
 from services.lib.config import SubConfig
 from services.lib.constants import THOR_BLOCK_SPEED, THOR_BLOCK_TIME
@@ -20,6 +19,9 @@ class LastBlockStore(INotified, WithDelegates, WithLogger):
 
     @property
     def maya(self):
+        return self.last_maya_block
+
+    def __int__(self):
         return self.last_maya_block
 
     def __init__(self, deps: DepContainer):

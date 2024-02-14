@@ -5,7 +5,7 @@ from services.jobs.fetch.circulating import RuneCirculatingSupplyFetcher, CacaoC
     ThorRealms
 from services.jobs.fetch.gecko_price import get_cacao_coin_gecko_info, gecko_market_cap_rank, gecko_ticker_price, \
     gecko_market_volume
-from services.lib.constants import thor_to_float, DEFAULT_CEX_NAME, DEFAULT_CEX_BASE_ASSET, cacao_to_float
+from services.lib.constants import DEFAULT_CEX_NAME, DEFAULT_CEX_BASE_ASSET, cacao_to_float
 from services.lib.date_utils import MINUTE
 from services.lib.depcont import DepContainer
 from services.lib.midgard.urlgen import free_url_gen
@@ -33,10 +33,13 @@ class RuneMarketInfoFetcher(WithLogger):
 
     @retries(5)
     async def total_pooled_rune(self):
-        j = await self.deps.midgard_connector.request(free_url_gen.url_network())
+        try:
+            j = await self.deps.midgard_connector.request(free_url_gen.url_network())
         # still "rune" even for Maya. Stay alert!
-        total_pooled_rune = j.get('totalPooledRune', 0)
-        return cacao_to_float(total_pooled_rune)
+            total_pooled_rune = j.get('totalPooledRune', 0)
+            return cacao_to_float(total_pooled_rune)
+        except (TypeError, ValueError):
+            return .0
 
     @retries(5)
     async def _get_circulating_supply(self) -> CacaoCirculatingSupply:

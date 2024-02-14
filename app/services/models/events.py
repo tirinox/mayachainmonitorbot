@@ -33,7 +33,7 @@ class EventSwap(NamedTuple):
             swap_target=int(attrs.get('swap_target', 0)),
             swap_slip=int(attrs.get('swap_slip', 0)),
             liquidity_fee=int(attrs.get('liquidity_fee', 0)),
-            liquidity_fee_in_rune=int(attrs.get('liquidity_fee_in_rune', 0)),
+            liquidity_fee_in_rune=int(attrs.get('liquidity_fee_in_cacao', 0)),
             emit_asset=attrs.get('emit_asset', ''),
             streaming_swap_quantity=int(attrs.get('streaming_swap_quantity', 0)),
             streaming_swap_count=int(attrs.get('streaming_swap_count', 0)),

@@ -226,6 +226,10 @@ async def demo_donate(app):
     await show_tx_by_hash(app, '7D6E1165F8A631A1A03EAC935B9413957C88139E9299DBC9E6FFF7A813E28840')
 
 
+async def demo_affiliate_fee_2(app):
+    await show_tx_by_hash(app, 'DED6792215D11588909CED7BA66A423619B3C2002AB438A97DBF9379C9A1488C')
+
+
 async def main():
     app = LpAppFramework()
     await app.prepare(brief=True)
@@ -234,7 +238,8 @@ async def main():
     # await demo_add_liq(app)
     # await demo_withdraw_liq(app)
     # await demo_refund(app)
-    await demo_donate(app)
+    # await demo_donate(app)
+    await demo_affiliate_fee_2(app)
 
 
 if __name__ == '__main__':

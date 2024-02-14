@@ -75,6 +75,10 @@ class NativeScannerBlock(BaseFetcher):
         self._time_tolerance_for_aggressive_scan = THOR_BLOCK_TIME * 1.1  # 6 sec + 10%
 
     @property
+    def last_block_ts(self):
+        return self._last_block_ts
+
+    @property
     def block_cycle(self):
         return self._block_cycle
 
@@ -206,7 +210,6 @@ class NativeScannerBlock(BaseFetcher):
                        message=block.error_message,
                        last_available=block.last_available_block)
 
-    @property
     def should_run_aggressive_scan(self):
         time_since_last_block = now_ts() - self._last_block_ts
         if time_since_last_block > self._time_tolerance_for_aggressive_scan:
@@ -238,6 +241,7 @@ class NativeScannerBlock(BaseFetcher):
             try:
                 self.logger.info(f'Fetching block #{self._last_block}. Cycle: {self._block_cycle}.')
                 block_result = await self.fetch_one_block(self._last_block)
+
                 if block_result is None:
                     self._on_error('None returned')
                     break
@@ -275,6 +279,8 @@ class NativeScannerBlock(BaseFetcher):
             self._this_block_attempts = 0
             self._block_cycle += 1
 
+            await self.pass_data_to_listeners(block_result)
+
             if self.one_block_per_run:
                 self.logger.warning('One block per run mode is on. Stopping.')
                 break
@@ -297,4 +303,3 @@ class NativeScannerBlock(BaseFetcher):
             return
 
         return block_result.only_successful
-f

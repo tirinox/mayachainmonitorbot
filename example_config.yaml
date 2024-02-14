@@ -175,8 +175,8 @@ names:
     t: THORSwap
     tr: Trust iOS
     te-ios: Trust iOS
-    te: Trust Android
-    rg: RangoExchange
+    te: "Trust Android"
+    rg: "Rango Exchange"
     commission: Ferz
     dx: Asgardex
     dcf: DecentralFi
@@ -186,6 +186,9 @@ names:
     runifier: Runifier
     0xbami: Unizen
     ds: Defispot
+    el: "El Dorado"
+    cs: CacaoSwap
+    kf: "Kensho Finance"
 
 
 tx:

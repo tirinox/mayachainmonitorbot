@@ -2060,7 +2060,7 @@ class BaseLocalization(ABC):  # == English
                 else:
                     delta_p = pretty_percent(delta)
                 delta_p = bracketify(delta_p) if delta else ''
-            except ValueError:
+            except (ValueError, TypeError):
                 delta_p = ''
 
             asset = Asset.from_string(pool.asset).shortest

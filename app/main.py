@@ -296,7 +296,7 @@ class App(WithLogger):
 
         if d.cfg.get('tx.enabled', True):
             main_tx_types = [
-                # ThorTxType.TYPE_SWAP,  # fixme: using the native block scanner
+                TxType.SWAP,  # re-enabled
                 TxType.REFUND,
                 TxType.ADD_LIQUIDITY,
                 TxType.WITHDRAW,

@@ -95,7 +95,7 @@ def get_explorer_url_for_node(address: str):
 
 
 def get_pool_url(pool_name):
-    return f'https://app.thorswap.finance/add/{pool_name}'
+    return f'https://www.mayascan.org/pools/{pool_name}'
 
 
 def get_mayacan_address_url(network: str, address: str):

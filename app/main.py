@@ -26,13 +26,11 @@ from services.jobs.fetch.net_stats import NetworkStatisticsFetcher
 from services.jobs.fetch.node_info import NodeInfoFetcher
 from services.jobs.fetch.pol import POLFetcher
 from services.jobs.fetch.pool_price import PoolFetcher, PoolInfoFetcherMidgard
-from services.jobs.fetch.profit_against_cex import StreamingSwapVsCexProfitCalculator
 from services.jobs.fetch.queue import QueueFetcher
 from services.jobs.fetch.savers_vnx import VNXSaversStatsFetcher
 from services.jobs.fetch.tx import TxFetcher
 from services.jobs.ilp_summer import ILPSummer
 from services.jobs.node_churn import NodeChurnDetector
-from services.jobs.scanner.loan_extractor import LoanExtractorBlock
 from services.jobs.scanner.native_scan import NativeScannerBlock
 from services.jobs.scanner.swap_extractor import SwapExtractorBlock
 from services.jobs.transfer_detector import RuneTransferDetectorTxLogs
@@ -70,7 +68,6 @@ from services.notify.types.block_notify import BlockHeightNotifier, LastBlockSto
 from services.notify.types.chain_notify import TradingHaltedNotifier
 from services.notify.types.dex_report_notify import DexReportNotifier
 from services.notify.types.key_metrics_notify import KeyMetricsNotifier
-from services.notify.types.loans_notify import LoanTxNotifier
 from services.notify.types.mimir_notify import MimirChangedNotifier
 from services.notify.types.node_churn_notify import NodeChurnNotifier
 from services.notify.types.pol_notify import POLNotifier

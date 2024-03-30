@@ -17,6 +17,9 @@ class PoolChurnNotifier(INotified, WithDelegates, WithLogger):
         self.spam_cd = Cooldown(self.deps.db, 'PoolChurnNotifier-spam', cooldown_sec)
 
     async def on_data(self, sender: PoolInfoFetcherMidgard, data: RuneMarketInfo):
+        if not data or not data.pools:
+            return
+
         # compare starting w 2nd iteration
         if not self.old_pool_dict:
             self.old_pool_dict = data.pools

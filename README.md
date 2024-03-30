@@ -58,3 +58,5 @@ make start
 
 For deep performance profiling
 `pip install line-profiler-pycharm`
+
+If you use PyCharm, please mark directory "app" as a source root.

@@ -30,9 +30,9 @@ async def send_to_channel_test_message(d: DepContainer):
 
         d.price_holder.pool_info_map = deepcopy(d.price_holder.pool_info_map)  # make a copy
         # del lph.pool_info_map['ETH.USDT-0XDAC17F958D2EE523A2206206994597C13D831EC7']  # deleted pool
-        del d.price_holder.pool_info_map['ETH.SUSHI-0X6B3595068778DD592E39A122F4F5A5CF09C90FE2']  # deleted pool
-        d.price_holder.pool_info_map['BNB.AVA-645'].status = PoolInfo.STAGED
-        d.price_holder.pool_info_map['BNB.FTM-A64'].status = PoolInfo.AVAILABLE
+        del d.price_holder.pool_info_map['BTC.BTC']  # deleted pool
+        d.price_holder.pool_info_map['ETH.USDC-0XA0B86991C6218B36C1D19D4A2E9EB0CE3606EB48'].status = PoolInfo.STAGED
+        d.price_holder.pool_info_map['ETH.USDT-0XDAC17F958D2EE523A2206206994597C13D831EC7'].status = PoolInfo.AVAILABLE
         d.price_holder.pool_info_map[DOGE_SYMBOL] = PoolInfo(DOGE_SYMBOL, 18555, 18555, 100, PoolInfo.STAGED)
 
         await notifier_pool_churn.on_data(ppf, d.price_holder.pool_info_map)  # no update at this moment!

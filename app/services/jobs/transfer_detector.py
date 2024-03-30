@@ -133,7 +133,7 @@ class RuneTransferDetectorTxLogs(WithDelegates, INotified, WithLogger):
         # Third, add inbound transfers from the Protocol from the TX logs
         try:
             for logs in r.tx_logs:
-                for log in logs:
+                for log in logs.entries:
                     for ev in log['events']:
                         dec_ev = DecodedEvent.from_dict(ev)
                         if t := self._build_transfer_from_event(dec_ev, r.block_no):

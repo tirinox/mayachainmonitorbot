@@ -108,7 +108,7 @@ class PoolPictureGenerator(BasePictureGenerator):
 
         # header = loc.top_pools()
         header = loc.TEXT_BP_HEADER
-        draw.text((830, 106), header,
+        draw.text((744, 106), header,
                   fill='#fff', font=r.fonts.get_font_bold(80),
                   anchor='lm')
 

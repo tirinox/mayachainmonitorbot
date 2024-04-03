@@ -10,7 +10,7 @@ from typing import List, Dict, NamedTuple, Optional, Tuple, Any
 
 from semver import VersionInfo
 
-from services.lib.constants import thor_to_float, float_to_thor, bp_to_float
+from services.lib.constants import float_to_thor, bp_to_float, cacao_to_float
 from services.lib.date_utils import now_ts
 from services.lib.texts import find_country_emoji
 from services.lib.thor_logic import get_effective_security_bond
@@ -99,11 +99,14 @@ class NodeInfo(BaseModelMixin):
         return cls(
             status=d.get('status', NodeInfo.DISABLED),
             node_address=d.get('node_address', ''),
-            bond=float(thor_to_float(d.get('total_bond', 0))),
+            bond=float(
+                cacao_to_float(d.get(
+                    'total_bond', d.get('bond', 0.0)
+                ))),
             ip_address=d.get('ip_address', ''),
             version=d.get('version', ''),
             slash_points=int(d.get('slash_points', 0)),
-            current_award=thor_to_float(d.get('current_award', 0.0)),
+            current_award=cacao_to_float(d.get('current_award', 0.0)),
             requested_to_leave=bool(d.get('requested_to_leave', False)),
             forced_to_leave=bool(d.get('forced_to_leave', False)),
             active_block_height=int(d.get('active_block_height', 0)),
@@ -113,7 +116,7 @@ class NodeInfo(BaseModelMixin):
             bond_providers=[
                 BondProvider(
                     address=(bond_provider_address := prov.get('bond_address')),
-                    rune_bond=thor_to_float(prov.get('bond', 0)),
+                    rune_bond=cacao_to_float(prov.get('bond', 0)),
                     is_node_operator=(bond_provider_address == node_operator)
                 ) for prov in (bond_provider_info.get('providers') or [])
             ],
@@ -171,7 +174,7 @@ def calculate_security_cap_rune(nodes: List[NodeInfo], full=False):
         cap = sum(active_bonds)
     else:
         cap = get_effective_security_bond(active_bonds)
-    return thor_to_float(cap)
+    return cacao_to_float(cap)
 
 
 class EventBondProviderPayout(NamedTuple):

@@ -44,8 +44,8 @@ class Resources(metaclass=Singleton):
     HIDDEN_IMG = f'{BASE}/hidden.png'
     BG_IMG = f'{BASE}/lp_bg.png'
 
-    LOGO_FILE = f'{BASE}/tc_logo.png'
-    LOGO_FILE_TRANSPARENT = f'{BASE}/tc_logo_transparent.png'
+    LOGO_FILE = f'{BASE}/maya_logo_transparent.png'
+    LOGO_FILE_TRANSPARENT = f'{BASE}/maya_logo_transparent.png'
 
     CUSTOM_FONT_RUNIC = f'{BASE}/achievement/numbers_runic'
     CUSTOM_FONT_RUNIC_BW = f'{BASE}/achievement/numbers_runic_bw'

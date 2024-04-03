@@ -28,11 +28,14 @@ async def demo_test_geo_ip_google():
 
 
 async def get_ip_infos_pickled(lp_app, path='node_geo_new_full.pickle') -> NetworkNodeIpInfo:
+    result_network_info = None
     if path:
-        path = os.path.join('../../tmp/', path)
-        result_network_info = load_pickle(path)
-    else:
-        result_network_info = None
+        try:
+            path = os.path.join('../../temp/', path)
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            result_network_info = load_pickle(path)
+        except FileNotFoundError:
+            print('No pickled data found')
 
     if not result_network_info:
         geo_ip = GeoIPManager(lp_app.deps)
@@ -136,7 +139,7 @@ async def demo_test_new_geo_chart(app: LpAppFramework):
     # chart_pts = EXAMPLE_CHAR_PTS[5:7]
     # chart_pts = list(make_random_node_chart())
 
-    infos = await get_ip_infos_pickled('nodes_new_3.pickle')
+    infos = await get_ip_infos_pickled(app, 'nodes_new_6.pickle')
     gen = NodePictureGenerator(infos, chart_pts, app.deps.loc_man.default)
 
     pic = await gen.generate()
@@ -147,7 +150,7 @@ async def demo_test_new_geo_chart(app: LpAppFramework):
     """
     node_set_info: NetworkNodeIpInfo
     churn_notifier: NodeChurnNotifier
-    loc: BasrLocalisation
+    loc: BaseLocalisation
     chart_pts = await churn_notifier.load_last_statistics(NodePictureGenerator.CHART_PERIOD)
     gen = NodePictureGenerator(node_set_info, chart_pts, loc)
     pic = await gen.generate()
@@ -167,7 +170,7 @@ async def main():
     # await test_donuts()
     # await demo_get_node_stats()
     lp_app = LpAppFramework()
-    async with lp_app:
+    async with lp_app(brief=True):
         await demo_test_new_geo_chart(lp_app)
     # await demo_last_block()
     # await demo_test_parallel_fetch()

@@ -97,10 +97,10 @@ class MainMenuDialog(BaseDialog):
     async def cmd_price(self, message: Message):
         await self.build_metrics_dialog().show_price(message, 7 * DAY)
 
-    # @message_handler(commands='nodes', state='*')
-    # async def cmd_nodes(self, message: Message):
-    #     await self.build_metrics_dialog().show_node_list(message)
-    #
+    @message_handler(commands='nodes', state='*')
+    async def cmd_nodes(self, message: Message):
+        await self.build_metrics_dialog().show_node_list(message)
+
     # @message_handler(commands='stats', state='*')
     # async def cmd_stats(self, message: Message):
     #     await self.build_metrics_dialog().show_last_stats(message)
@@ -108,7 +108,7 @@ class MainMenuDialog(BaseDialog):
     # @message_handler(commands='queue', state='*')
     # async def cmd_queue(self, message: Message):
     #     await self.build_metrics_dialog().show_queue(message, DAY)
-    #
+
     @message_handler(commands='chains', state='*')
     async def cmd_chains(self, message: Message):
         await self.build_metrics_dialog().show_chain_info(message)

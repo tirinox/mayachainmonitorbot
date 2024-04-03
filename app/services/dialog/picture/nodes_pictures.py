@@ -329,15 +329,20 @@ class NodePictureGenerator:
         br.generate(draw, ruler_margin, 1680)
 
         # TC Logo
-        logo_x, logo_y = 30, 22
-        image.paste(r.tc_logo, (logo_x, logo_y))
+        logo_x, logo_y = 30, 30
+        image.paste(r.tc_logo, (logo_x, logo_y), mask=r.tc_logo)
         draw.text((logo_x + 10 + r.tc_logo.width, 81),
                   self.loc.TEXT_PIC_NODES, fill=TC_WHITE,
                   font=r.fonts.get_font(44), anchor='lb')
 
         # Chart
         chart = self._make_bond_chart(self.node_stats_points, r, 900, 450, period=self.CHART_PERIOD)
-        image.paste(chart, (580, 1150), chart)
+        if chart:
+            image.paste(chart, (580, 1150), chart)
+        else:
+            draw.text((w // 2, 1280),
+                      "Still collecting data for bond chart...",
+                      fill=TC_WHITE, font=r.fonts.get_font(30), anchor='mm')
 
         return image
 
@@ -407,6 +412,9 @@ class NodePictureGenerator:
         return list(reversed(results))
 
     def _make_bond_chart(self, pts: List[NodeStatsItem], r, w, h, period=DAY * 14):
+        if len(pts) <= 1:
+            return
+
         gr = PlotGraphLines(w, h, bg=(0, 0, 0, 0))
         gr.x_formatter = gr.date_formatter
         gr.y_formatter = short_rune

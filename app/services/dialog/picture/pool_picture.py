@@ -22,7 +22,7 @@ class PoolPictureGenerator(BasePictureGenerator):
         self.logos = {}
         self.r = Resources()
 
-    FILENAME_PREFIX = 'thorchain_pools'
+    FILENAME_PREFIX = 'maya_pools'
 
     async def prepare(self):
         r = Resources()
@@ -148,16 +148,16 @@ class PoolPictureGenerator(BasePictureGenerator):
         draw.text((x, bottom_value_y), str(total_pools), fill='#eee', font=bottom_value_font, anchor='lm')
         draw.text((x, bottom_text_y), loc.TEXT_BP_ACTIVE_POOLS, fill='#aaa', font=bottom_text_font, anchor='lt')
 
-        # total liquidity
-        x = 870
-        total_liquidity = short_dollar(e.total_liquidity())
-        draw.text((x, bottom_value_y), total_liquidity, fill='#eee', font=bottom_value_font, anchor='lm')
-        draw.text((x, bottom_text_y), loc.TEXT_BP_TOTAL_LIQ, fill='#aaa', font=bottom_text_font, anchor='lt')
-
         # total volume
-        x = 1512
+        x = 870
         total_volume = short_dollar(e.total_volume_24h())
         draw.text((x, bottom_value_y), total_volume, fill='#eee', font=bottom_value_font, anchor='lm')
         draw.text((x, bottom_text_y), loc.TEXT_BP_24H_VOLUME, fill='#aaa', font=bottom_text_font, anchor='lt')
+
+        # total liquidity
+        x = 1512
+        total_liquidity = short_dollar(e.total_liquidity())
+        draw.text((x, bottom_value_y), total_liquidity, fill='#eee', font=bottom_value_font, anchor='lm')
+        draw.text((x, bottom_text_y), loc.TEXT_BP_TOTAL_LIQ, fill='#aaa', font=bottom_text_font, anchor='lt')
 
         return image

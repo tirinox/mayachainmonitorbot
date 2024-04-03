@@ -94,6 +94,16 @@ async def find_anomaly(app, start=13225800, steps=200):
         block += 1
 
 
+async def demo_top_pools(app: LpAppFramework):
+    d = app.deps
+    fetcher_pool_info = PoolInfoFetcherMidgard(d, 1)
+    d.best_pools_notifier = BestPoolsNotifier(d)
+    await d.best_pools_notifier._cooldown.clear()
+    fetcher_pool_info.add_subscriber(d.best_pools_notifier)
+    await fetcher_pool_info.run_once()
+
+
+
 async def debug_load_pools(app: LpAppFramework):
     await app.deps.last_block_fetcher.run_once()
 
@@ -116,7 +126,8 @@ async def main():
         # await demo_cache_blocks(app)
         # await demo_top_pools(app)
         # await demo_price_graph(app)
-        await debug_load_pools(app)
+        # await debug_load_pools(app)
+        await demo_top_pools(app)
 
 
 if __name__ == '__main__':

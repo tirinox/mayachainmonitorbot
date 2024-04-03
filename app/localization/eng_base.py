@@ -2039,6 +2039,16 @@ class BaseLocalization(ABC):  # == English
 
     # ------- BEST POOLS -------
 
+    TEXT_BP_HEADER = "TOP POOLS"
+
+    TEXT_BP_BEST_APR_TITLE = "BEST APR"
+    TEXT_BP_HIGH_VOLUME_TITLE = "HIGH VOLUME"
+    TEXT_BP_DEEPEST_TITLE = "DEEPEST"
+
+    TEXT_BP_ACTIVE_POOLS = 'ACTIVE POOLS'
+    TEXT_BP_TOTAL_LIQ = 'TOTAL LIQUIDITY'
+    TEXT_BP_24H_VOLUME = '24H VOLUME'
+
     def format_pool_top(self, attr_name, pd: PoolMapPair, title, no_pool_text, n_pools):
         top_pools = pd.get_top_pools(attr_name, n=n_pools)
         text = bold(title) + '\n'
@@ -2072,15 +2082,16 @@ class BaseLocalization(ABC):  # == English
         return text.strip()
 
     def notification_text_best_pools(self, pd: PoolMapPair, n_pools):
-        no_pool_text = 'Nothing yet. Maybe still loading...'
-
-        text = '\n\n'.join([self.format_pool_top(top_pools, pd, title, no_pool_text, n_pools) for title, top_pools in [
-            ('💎 Best APY', pd.BY_APY),
-            ('💸 Top volume', pd.BY_VOLUME_24h),
-            ('🏊 Max Liquidity', pd.BY_DEPTH),
-        ]])
-
-        return text
+        # no_pool_text = 'Nothing yet. Maybe still loading...'
+        #
+        # text = '\n\n'.join([self.format_pool_top(top_pools, pd, title, no_pool_text, n_pools) for title, top_pools in [
+        #     ('💎 Best APY', pd.BY_APY),
+        #     ('💸 Top volume', pd.BY_VOLUME_24h),
+        #     ('🏊 Max Liquidity', pd.BY_DEPTH),
+        # ]])
+        #
+        # return text
+        return 'MayaChain liquidity pools'
 
     # ------- INLINE BOT (English only) -------
 

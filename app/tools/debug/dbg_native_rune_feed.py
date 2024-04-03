@@ -28,7 +28,7 @@ class ReceiverPublicText(INotified):
             sep()
 
 
-async def demo_native_block_action_detector(app, start=12209517):
+async def demo_native_block_action_detector(app, start=5551267):
     scanner = NativeScannerBlock(app.deps, last_block=start)
     scanner.one_block_per_run = True
     detector = RuneTransferDetectorTxLogs()
@@ -132,7 +132,7 @@ async def demo_debug_personal_transfer(app):
 async def main():
     app = LpAppFramework()
     async with app(brief=True):
-        await demo_block_scanner_active(app, send_alerts=False, catch_up=True)
+        # await demo_block_scanner_active(app, send_alerts=False, catch_up=True)
 
         # await demo_debug_personal_transfer(app)
 
@@ -143,7 +143,7 @@ async def main():
 
         # await debug_block_tx_status_check(app)
         # await demo_rune_transfers_once(app, )  # block=12929445
-        await demo_rune_transfers_once(app, block=4483276)
+        await demo_rune_transfers_once(app, block=5551267)
         # await demo_rune_transfers_once(app, block=13922464)
 
 

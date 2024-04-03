@@ -10,7 +10,7 @@ from typing import List, Dict, NamedTuple
 from aionode.types import ThorPool
 
 from services.lib.constants import thor_to_float, cacao_to_float
-from services.lib.money import Asset
+from services.lib.money import Asset, calc_percent_change
 
 
 def pool_share(rune_depth, asset_depth, my_units, pool_total_units):
@@ -46,6 +46,8 @@ class PoolInfo:
     savers_depth: int = 0
     savers_units: int = 0
     savers_apr: float = 0.0
+
+    pool_apr: float = 0.0  # new!
 
     is_virtual: bool = False
 
@@ -236,16 +238,21 @@ class PoolMapPair:
     BY_VOLUME_24h = 'usd_volume_24h'
     BY_DEPTH = 'total_liquidity'
     BY_APY = 'pool_apy'
+    BY_APR = 'pool_apr'
 
     @staticmethod
     def bad_value(x: float):
         return math.isinf(x) or math.isnan(x)
 
+    @property
+    def all_assets(self):
+        return set(self.pool_detail_dic.keys()) | set(self.pool_detail_dic_prev.keys())
+
     def get_top_pools(self, criterion: str, n=None, descending=True) -> List[PoolInfo]:
         pools = self.pool_detail_dic.values()
         criterion = str(criterion)
 
-        if criterion in (self.BY_APY, self.BY_VOLUME_24h):
+        if criterion in (self.BY_APR, self.BY_VOLUME_24h):
             pools = filter(lambda p: p.is_enabled, pools)
         pools = filter(lambda p: not self.bad_value(getattr(p, criterion)), pools)
 
@@ -271,7 +278,7 @@ class PoolMapPair:
         if prev_value == 0.0:
             return None
 
-        if attr_name == self.BY_APY:
+        if attr_name == self.BY_APR:
             return curr_value - prev_value
         else:
             return (curr_value / prev_value - 1.0) * 100.0
@@ -279,3 +286,33 @@ class PoolMapPair:
     @property
     def empty(self):
         return not self.pool_detail_dic
+
+    @property
+    def number_of_active_pools(self):
+        return len([pool for pool in self.pool_detail_dic.values() if pool.is_enabled])
+
+    def total_liquidity(self, prev=False):
+        scope = self.pool_detail_dic_prev if prev else self.pool_detail_dic
+        return sum(p.total_liquidity for p in scope.values())
+
+    def total_volume_24h(self, prev=False):
+        scope = self.pool_detail_dic_prev if prev else self.pool_detail_dic
+        return sum(p.usd_volume_24h for p in scope.values())
+
+    @property
+    def total_liquidity_diff_percent(self):
+        if not self.pool_detail_dic_prev:
+            return None
+
+        prev = self.total_liquidity(prev=True)
+        curr = self.total_liquidity()
+        return calc_percent_change(prev, curr)
+
+    @property
+    def total_volume_24h_diff_percent(self):
+        if not self.pool_detail_dic_prev:
+            return None
+
+        prev = self.total_volume_24h(prev=True)
+        curr = self.total_volume_24h()
+        return calc_percent_change(prev, curr)

@@ -62,7 +62,7 @@ class ThorNodeAccount(NamedTuple):
     STATUS_UNKNOWN = 'unknown'
     STATUS_DISABLED = 'disabled'
 
-    node_address: str = 'thor?'
+    node_address: str = 'maya?'
     status: str = ''
     pub_key_set: dict = None
     validator_cons_pub_key: str = ''

@@ -1,4 +1,4 @@
-# THORChain monitoring bot configuration file
+# MAYAChain monitoring bot configuration file
 # Rename it to "config.yaml"
 
 log_level: INFO
@@ -17,6 +17,8 @@ web3:
     rpc: "https://api.avax.network/ext/bc/C/rpc"
   BSC:
     rpc: "https://bscrpc.com"
+  ARB:
+    rpc: "https://arb1.arbitrum.io/rpc"
   cache_expire: 30d
   retries: 3
   retry_wait: 2s
@@ -186,9 +188,16 @@ names:
     runifier: Runifier
     0xbami: Unizen
     ds: Defispot
-    el: "El Dorado"
+    eld: "El Dorado"
     cs: CacaoSwap
     kf: "Kensho Finance"
+    moca: "Moca"
+    mc: "Moca"
+    ts: "THORSwap"
+    dcg: "Dash Core"
+    leo: "LeoDex"
+    tt: "Turbo Trade"
+    OS: "Osaia"
 
 
 tx:
@@ -466,16 +475,16 @@ achievements:
 
 
 pol:
-  enabled: true
+  enabled: false
   fetch_period: 30m
   notification:
     cooldown: 1d
     allow_when_zero: false
 
 
-#key_metrics:
-#  enabled: false
-#  fetch_period: 10m
-#  data_max_age: 36h
-#  notification:
-#    cooldown: 7d
+key_metrics:
+  enabled: false
+  fetch_period: 10m
+  data_max_age: 36h
+  notification:
+    cooldown: 7d

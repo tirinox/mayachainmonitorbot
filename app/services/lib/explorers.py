@@ -37,6 +37,8 @@ def get_explorer_url_to_address(network_id, pool_or_chain: str, address: str):
         return f'https://atomscan.com/kujira/accounts/{address}'
     elif chain == Chains.DASH:
         return f'https://explorer.dash.org/insight/address/{address}'
+    elif chain == Chains.ARB:
+        return f'https://arbiscan.io/address/{address}'
     else:
         url = f'https://www.google.com/search?q={chain}+explorer'
         return url if is_live else f'{url}+test'
@@ -85,6 +87,8 @@ def get_explorer_url_to_tx(network_id, pool_or_chain: str, tx_id: str):
         return f'https://atomscan.com/kujira/transactions/{tx_id}'
     elif chain == Chains.DASH:
         return f'https://explorer.dash.org/insight/tx/{tx_id}'
+    elif chain == Chains.ARB:
+        return f'https://arbiscan.io/tx/{tx_id}'
     else:
         url = f'https://www.google.com/search?q={chain}+explorer'
         return url if is_live else f'{url}+test'

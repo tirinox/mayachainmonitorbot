@@ -25,6 +25,7 @@ BNB_ETHB_SYMBOL = 'BNB.ETH-1C9'
 BNB_ETHB_TEST_SYMBOL = 'BNB.ETH-D5B'
 ETH_SYMBOL = 'ETH.ETH'
 AVAX_SYMBOL = 'AVAX.AVAX'
+ARB_SYMBOL = 'ARB.ARB-0X912CE59144191C1204E64559FE8253A0E49E6548'
 
 BNB_USDT_SYMBOL = 'BNB.USDT-6D8'
 BNB_USDT_TEST_SYMBOL = 'BNB.USDT-DC8'
@@ -77,17 +78,11 @@ class Chains:
     THOR = 'THOR'
     ETH = 'ETH'
     BTC = 'BTC'
-    BCH = 'BCH'
-    LTC = 'LTC'
-    BNB = 'BNB'
-    DOGE = 'DOGE'
-    AVAX = 'AVAX'
-    ATOM = 'GAIA'
-    BSC = 'BSC'
     KUJI = 'KUJI'
     DASH = 'DASH'
+    ARB = 'ARB'
 
-    META_ALL = (MAYA, THOR, ETH, BTC, BCH, LTC, BNB, DOGE, AVAX, ATOM, BSC, KUJI, DASH)
+    META_ALL = (MAYA, THOR, ETH, KUJI, DASH, ARB)
 
     @staticmethod
     def detect_chain(orig_address: str) -> str:
@@ -98,12 +93,8 @@ class Chains:
             return Chains.MAYA
         elif address.startswith('thor') or address.startswith('tthor') or address.startswith('sthor'):
             return Chains.THOR
-        elif address.startswith('bnb') or address.startswith('tbnb'):
-            return Chains.BNB
-        elif orig_address.startswith('D'):
-            return Chains.DOGE
-        elif address.startswith('cosmos'):
-            return Chains.ATOM
+        elif address.startswith('kujija'):
+            return Chains.KUJI
         return ''
 
     @staticmethod
@@ -112,32 +103,24 @@ class Chains:
             return THOR_BLOCK_TIME
         elif chain == Chains.ETH:
             return 13
-        elif chain == Chains.BTC or chain == Chains.BCH:
+        elif chain == Chains.BTC:
             return 10 * MINUTE
-        elif chain == Chains.LTC:
-            return 2.5 * MINUTE
-        elif chain == Chains.BNB:
-            return 0.4
+        elif chain == Chains.DASH:
+            return 2.6 * MINUTE
         elif chain == Chains.THOR:
             return THOR_BLOCK_TIME
-        elif chain == Chains.DOGE:
-            return MINUTE
-        elif chain == Chains.ATOM:
-            return 6.85
-        elif chain == Chains.AVAX:
-            return 3.0
-        elif chain == Chains.BSC:
-            return 3.0
+        elif chain == Chains.ARB:
+            return 0.26
+        elif chainn == Chains.KUJI:
+            return 2.2
         return 0.01
 
     @staticmethod
     def web3_chain_id(chain: str) -> int:
         if chain == Chains.ETH:
             return 0x1
-        elif chain == Chains.AVAX:
-            return 43114
-        elif chain == Chains.BSC:
-            return 56
+        elif chain == Chains.ARB:
+            return 42161
 
     @staticmethod
     def l1_asset(chain: str) -> str:

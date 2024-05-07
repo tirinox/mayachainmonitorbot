@@ -49,6 +49,7 @@ thor:
 
 
 personal:
+  max_fails: 3  # (!) new
   rate_limit:
     number: 50
     period: 5m

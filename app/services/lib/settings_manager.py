@@ -135,6 +135,13 @@ class SettingsContext:
     def is_inactive(self):
         return bool(self._curr_settings.get(GeneralSettings.INACTIVE, False))
 
+    @property
+    def fail_counter(self):
+        return self._curr_settings.get(GeneralSettings.FAIL_COUNTER, 0)
+
+    def increment_fail_counter(self):
+        self._curr_settings[GeneralSettings.FAIL_COUNTER] = self.fail_counter + 1
+
     def stop(self):
         self.stop_s(self._curr_settings)
 

@@ -1,16 +1,60 @@
 {
   "name": "1inch",
   "timestamp": "2022-04-06T22:19:09+00:00",
-  "version": { "major": 145, "minor": 0, "patch": 0 },
+  "version": {
+    "major": 145,
+    "minor": 0,
+    "patch": 0
+  },
   "keywords": ["1inch", "default", "list"],
   "tokens": [
+    {
+      "address": "0xa6C0c097741D55ECd9a3A7DeF3A8253fD022ceB9",
+      "chainId": 1,
+      "name": "AVA",
+      "symbol": "AVA",
+      "decimals": 18,
+      "logoURI": "https://etherscan.io/token/images/avafoundation_32.png"
+    },
+    {
+      "address": "0x9506d37f70eB4C3d79C398d326C871aBBf10521d",
+      "chainId": 1,
+      "name": "Media Licensing Token",
+      "symbol": "MLT",
+      "decimals": 18,
+      "logoURI": "https://etherscan.io/token/images/milcglobal_32.png"
+    },
+    {
+      "address": "0xf819d9Cb1c2A819Fd991781A822dE3ca8607c3C9",
+      "chainId": 1,
+      "name": "Unibot",
+      "symbol": "UNIBOT",
+      "decimals": 18,
+      "logoURI": "https://etherscan.io/token/images/unibot_32.png"
+    },
+    {
+      "address": "0x6fA5E1c43b5a466CBD1CAe7993B67C982400d481",
+      "chainId": 1,
+      "name": "CoinBot",
+      "symbol": "COINBT",
+      "decimals": 18,
+      "logoURI": "https://static.thorswap.net/token-list/images/eth.coinbt-0x6fa5e1c43b5a466cbd1cae7993b67c982400d481.png"
+    },
+    {
+      "address": "0x6982508145454Ce325dDbE47a25d4ec3d2311933",
+      "chainId": 1,
+      "name": "Pepe",
+      "symbol": "PEPE",
+      "decimals": 18,
+      "logoURI": "https://etherscan.io/token/images/pepe_32.png"
+    },
     {
       "address": "0x249cA82617eC3DfB2589c4c17ab7EC9765350a18",
       "chainId": 1,
       "name": "Verse",
       "symbol": "VERSE",
       "decimals": 18,
-      "logoURI": "https://assets.coingecko.com/coins/images/13072/small/bAe1G-lD_400x400.png?1654056255"
+      "logoURI": "https://etherscan.io/token/images/bitcoin-verse_32.png"
     },
     {
       "address": "0xd794DD1CAda4cf79C9EebaAb8327a1B0507ef7d4",
@@ -7962,6 +8006,70 @@
       "symbol": "OKB",
       "decimals": 18,
       "logoURI": "https://static.coinall.ltd/cdn/wallet/logo/okb.png"
+    },
+    {
+      "address": "0x85614A474dBeED440d5BBDB8aC50b0f22367F997",
+      "chainId": 1,
+      "name": "XVG ERC-20",
+      "symbol": "XVG",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/vergecurrency/verge-graphics/master/XVGETH/Verge_Token_erc-20_icon_square-192x192.png"
+    },
+    {
+      "address": "0xb2e96a63479C2Edd2FD62b382c89D5CA79f572d3",
+      "chainId": 1,
+      "name": "WrappedZNN",
+      "symbol": "wZNN",
+      "decimals": 8,
+      "logoURI": "https://tokens.1inch.io/0xb2e96a63479c2edd2fd62b382c89d5ca79f572d3.png"
+    },
+    {
+      "address": "0x0E573Ce2736Dd9637A0b21058352e1667925C7a8",
+      "chainId": 1,
+      "name": "Verified USD",
+      "symbol": "USDV",
+      "decimals": 6,
+      "logoURI": "https://usdv.money/static/features/home/token.svg"
+    },
+    {
+      "address": "0x5283D291DBCF85356A21bA090E6db59121208b44",
+      "chainId": 1,
+      "name": "Blur",
+      "symbol": "BLUR",
+      "decimals": 18,
+      "logoURI": "https://etherscan.io/token/images/blurio_32.png"
+    },
+    {
+      "address": "0x046EeE2cc3188071C02BfC1745A6b17c656e3f3d",
+      "chainId": 1,
+      "name": "Rollbit",
+      "symbol": "RLB",
+      "decimals": 18,
+      "logoURI": "https://etherscan.io/token/images/rollbitcoin_32.png"
+    },
+    {
+      "address": "0x815C23eCA83261b6Ec689b60Cc4a58b54BC24D8D",
+      "chainId": 1,
+      "name": "vTHOR",
+      "symbol": "vTHOR",
+      "decimals": 18,
+      "logoURI": "https://static.thorswap.net/token-list/images/eth.vthor-0x815c23eca83261b6ec689b60cc4a58b54bc24d8d.png"
+    },
+    {
+      "address": "0x826180541412D574cf1336d22c0C0a287822678A",
+      "chainId": 1,
+      "name": "Chainflip",
+      "symbol": "FLIP",
+      "decimals": 18,
+      "logoURI": "https://static.thorswap.net/token-list/images/eth.flip-0x826180541412d574cf1336d22c0c0a287822678a.png"
+    },
+    {
+      "address": "0x73a9fb46e228628f8f9bb9004eca4f4f529d3998",
+      "chainId": 1,
+      "name": "Wrapped LEO",
+      "symbol": "WLEO",
+      "decimals": 3,
+      "logoURI": "https://img.inleo.io/DQmZhBmRaQx5tozZLZai579SjktJDigtmoXNP73jHmh6nWK/leoLogo.png"
     }
   ],
   "logoURI": "https://1inch.exchange/assets/images/logo.png"

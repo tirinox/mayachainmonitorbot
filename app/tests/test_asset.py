@@ -30,6 +30,9 @@ def test_asset1():
     assert str(a3) == 'BNB.BNB'
     assert a3.pretty_str == 'BNB.BNB'
 
+    arb_eth = Asset('ARB.ETH')
+    assert arb_eth.pretty_str == 'ARB.ETH'
+
 
 def test_synth_asset_name():
     a1 = Asset("BNB/BTCB-1DE")

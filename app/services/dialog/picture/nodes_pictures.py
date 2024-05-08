@@ -409,12 +409,11 @@ class NodePictureGenerator:
                 results.append(p)
                 last_ts = p.ts
 
+        results.append(pts[-1])
+
         return list(reversed(results))
 
     def _make_bond_chart(self, pts: List[NodeStatsItem], r, w, h, period=DAY * 14):
-        if len(pts) <= 1:
-            return
-
         gr = PlotGraphLines(w, h, bg=(0, 0, 0, 0))
         gr.x_formatter = gr.date_formatter
         gr.y_formatter = short_rune
@@ -428,6 +427,7 @@ class NodePictureGenerator:
         gr.bar_height_limit = 142
 
         if pts:
+            pts = self._bond_chart_flat_if_no_data(pts)
             pts = self.sparse_points(pts)
             bond_points = [(p.ts, p.bond_active_total) for p in pts]
             node_points = [(p.ts, p.n_active_nodes) for p in pts]
@@ -443,3 +443,13 @@ class NodePictureGenerator:
         gr.min_x = now_ts() - period
         gr.max_x = now_ts()
         return gr.finalize()
+
+    def _bond_chart_flat_if_no_data(self, pts):
+        if len(pts) > 1:
+            return pts
+        current_bond = self.data.total_bond
+        current_nodes = len(self.data.active_nodes)
+        return [
+            NodeStatsItem(now_ts() - day * DAY, 0, 0, 0, current_bond, current_bond, current_nodes, current_nodes)
+            for day in range(5)
+        ]

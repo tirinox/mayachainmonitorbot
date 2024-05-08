@@ -489,10 +489,8 @@ class BaseLocalization(ABC):  # == English
         chain = ''
         if a.token.chain_id == Chains.web3_chain_id(Chains.ETH):
             chain = Chains.ETH
-        elif a.token.chain_id == Chains.web3_chain_id(Chains.AVAX):
-            chain = Chains.AVAX
-        elif a.token.chain_id == Chains.web3_chain_id(Chains.BSC):
-            chain = Chains.BSC
+        elif a.token.chain_id == Chains.web3_chain_id(Chains.ARB):
+            chain = Chains.ARB
         if a.amount > 0:
             return f'{self.format_op_amount(a.amount)} {chain}.{a.token.symbol}'
         else:

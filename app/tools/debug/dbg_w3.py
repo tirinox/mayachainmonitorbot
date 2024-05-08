@@ -103,7 +103,7 @@ async def demo_decoder(app: LpAppFramework):
     # swap out
     print(f'Swap Out? {r}')
 
-    aggr_avax = aggr.get_by_chain(Chains.AVAX)
+    aggr_avax = aggr.get_by_chain(Chains.ARB)  # fixme
 
     r = await aggr_avax.decode_swap_in('0xc2483005204f9b4d41d15024913807bc8d2a1714c55fae0b5f23b1d71d6affe3')
     # swap in

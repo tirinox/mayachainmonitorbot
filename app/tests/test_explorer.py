@@ -9,10 +9,6 @@ def test_expl1():
     assert get_explorer_url_to_address(NetworkIdents.CHAOSNET_MULTICHAIN, 'DOT', 'jwfowwfjqjdqjqfo') == \
            'https://www.google.com/search?q=DOT+explorer'
 
-    assert get_explorer_url_to_address(NetworkIdents.TESTNET_MULTICHAIN, Chains.BNB,
-                                       'tbnb12ld7svh7wrwgvf0ll97xjnzp0qpeky97aqkpwc') == \
-           'https://testnet-explorer.binance.org/address/tbnb12ld7svh7wrwgvf0ll97xjnzp0qpeky97aqkpwc'
-
 
 def uri_parse():
     assert link_with_domain_text(

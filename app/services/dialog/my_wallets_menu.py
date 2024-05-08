@@ -694,7 +694,7 @@ class MyWalletsMenu(DialogWithSettings):
     # --- MISC ---
 
     async def get_balances(self, address: str):
-        if LPAddress.is_thor_prefix(address):
+        if LPAddress.is_maya_prefix(address):
             with suppress(Exception):
                 return await self.deps.thor_connector.query_balance(address)
 

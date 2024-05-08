@@ -34,21 +34,14 @@ class CryptoLogoDownloader:
     CONTRACT = 'contract'
 
     CHAIN_TO_NAME = {
-        Chains.BNB: 'binance',
         Chains.BTC: 'bitcoin',
-        Chains.LTC: 'litecoin',
-        Chains.BCH: 'bitcoincash',
         Chains.ETH: 'ethereum',
-        Chains.DOGE: 'doge',
-        Chains.AVAX: 'avalanchex',
-        Chains.AVAX + CONTRACT: 'avalanchec',
-        Chains.ATOM: 'cosmos',
-        Chains.BSC: 'smartchain',
+        Chains.ARB: 'arbitrum',
+        Chains.DASH: 'dash',
+        Chains.KUJI: 'kujira',
     }
 
     TEST_ASSET_MAPPING = {
-        BNB_USDT_TEST_SYMBOL: BNB_USDT_SYMBOL,
-        BNB_BUSD_TEST_SYMBOL: BNB_BUSD_SYMBOL,
         ETH_USDT_TEST_SYMBOL: ETH_USDT_SYMBOL,
     }
 
@@ -78,10 +71,7 @@ class CryptoLogoDownloader:
         if a.is_gas_asset:  # e.g. BNB.BNB, BTC.BTC, GAIA.ATOM
             path = f'{chain_name}/info/logo.png'
         else:
-            if a.chain != Chains.BNB:
-                address = convert_eth_address_to_case_checksum(a.tag)  # fix for CaSe checksum
-            else:
-                address = a.full_name
+            address = convert_eth_address_to_case_checksum(a.tag)  # fix for CaSe checksum
             path = f'{chain_name}/assets/{address}/logo.png'
 
         return f'{cls.COIN_BASE_URL}/{path}'

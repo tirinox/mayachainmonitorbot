@@ -336,14 +336,13 @@ class Asset:
     }
 
     ABBREVIATE_GAS_ASSETS = {
-        'ETH.ETH', 'BTC.BTC', 'LTC.LTC', 'AVAX.AVAX', 'DOGE.DOGE'
+        'ETH.ETH', 'BTC.BTC', 'LTC.LTC', 'AVAX.AVAX', 'DOGE.DOGE', 'DASH.DASH', 'KUJI.KUJI',
     }
 
     GAS_ASSETS = {
-        Chains.ATOM: 'ATOM',
         Chains.THOR: 'RUNE',
-        Chains.BSC: 'BNB',
         Chains.MAYA: 'CACAO',
+        Chains.ARB: 'ETH',
         # to be continues
     }
 

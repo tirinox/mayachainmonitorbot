@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw
 from localization.manager import BaseLocalization
 from services.dialog.picture.common import BasePictureGenerator
 from services.dialog.picture.resources import Resources
-from services.lib.constants import BTC_SYMBOL, ETH_SYMBOL, BNB_BUSD_SYMBOL, ETH_USDC_SYMBOL, ETH_USDT_SYMBOL
+from services.lib.constants import BTC_SYMBOL, ETH_SYMBOL, ETH_USDC_SYMBOL, ETH_USDT_SYMBOL
 from services.lib.draw_utils import paste_image_masked, result_color, TC_LIGHTNING_BLUE, TC_YGGDRASIL_GREEN, \
     dual_side_rect, COLOR_OF_PROFIT, font_estimate_size
 from services.lib.money import pretty_money, short_dollar, short_money, format_percent, Asset
@@ -37,7 +37,6 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
             self.r.logo_downloader.get_or_download_logo_cached(ETH_SYMBOL),
             self.r.logo_downloader.get_or_download_logo_cached(ETH_USDT_SYMBOL),
             self.r.logo_downloader.get_or_download_logo_cached(ETH_USDC_SYMBOL),
-            self.r.logo_downloader.get_or_download_logo_cached(BNB_BUSD_SYMBOL),
         )
         logo_size = int(self.btc_logo.width * 0.66)
         self.usdc_logo.thumbnail((logo_size, logo_size))

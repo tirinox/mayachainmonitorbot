@@ -88,7 +88,7 @@ class AggregatorSingleChain:
 
 
 class AggregatorDataExtractor(WithLogger, INotified, WithDelegates):
-    DEFAULT_CHAINS = (Chains.ETH, Chains.AVAX, Chains.BSC)
+    DEFAULT_CHAINS = (Chains.ETH, Chains.ARB)
 
     def __init__(self, deps: DepContainer, suitable_chains=DEFAULT_CHAINS):
         super().__init__()

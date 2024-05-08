@@ -4,7 +4,7 @@ from typing import List, Optional, Set
 
 from services.jobs.fetch.circulating import CacaoCirculatingSupply
 from services.lib.config import Config
-from services.lib.constants import BNB_BTCB_SYMBOL, BTC_SYMBOL, STABLE_COIN_POOLS, thor_to_float
+from services.lib.constants import BTC_SYMBOL, STABLE_COIN_POOLS, thor_to_float
 from services.lib.date_utils import now_ts, DAY
 from services.lib.money import weighted_mean, Asset, is_cacao
 from services.lib.texts import fuzzy_search
@@ -137,7 +137,7 @@ class LastPriceHolder:
 
     def _calculate_btc_price(self):
         self.btc_per_rune = 0.0
-        btc_symbols = (BTC_SYMBOL, BNB_BTCB_SYMBOL)
+        btc_symbols = (BTC_SYMBOL,)
         for btc_symbol in btc_symbols:
             pool = self.pool_info_map.get(btc_symbol)
             if pool is not None:

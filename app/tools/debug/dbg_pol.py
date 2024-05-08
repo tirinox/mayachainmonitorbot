@@ -81,7 +81,6 @@ async def demo_pol_history(app: LpAppFramework):
 
 
 async def main():
-    # app = LpAppFramework(log_level=logging.INFO, network=NetworkIdents.STAGENET_MULTICHAIN)
     app = LpAppFramework(log_level=logging.INFO)
 
     async with app:

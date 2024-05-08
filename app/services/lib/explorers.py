@@ -10,29 +10,12 @@ def get_explorer_url_to_address(network_id, pool_or_chain: str, address: str):
         return f"https://runescan.io/address/{address}"
     elif chain == Chains.MAYA:
         return f"https://www.mayascan.org/address/{address}"
-    elif chain == Chains.BNB:
-        return f'https://explorer.binance.org/address/{address}' if is_live else \
-            f'https://testnet-explorer.binance.org/address/{address}'
     elif chain == Chains.ETH:
         return f'https://etherscan.io/address/{address}' if is_live else \
             f'https://ropsten.etherscan.io/address/{address}'
     elif chain == Chains.BTC:
         return f'https://www.blockchain.com/btc/address/{address}' if is_live else \
             f'https://www.blockchain.com/btc-testnet/address/{address}'
-    elif chain == Chains.BCH:
-        return f'https://www.blockchain.com/bch/address/{address}' if is_live else \
-            f'https://www.blockchain.com/bch-testnet/address/{address}'
-    elif chain == Chains.LTC:
-        return f'https://blockchair.com/litecoin/address/{address}' if is_live else \
-            f'https://tltc.bitaps.com/{address}'
-    elif chain == Chains.DOGE:
-        return f'https://dogechain.info/address/{address}'
-    elif chain == Chains.AVAX:
-        return f'https://snowtrace.io/address/{address.lower()}'
-    elif chain == Chains.ATOM:
-        return f'https://www.mintscan.io/cosmos/account/{address.lower()}'
-    elif chain == Chains.BSC:
-        return f'https://bscscan.com/address/{address}'
     elif chain == Chains.KUJI:
         return f'https://atomscan.com/kujira/accounts/{address}'
     elif chain == Chains.DASH:
@@ -58,9 +41,6 @@ def get_explorer_url_to_tx(network_id, pool_or_chain: str, tx_id: str):
         return f"https://runescan.io/tx/{tx_id}"
     elif chain == Chains.MAYA:
         return f"https://www.mayascan.org/tx/{tx_id}"
-    elif chain == Chains.BNB:
-        return f'https://explorer.binance.org/tx/{tx_id}' if is_live else \
-            f'https://testnet-explorer.binance.org/tx/{tx_id}'
     elif chain == Chains.ETH:
         tx_id = add_0x(tx_id)
         return f'https://etherscan.io/tx/{tx_id}' if is_live else \
@@ -68,21 +48,6 @@ def get_explorer_url_to_tx(network_id, pool_or_chain: str, tx_id: str):
     elif chain == Chains.BTC:
         return f'https://www.blockchain.com/btc/tx/{tx_id}' if is_live else \
             f'https://www.blockchain.com/btc-testnet/tx/{tx_id}'
-    elif chain == Chains.BCH:
-        return f'https://www.blockchain.com/bch/tx/{tx_id}' if is_live else \
-            f'https://www.blockchain.com/bch-testnet/tx/{tx_id}'
-    elif chain == Chains.LTC:
-        return f'https://blockchair.com/litecoin/transaction/{tx_id}' if is_live else \
-            f'https://tltc.bitaps.com/{tx_id}'
-    elif chain == Chains.DOGE:
-        return f'https://dogechain.info/tx/{tx_id.lower()}'
-    elif chain == Chains.AVAX:
-        tx_id = add_0x(tx_id.lower())
-        return f'https://snowtrace.io/tx/{tx_id}'
-    elif chain == Chains.ATOM:
-        return f'https://www.mintscan.io/cosmos/txs/{tx_id.upper()}'
-    elif chain == Chains.BSC:
-        return f'https://bscscan.com/tx/{tx_id}'
     elif chain == Chains.KUJI:
         return f'https://atomscan.com/kujira/transactions/{tx_id}'
     elif chain == Chains.DASH:

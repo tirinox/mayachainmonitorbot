@@ -35,13 +35,7 @@ class StreamingSwapQuote(WithLogger):
         self.mock_addresses = {
             Chains.BTC: 'bc1qdvxpt06ulfk5gm5p52wa4mrt6e887wkmvc4xxw',
             Chains.ETH: '0x4E71F9debEC9117F1FACc7eeB490758AF45806A7',
-            Chains.BNB: 'bnb1d8qn6p6vr6mjl2yf6x3xsen9z33jyhkt5tnlkp',
-            Chains.BCH: 'pqvm5jv4zhy38dkzrx0md73c3sujhkmg4yhlmhhmfm',
-            Chains.LTC: 'ltc1qzvcgmntglcuv4smv3lzj6k8szcvsrmvk0phrr9wfq8w493r096ssm2fgsw',
-            Chains.AVAX: '0x66153cf0e164bc9bdae88fb36fc5b92dc63a79d6',
-            Chains.BSC: '0x66153cf0e164bc9bdae88fb36fc5b92dc63a79d6',
-            Chains.ATOM: 'cosmos1rdly788mpmwvemd5yr8wu0499zs4v4qnaptum4',
-            Chains.DOGE: 'DLmW4rFuPqR3cUyqJiBqjho2CtHMC12bFt',
+            Chains.ARB: '0x4E71F9debEC9117F1FACc7eeB490758AF45806A7',
         }
         self.rune = AssetRUNE
 

@@ -18,14 +18,7 @@ def change_ratio_to_apy(ch, days):
 @dataclass
 class LPAddress(BaseModelMixin):
     @classmethod
-    def is_good_bnb_address(cls, addr: str):
-        addr = addr.strip()
-        return (addr.startswith('bnb1')
-                and 30 <= len(addr) <= 50
-                and set(addr[4:]) < set(BECH_2_CHARSET))
-
-    @classmethod
-    def is_thor_prefix(cls, addr: str):
+    def is_maya_prefix(cls, addr: str):
         addr = addr.lower()
         return addr.startswith('smaya') or addr.startswith(MAYA_PREFIX)
 
@@ -34,7 +27,7 @@ class LPAddress(BaseModelMixin):
         addr = addr.strip()
         if not (26 <= len(addr) <= 78):
             return False
-        # if not cls.is_thor_prefix(addr):
+        # if not cls.is_maya_prefix(addr):
         #     return False
 
         english_and_numbers = string.ascii_letters + string.digits

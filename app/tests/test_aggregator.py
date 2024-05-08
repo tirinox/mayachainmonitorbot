@@ -21,7 +21,7 @@ def aggr() -> AggregatorResolver:
 def test_loading(aggr):
     assert len(aggr) == 40
     assert len(aggr.by_chain) == 3
-    assert set(aggr.by_chain.keys()) == {Chains.ETH, Chains.AVAX, Chains.BSC}
+    assert set(aggr.by_chain.keys()) == {Chains.ETH, Chains.ARB}
 
 
 @pytest.mark.parametrize(('address', 'name', 'chain'), [
@@ -52,14 +52,14 @@ def test_aggregator_fuzzy_search(address, name, chain, aggr):
 
 
 def test_token_list():
-    t_avax = StaticTokenList(StaticTokenList.DEFAULT_LISTS[Chains.AVAX], Chains.AVAX)
-    assert len(t_avax) > 0
+    t_arb = StaticTokenList(StaticTokenList.DEFAULT_LISTS[Chains.ARB], Chains.ARB)
+    assert len(t_arb) > 0
 
-    t1 = t_avax['0x152b9d0FdC40C096757F570A51E494bd4b943E50']
+    t1 = t_arb['0x152b9d0FdC40C096757F570A51E494bd4b943E50']
     assert t1.logoURI == 'https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/0x152b9d0FdC40C096757F570A51E494bd4b943E50/logo.png'
     assert t1.decimals == 8
     assert t1.name == 'Bitcoin'
-    assert all((t.chain_id == 43114 or t.chain_id == 4) for t in t_avax.tokens.values())
+    assert all((t.chain_id == 43114 or t.chain_id == 4) for t in t_arb.tokens.values())
 
     t_eth = StaticTokenList(StaticTokenList.DEFAULT_LISTS[Chains.ETH], Chains.ETH)
     assert len(t_eth) > 0

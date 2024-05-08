@@ -15,8 +15,7 @@ from services.lib.w3.web3_helper import Web3Helper
 class StaticTokenList:
     DEFAULT_LISTS = {
         Chains.ETH: f'{CONTRACT_DATA_BASE_PATH}/eth_mainnet_latest.json',
-        Chains.AVAX: f'{CONTRACT_DATA_BASE_PATH}/avax_mainnet_latest.json',
-        Chains.BSC: f'{CONTRACT_DATA_BASE_PATH}/bsc_mainnet_latest.json'
+        Chains.ARB: f'{CONTRACT_DATA_BASE_PATH}/arb_mainnet_latest.json',
     }
 
     def __init__(self, filename, chain_id):

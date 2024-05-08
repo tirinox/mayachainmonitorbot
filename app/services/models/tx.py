@@ -287,7 +287,7 @@ class ThorTx:
     @property
     def rune_input_address(self):
         for tx in self.in_tx:
-            if not tx.coins and LPAddress.is_thor_prefix(tx.address):
+            if not tx.coins and LPAddress.is_maya_prefix(tx.address):
                 # in the case when it is "empty" thor tx (with no coins sent)
                 return tx.address
 

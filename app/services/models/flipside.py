@@ -5,9 +5,10 @@ from datetime import datetime
 from functools import cached_property
 from typing import NamedTuple, List
 
-from services.jobs.fetch.flipside import FSList, KEY_DATETIME
 from services.lib.constants import STABLE_COIN_POOLS_ALL, thor_to_float
 from services.models.pool_info import PoolInfoMap
+
+KEY_DATETIME = "datetime"
 
 
 class FSSwapVolume(NamedTuple):
@@ -180,19 +181,9 @@ class FSSwapRoutes(NamedTuple):
         )
 
 
-class KeyStats(NamedTuple):
-    date: datetime
-    affiliates: List[FSAffiliateCollectors]
-    fees: FSFees
-    swappers: FSSwapCount
-    volume: FSSwapVolume
-    locked: FSLockedValue
-    pools: PoolInfoMap
-
-
 @dataclasses.dataclass
 class AlertKeyStats:
-    series: FSList
+    series: object
     previous_pools: PoolInfoMap
     current_pools: PoolInfoMap
 
@@ -205,6 +196,10 @@ class AlertKeyStats:
     @property
     def end_date(self):
         return self.series.latest_date
+
+    @property
+    def is_valid(self):
+        return self.current_pools and self.routes and self.affiliates
 
     def get_stables_sum(self, previous=False):
         return self.get_sum(STABLE_COIN_POOLS_ALL, previous)

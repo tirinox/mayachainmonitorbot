@@ -2,7 +2,6 @@ import datetime
 from datetime import date
 from typing import NamedTuple
 
-from services.jobs.fetch.flipside import FSList
 from services.lib.date_utils import now_ts
 from services.models.events import EventLoanOpen, EventLoanRepayment
 
@@ -53,7 +52,7 @@ class LendingStats(NamedTuple):
             eth_current_cr=j['ETH_CURRENT_CR'],
             btc_current_ltv=j['BTC_CURRENT_LTV'],
             eth_current_ltv=j['ETH_CURRENT_LTV'],
-            day=FSList.parse_date(j['DAY'])
+            day=j['DAY']
         )
 
     @property

@@ -25,7 +25,6 @@ class FlipSideSaver(INotified):
 
     async def on_data(self, sender, data):
         # result, fresh_pools, old_pools = data
-        # result: FSList
         with open(self.filename, 'wb') as f:
             pickle.dump(data, f)
             print(f'DATA SAVED to {self.filename}')

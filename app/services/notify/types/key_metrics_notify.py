@@ -1,13 +1,11 @@
-from datetime import timedelta
 from typing import Optional
 
-from services.jobs.fetch.flipside import FSList
 from services.lib.cooldown import Cooldown
 from services.lib.date_utils import parse_timespan_to_seconds, DAY, now_ts
 from services.lib.delegates import INotified, WithDelegates
 from services.lib.depcont import DepContainer
 from services.lib.utils import WithLogger
-from services.models.flipside import FSFees, FSLockedValue, FSSwapCount, FSSwapVolume, AlertKeyStats
+from services.models.flipside import AlertKeyStats
 from services.models.time_series import TimeSeries
 
 
@@ -33,48 +31,34 @@ class KeyMetricsNotifier(INotified, WithDelegates, WithLogger):
     def window_in_days(self):
         return int((self.notify_cd_sec + 1) / DAY)
 
-    def is_fresh_enough(self, data: FSList):
-        return data and now_ts() - data.latest_date.timestamp() < self.data_max_age
+    def is_fresh_enough(self, data: AlertKeyStats):
+        return data and now_ts() - data.end_date.timestamp() < self.data_max_age
 
     async def on_data(self, sender, e: AlertKeyStats):
         if not e.current_pools:
             self.logger.error(f'No pool data! Aborting.')
             return
 
+        if not e.is_valid:
+            self.logger.warning(f'AlertKeyStats is invalid')
+            return
+
         if not e.previous_pools:
             self.logger.warning(f'No previous pool data! Go on')
 
-        if not len(e.series):
-            self.logger.warning(f'Length is 0')
-            return
-
-        e.series = e.series.remove_incomplete_rows((FSFees, FSSwapCount, FSLockedValue, FSSwapVolume))
-
-        if not self.is_fresh_enough(e.series):
-            self.logger.error(f'Network data is too old! The most recent date is {e.series.latest_date}!')
+        if not self.is_fresh_enough(e):
+            self.logger.error(f'Network data is too old! The most recent date is {e.end_date}!')
             self.deps.emergency.report(
                 'WeeklyKeyMetrics',
                 'Network data is too old!',
-                date=str(e.series.latest_date))
+                date=str(e.end_date))
             return
-
-        last_date = e.series.latest_date
-        previous_date = last_date - timedelta(days=self.window_in_days)
-
-        previous_data = e.series.get(previous_date, [])
-        self.logger.info(f'Previous date is {previous_date}; data has {len(previous_data)} entries.')
-
-        current_data = e.series.most_recent
-        self.logger.info(f'Current date is {last_date}; data has {len(current_data)} entries.')
 
         self._prev_data = e
 
         if await self.notify_cd.can_do():
             await self._notify(e)
             await self.notify_cd.do()
-
-        # await self.series.add(info=new_info.as_json_string)
-        # await self.series.trim_oldest(self.MAX_POINTS)
 
     @property
     def last_event(self):

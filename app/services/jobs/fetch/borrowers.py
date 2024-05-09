@@ -1,7 +1,6 @@
 from typing import List, Optional
 
 from services.jobs.fetch.base import BaseFetcher
-from services.jobs.fetch.flipside import FlipSideConnector
 from services.lib.date_utils import parse_timespan_to_seconds, DAY
 from services.lib.depcont import DepContainer
 from services.lib.midgard.parser import get_parser_by_network_id
@@ -20,7 +19,6 @@ class BorrowersFetcher(BaseFetcher):
         period = parse_timespan_to_seconds(deps.cfg.borrowers.fetch_period)
         super().__init__(deps, period)
         self.midgard_parser = get_parser_by_network_id(deps.cfg.network_id)
-        self.fs = FlipSideConnector(deps.session)
 
     async def get_borrower_list(self) -> List[str]:
         borrowers = await self.deps.midgard_connector.request(free_url_gen.url_borrowers())

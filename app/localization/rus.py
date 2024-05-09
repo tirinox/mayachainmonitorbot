@@ -1152,15 +1152,15 @@ class RussianLocalization(BaseLocalization):
 
         msg = bold('💫 Обновление версии протокола MayaChain') + '\n\n'
 
-        def version_and_nodes(v, all=False):
-            realm = data.nodes_all if all else data.active_only_nodes
+        def version_and_nodes(v, v_all=False):
+            realm = data.nodes_all if v_all else data.active_only_nodes
             n_nodes = len(data.find_nodes_with_version(realm, v))
             return f"{code(v)} ({n_nodes} {plural(n_nodes, 'нода', 'нод')})"
 
         current_active_version = data.current_active_version
 
         if new_versions:
-            new_version_joined = ', '.join(version_and_nodes(v, all=True) for v in new_versions)
+            new_version_joined = ', '.join(version_and_nodes(v, v_all=True) for v in new_versions)
             msg += f"🆕 Обнаружена новая версия: {new_version_joined}\n\n"
 
             msg += f"⚡️ Активная версия протокола сейчас – {version_and_nodes(current_active_version)}\n" + \

@@ -13,7 +13,9 @@ from tools.lib.lp_common import LpAppFramework, save_and_show_pic
 
 async def demo_load(app: LpAppFramework):
     f = KeyStatsFetcher(app.deps)
-    await f.fetch()
+    r = await f._load_dividends()
+    # r = await f.fetch()
+    print(r)
 
 
 class FlipSideSaver(INotified):
@@ -73,11 +75,12 @@ async def demo_picture(app: LpAppFramework):
 
 async def main():
     lp_app = LpAppFramework(log_level=logging.INFO)
-    async with lp_app:
+    async with lp_app(brief=True):
         # await lp_app.prepare(brief=True)
 
         # await demo_analyse(lp_app)
-        await demo_picture(lp_app)
+        # await demo_picture(lp_app)
+        await demo_load(lp_app)
 
 
 if __name__ == '__main__':

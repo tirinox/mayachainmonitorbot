@@ -9,10 +9,10 @@ from services.dialog.picture.resources import Resources
 from services.lib.constants import BTC_SYMBOL, ETH_SYMBOL, ETH_USDC_SYMBOL, ETH_USDT_SYMBOL, KUJI_USK_SYMBOL
 from services.lib.draw_utils import paste_image_masked, result_color, TC_LIGHTNING_BLUE, TC_YGGDRASIL_GREEN, \
     dual_side_rect, COLOR_OF_PROFIT, font_estimate_size
-from services.lib.money import pretty_money, short_dollar, short_money, format_percent, Asset
+from services.lib.money import pretty_money, short_dollar, short_money, format_percent, Asset, AssetRUNE
 from services.lib.texts import bracketify
 from services.lib.utils import async_wrap
-from services.models.flipside import AlertKeyStats
+from services.models.key_stats_model import AlertKeyStats
 
 
 class KeyStatsPictureGenerator(BasePictureGenerator):
@@ -28,21 +28,25 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
         self.btc_logo = None
         self.eth_logo = None
         self.usdt_logo = self.usdc_logo = self.usk_logo = None
+        self.rune_logo = None
 
     FILENAME_PREFIX = 'MayaChain_weekly_stats'
 
     async def prepare(self):
-        self.btc_logo, self.eth_logo, self.usdt_logo, self.usdc_logo, self.usk_logo = await asyncio.gather(
-            self.r.logo_downloader.get_or_download_logo_cached(BTC_SYMBOL),
-            self.r.logo_downloader.get_or_download_logo_cached(ETH_SYMBOL),
-            self.r.logo_downloader.get_or_download_logo_cached(ETH_USDT_SYMBOL),
-            self.r.logo_downloader.get_or_download_logo_cached(ETH_USDC_SYMBOL),
-            self.r.logo_downloader.get_or_download_logo_cached(KUJI_USK_SYMBOL),
-        )
+        self.btc_logo, self.eth_logo, self.usdt_logo, self.usdc_logo, self.usk_logo, self.rune_logo = \
+            await asyncio.gather(
+                self.r.logo_downloader.get_or_download_logo_cached(BTC_SYMBOL),
+                self.r.logo_downloader.get_or_download_logo_cached(ETH_SYMBOL),
+                self.r.logo_downloader.get_or_download_logo_cached(ETH_USDT_SYMBOL),
+                self.r.logo_downloader.get_or_download_logo_cached(ETH_USDC_SYMBOL),
+                self.r.logo_downloader.get_or_download_logo_cached(KUJI_USK_SYMBOL),
+                self.r.logo_downloader.get_or_download_logo_cached(str(AssetRUNE)),
+            )
         logo_size = int(self.btc_logo.width * 0.66)
         self.usdc_logo.thumbnail((logo_size, logo_size))
         self.usdt_logo.thumbnail((logo_size, logo_size))
         self.usk_logo.thumbnail((logo_size, logo_size))
+        # self.rune_logo.thumbnail((logo_size, logo_size))
 
     @staticmethod
     def percent_change(old_v, new_v):
@@ -66,20 +70,20 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
     def _get_picture_sync(self):
         # prepare data
         r, loc, e = self.r, self.loc, self.event
-        curr_lock, prev_lock = e.locked_value_usd_curr_prev
+        curr_lock, prev_lock = e.bond_usd, e.bond_usd_prev
 
-        total_revenue_usd, prev_total_revenue_usd = e.total_revenue_usd_curr_prev
-        block_rewards_usd, prev_block_rewards_usd = e.block_rewards_usd_curr_prev
-        liq_fee_usd, prev_liq_fee_usd = e.liquidity_fee_usd_curr_prev
-        aff_fee_usd, prev_aff_fee_usd = e.affiliate_fee_usd_curr_prev
+        total_revenue_usd, prev_total_revenue_usd = e.protocol_revenue_usd, e.protocol_revenue_usd_prev
+        # block_rewards_usd, prev_block_rewards_usd = e.block_rewards_usd_curr_prev
+        # liq_fee_usd, prev_liq_fee_usd = e.liquidity_fee_usd_curr_prev
+        aff_fee_usd, prev_aff_fee_usd = e.affiliate_revenue_usd, e.affiliate_revenue_usd_prev
 
-        block_ratio = e.block_ratio
-        organic_ratio = e.organic_ratio
+        # block_ratio = e.block_ratio
+        # organic_ratio = e.organic_ratio
         aff_collectors = e.top_affiliate_daily
 
-        swap_count, prev_swap_count = e.swap_count_curr_prev
-        usd_volume, prev_usd_volume = e.usd_volume_curr_prev
-        unique_swap, prev_unique_swap = e.unique_swap_curr_prev
+        swap_count, prev_swap_count = e.number_of_swaps, e.number_of_swaps_prev
+        usd_volume, prev_usd_volume = e.swap_volume_usd, e.swap_volume_usd_prev
+        unique_swap, prev_unique_swap = e.unique_swapper_count, e.unique_swapper_count_prev
 
         swap_routes = e.swap_routes
 
@@ -216,31 +220,33 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
 
         # ----- organic fees vs block rewards
 
-        draw.text((x, 1050),
-                  loc.TEXT_PIC_STATS_ORGANIC_VS_BLOCK_REWARDS,
-                  fill='#fff',
-                  font=r.fonts.get_font(37))
+        # todo: put here maya revenues!
 
-        font_fee = r.fonts.get_font_bold(32)
-        x_right = 1283
+        # draw.text((x, 1050),
+        #           loc.TEXT_PIC_STATS_ORGANIC_VS_BLOCK_REWARDS,
+        #           fill='#fff',
+        #           font=r.fonts.get_font(37))
+        #
+        # font_fee = r.fonts.get_font_bold(32)
+        # x_right = 1283
 
-        y_p, y_bar = 1142, 1105
-
-        dual_side_rect(draw, x, y_bar, x_right, y_bar + 14,
-                       liq_fee_usd, block_rewards_usd,
-                       TC_YGGDRASIL_GREEN, TC_LIGHTNING_BLUE)
-
-        draw.text((x, y_p),
-                  format_percent(organic_ratio, 1, threshold=0.0),
-                  font=font_fee,
-                  anchor='lm',
-                  fill=TC_YGGDRASIL_GREEN)
-
-        draw.text((x_right, y_p),
-                  format_percent(block_ratio, 1, threshold=0.0),
-                  font=font_fee,
-                  anchor='rm',
-                  fill=TC_LIGHTNING_BLUE)
+        # y_p, y_bar = 1142, 1105
+        #
+        # dual_side_rect(draw, x, y_bar, x_right, y_bar + 14,
+        #                liq_fee_usd, block_rewards_usd,
+        #                TC_YGGDRASIL_GREEN, TC_LIGHTNING_BLUE)
+        #
+        # draw.text((x, y_p),
+        #           format_percent(organic_ratio, 1, threshold=0.0),
+        #           font=font_fee,
+        #           anchor='lm',
+        #           fill=TC_YGGDRASIL_GREEN)
+        #
+        # draw.text((x_right, y_p),
+        #           format_percent(block_ratio, 1, threshold=0.0),
+        #           font=font_fee,
+        #           anchor='rm',
+        #           fill=TC_LIGHTNING_BLUE)
 
         # 3. Block
 

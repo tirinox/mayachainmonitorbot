@@ -80,5 +80,13 @@ class MidgardURLGenV2(MidgardURLGenBase):
     def url_borrowers(self):
         return f'{self.base_url}/v2/borrowers'
 
+    def url_swap_history(self, interval, count):
+        return f'{self.base_url}/v2/history/swaps?interval={interval}&count={count}'
+
+    def url_earnings_history(self, interval, count):
+        return f'{self.base_url}/v2/history/earnings?interval={interval}&count={count}'
+
+    WEEK = 'week'
+
 
 free_url_gen = MidgardURLGenV2('')

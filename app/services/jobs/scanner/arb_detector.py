@@ -17,7 +17,7 @@ class ArbBotDetector(WithLogger):
         Try to detect if the address is an arb bot.
         Safe function, doesn't raise exceptions.
         @param address:
-        @return:
+        @return: bool
         """
         try:
             name = await self.deps.name_service.lookup_name_by_address(address)

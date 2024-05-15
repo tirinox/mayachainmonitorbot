@@ -1,7 +1,7 @@
 import asyncio
 from typing import Optional
 
-from services.jobs.fetch.circulating import RuneCirculatingSupplyFetcher, CacaoCirculatingSupply, RuneHoldEntry, \
+from services.jobs.fetch.circulating import CacaoCirculatingSupplyFetcher, CacaoCirculatingSupply, RuneHoldEntry, \
     ThorRealms
 from services.jobs.fetch.gecko_price import get_cacao_coin_gecko_info, gecko_market_cap_rank, gecko_ticker_price, \
     gecko_market_volume
@@ -43,7 +43,7 @@ class RuneMarketInfoFetcher(WithLogger):
 
     @retries(5)
     async def _get_circulating_supply(self) -> CacaoCirculatingSupply:
-        supply_fetcher = RuneCirculatingSupplyFetcher(
+        supply_fetcher = CacaoCirculatingSupplyFetcher(
             self.deps.session,
             thor_node=self.deps.thor_connector.env.thornode_url,
             step_sleep=self.deps.cfg.sleep_step)

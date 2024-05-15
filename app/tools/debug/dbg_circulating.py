@@ -4,7 +4,7 @@ import time
 
 from localization.languages import Language
 from localization.manager import BaseLocalization
-from services.jobs.fetch.circulating import RuneCirculatingSupplyFetcher
+from services.jobs.fetch.circulating import CacaoCirculatingSupplyFetcher
 from services.jobs.fetch.fair_price import RuneMarketInfoFetcher
 from services.jobs.fetch.net_stats import NetworkStatisticsFetcher
 from services.lib.texts import sep
@@ -54,7 +54,7 @@ async def my_test_circulating(lp_app: LpAppFramework):
 
 async def debug_circulating_rune_fetcher(app: LpAppFramework):
     # data = await app.deps.rune_market_fetcher.get_full_supply()
-    supply = RuneCirculatingSupplyFetcher(app.deps.session, app.deps.thor_connector.env.thornode_url)
+    supply = CacaoCirculatingSupplyFetcher(app.deps.session, app.deps.thor_connector.env.thornode_url)
     data = await supply.fetch()
 
     print(data)
@@ -62,7 +62,7 @@ async def debug_circulating_rune_fetcher(app: LpAppFramework):
 
 
 async def debug_circulating_rune_message(app: LpAppFramework):
-    # supply = RuneCirculatingSupplyFetcher(app.deps.session, app.deps.thor_connector.env.thornode_url)
+    # supply = CacaoCirculatingSupplyFetcher(app.deps.session, app.deps.thor_connector.env.thornode_url)
     # data = await supply.fetch()
 
     fetcher_stats = NetworkStatisticsFetcher(app.deps)

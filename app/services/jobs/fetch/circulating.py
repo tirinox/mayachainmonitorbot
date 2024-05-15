@@ -116,7 +116,7 @@ class CacaoCirculatingSupply(NamedTuple):
         return self.bonded + self.pooled
 
 
-class RuneCirculatingSupplyFetcher(WithLogger):
+class CacaoCirculatingSupplyFetcher(WithLogger):
     def __init__(self, session, thor_node, step_sleep=0):
         super().__init__()
         self.session = session
@@ -150,24 +150,28 @@ class RuneCirculatingSupplyFetcher(WithLogger):
         )
 
     @staticmethod
-    def get_pure_rune_from_thor_array(arr):
+    def get_pure_cacao_from_thor_array(arr):
         if arr:
             thor_rune = next((item['amount'] for item in arr if item['denom'] == CACAO_DENOM), 0)
             return int(cacao_to_float(thor_rune))
         else:
             return 0
 
-    async def get_cacao_total_supply(self):
+    async def get_supply_data(self):
         url_supply = f'{self.thor_node}/cosmos/bank/v1beta1/supply'
         self.logger.debug(f'Get: "{url_supply}"')
         async with self.session.get(url_supply) as resp:
             j = await resp.json()
             items = j['supply']
-            return self.get_pure_rune_from_thor_array(items)
+            return items
+
+    async def get_cacao_total_supply(self):
+        items = await self.get_supply_data()
+        return self.get_pure_cacao_from_thor_array(items)
 
     async def get_thor_address_balance(self, address):
         url_balance = f'{self.thor_node}/cosmos/bank/v1beta1/balances/{address}'
         self.logger.debug(f'Get: "{url_balance}"')
         async with self.session.get(url_balance) as resp:
             j = await resp.json()
-            return self.get_pure_rune_from_thor_array(j['balances'])
+            return self.get_pure_cacao_from_thor_array(j['balances'])

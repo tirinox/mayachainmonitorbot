@@ -23,7 +23,7 @@ from services.lib.texts import bold, link, code, ital, pre, x_ses, progressbar, 
 from services.lib.utils import grouper, translate
 from services.lib.w3.dex_analytics import DexReportEntry, DexReport
 from services.models.cap_info import ThorCapInfo
-from services.models.flipside import AlertKeyStats
+from services.models.key_stats_model import AlertKeyStats
 from services.models.last_block import BlockProduceState, EventBlockSpeed
 from services.models.loans import AlertLoanOpen, AlertLoanRepayment
 from services.models.lp_info import LiquidityPoolReport

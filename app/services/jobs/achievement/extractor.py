@@ -9,7 +9,7 @@ from services.lib.date_utils import full_years_old_ts
 from services.lib.depcont import DepContainer
 from services.lib.money import Asset
 from services.lib.utils import is_list_of_type, WithLogger
-from services.models.flipside import AlertKeyStats
+from services.models.key_stats_model import AlertKeyStats
 from services.models.loans import LendingStats, AlertLoanOpen
 from services.models.net_stats import NetworkStats
 from services.models.node_info import NodeSetChanges

@@ -177,6 +177,18 @@ class ThorConnector:
         for client in self._clients:
             client.set_client_id_header(client_id)
 
+    @property
+    def first_client(self) -> ThorNodeClient:
+        return self._clients[0]
+
+    @property
+    def first_client_node_url(self):
+        return self.first_client.env.thornode_url
+
+    @property
+    def first_client_rpc_url(self):
+        return self.first_client.env.rpc_url
+
     async def _request(self, path, is_rpc=False, treat_empty_as_ok=True):
         for client in self._clients:
             for attempt in range(1, client.env.retries + 1):

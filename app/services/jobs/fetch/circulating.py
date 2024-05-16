@@ -1,6 +1,7 @@
 import asyncio
 from typing import NamedTuple, Dict
 
+from aionode.connector import ThorConnector
 from services.lib.constants import CACAO_IDEAL_SUPPLY, CACAO_DENOM, cacao_to_float
 from services.lib.utils import WithLogger
 
@@ -117,10 +118,9 @@ class CacaoCirculatingSupply(NamedTuple):
 
 
 class CacaoCirculatingSupplyFetcher(WithLogger):
-    def __init__(self, session, thor_node, step_sleep=0):
+    def __init__(self, thor: ThorConnector, step_sleep=0):
         super().__init__()
-        self.session = session
-        self.thor_node = thor_node
+        self.thor = thor
         self.step_sleep = step_sleep
 
     async def fetch(self) -> CacaoCirculatingSupply:
@@ -135,7 +135,7 @@ class CacaoCirculatingSupplyFetcher(WithLogger):
             # No hurry, do it step by step
             await asyncio.sleep(self.step_sleep)
 
-            balance = await self.get_thor_address_balance(address)
+            balance = await self.get_cacao_address_balance(address)
             result.set_holder(RuneHoldEntry(address, balance, wallet_name, realm))
 
         locked_rune = sum(
@@ -157,21 +157,10 @@ class CacaoCirculatingSupplyFetcher(WithLogger):
         else:
             return 0
 
-    async def get_supply_data(self):
-        url_supply = f'{self.thor_node}/cosmos/bank/v1beta1/supply'
-        self.logger.debug(f'Get: "{url_supply}"')
-        async with self.session.get(url_supply) as resp:
-            j = await resp.json()
-            items = j['supply']
-            return items
-
     async def get_cacao_total_supply(self):
-        items = await self.get_supply_data()
+        items = await self.thor.query_supply_raw()
         return self.get_pure_cacao_from_thor_array(items)
 
-    async def get_thor_address_balance(self, address):
-        url_balance = f'{self.thor_node}/cosmos/bank/v1beta1/balances/{address}'
-        self.logger.debug(f'Get: "{url_balance}"')
-        async with self.session.get(url_balance) as resp:
-            j = await resp.json()
-            return self.get_pure_cacao_from_thor_array(j['balances'])
+    async def get_cacao_address_balance(self, address):
+        balance = await self.thor.query_balance(address)
+        return int(balance.cacao_float)

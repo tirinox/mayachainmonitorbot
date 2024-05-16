@@ -43,11 +43,7 @@ class RuneMarketInfoFetcher(WithLogger):
 
     @retries(5)
     async def _get_circulating_supply(self) -> CacaoCirculatingSupply:
-        supply_fetcher = CacaoCirculatingSupplyFetcher(
-            self.deps.session,
-            thor_node=self.deps.thor_connector.env.thornode_url,
-            step_sleep=self.deps.cfg.sleep_step)
-
+        supply_fetcher = CacaoCirculatingSupplyFetcher(self.deps.thor_connector, step_sleep=self.deps.cfg.sleep_step)
         return await supply_fetcher.fetch()
 
     def _enrich_circulating_supply(self, supply: CacaoCirculatingSupply) -> CacaoCirculatingSupply:

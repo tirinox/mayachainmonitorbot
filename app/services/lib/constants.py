@@ -224,5 +224,5 @@ DEFAULT_RUNE_FEE = 2000000  # fixme!
 
 DEFAULT_RESERVE_ADDRESS = 'maya1dheycdevq39qlkxs2a6wuuzyn4aqxhve4hc8sm'
 BOND_MODULE = 'thor17gw75axcnr8747pkanye45pnrwk7p9c3cqncsv'
-POOL_MODULE = 'thor1g98cy3n9mmjrpn0sxmn63lztelera37n8n67c0'
+POOL_MODULE = 'maya1g98cy3n9mmjrpn0sxmn63lztelera37n8yyjwl'
 SYNTH_MODULE = 'thor1v8ppstuf6e3x0r4glqc68d5jqcs2tf38cg2q6y'

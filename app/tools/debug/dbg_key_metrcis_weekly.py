@@ -15,7 +15,8 @@ async def demo_load(app: LpAppFramework):
     f = KeyStatsFetcher(app.deps)
     # r = await f._load_dividends()
     # r = await f._load_earnings_history()
-    r = await f.fetch()
+    r = await f._load_lock_stats()
+    # r = await f.fetch()
     print(r)
 
 

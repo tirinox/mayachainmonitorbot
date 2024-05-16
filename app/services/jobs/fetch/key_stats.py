@@ -1,7 +1,9 @@
 import asyncio
 import datetime
 import random
+from typing import List
 
+from aionode.types import ThorNodeAccount
 from services.jobs.fetch.base import BaseFetcher
 from services.jobs.fetch.pool_price import PoolFetcher
 from services.lib.constants import MAYA_DENOM, MAYA_DIVIDER_INV, cacao_to_float, BOND_MODULE, POOL_MODULE, \
@@ -14,6 +16,7 @@ from services.lib.utils import WithLogger
 from services.models.earnings_history import EarningsData
 from services.models.key_stats_model import AlertKeyStats, AffiliateCollectors, MayaDividend, \
     MayaDividends, OverallSwapRoutes
+from services.models.pool_info import PoolInfoMap
 from services.models.swap_history import SwapHistoryResponse
 
 URL_SWAP_PATHS = "https://mayaswap.s3.eu-central-1.amazonaws.com/stats.json?r={r}"
@@ -71,17 +74,30 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
 
     async def _load_lock_stats(self, days_ago=7):
         thor = self.deps.thor_connector
+
         last_block = await thor.query_last_blocks()
         last_block = last_block[0].mayachain
         block_ago = last_block - DAY / THOR_BLOCK_TIME
-        # todo: work here
-        bond_balance = await thor.query_balance(BOND_MODULE)
-        pool_balance = await thor.query_balance(POOL_MODULE)
+
+        nodes = await thor.query_node_accounts()
+        prev_nodes = await thor.query_node_accounts(block_ago)
+
+        def sum_active_bonds(_nodes: List[ThorNodeAccount]):
+            return sum(n.bond for n in _nodes if n.status.lower() == ThorNodeAccount.STATUS_ACTIVE)
+
+        curr_bond = cacao_to_float(sum_active_bonds(nodes))
+        prev_bond = cacao_to_float(sum_active_bonds(prev_nodes))
+
+        return prev_bond, curr_bond
 
     async def _load_swap_routes(self) -> OverallSwapRoutes:
         data = await self._load_json(URL_SWAP_PATHS.format(r=random.uniform(0, 1)))
         paths = OverallSwapRoutes.from_json(data)
         return paths
+
+    @staticmethod
+    def _sum_pool(pools: PoolInfoMap, cacao_price):
+        return cacao_to_float(sum(p.balance_rune for p in pools.values())) * cacao_price
 
     async def fetch(self) -> AlertKeyStats:
         # Load pool data for BTC/ETH/RUNE/USD value in the pools
@@ -105,6 +121,7 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         affiliate_stats = await self._load_affiliate_stats()
         dividends = await self._load_dividends()
         routes = await self._load_swap_routes()
+        prev_bond, curr_bond = await self._load_lock_stats()
 
         usd_per_cacao = earnings_history.intervals[0].cacao_price_usd
         prev_usd_per_cacao = earnings_history.intervals[1].cacao_price_usd
@@ -115,10 +132,10 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         # Done. Construct the resulting event
         return AlertKeyStats(
             old_pools, fresh_pools,
-            bond_usd=0,
-            bond_usd_prev=0,
-            pool_usd=0,
-            pool_usd_prev=0,
+            bond_usd=curr_bond * usd_per_cacao,
+            bond_usd_prev=prev_bond * prev_usd_per_cacao,
+            pool_usd=self._sum_pool(fresh_pools, usd_per_cacao),
+            pool_usd_prev=self._sum_pool(old_pools, prev_usd_per_cacao),
             protocol_revenue_usd=cacao_to_float(earnings_history.current_week.earnings) * usd_per_cacao,
             protocol_revenue_usd_prev=cacao_to_float(earnings_history.previous_week.earnings) * prev_usd_per_cacao,
             affiliate_revenue_usd=affiliate_stats.current_week_affiliate_revenue_usd,

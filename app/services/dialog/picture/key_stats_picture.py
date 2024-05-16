@@ -76,8 +76,8 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
         draw = ImageDraw.Draw(image)
 
         # Week dates
-        start_date = self.event.end_date - timedelta(days=self.event.days)
-        period_str = self.loc.text_key_stats_period(start_date, self.event.end_date)
+        start_date = e.end_date - timedelta(days=e.days)
+        period_str = self.loc.text_key_stats_period(start_date, e.end_date)
 
         draw.text((1862, 236), period_str,
                   fill='#fff', font=r.fonts.get_font_bold(52),
@@ -276,7 +276,7 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
         y_margin = 60
 
         font_routes = r.fonts.get_font_bold(40)
-        for i, ((label_left, label_right), count) in zip(range(1, n_max + 1), e.swap_routes):
+        for i, ((label_left, label_right), volume) in zip(range(1, n_max + 1), e.top_swap_routes):
             l_asset, r_asset = Asset(label_left), Asset(label_right)
 
             text = f'{i}. {l_asset.name} ⇌ {r_asset.name}'
@@ -289,7 +289,7 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
             w, _ = font_estimate_size(font_routes, text)
 
             draw.text((x + w + 20, y + 6),
-                      bracketify(short_dollar(count)),
+                      bracketify(short_dollar(volume)),
                       fill=COLOR_OF_PROFIT,
                       font=font_small_n)
 

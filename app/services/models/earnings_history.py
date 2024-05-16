@@ -61,5 +61,14 @@ class EarningsData(NamedTuple):
     @classmethod
     def from_json(cls, json_data):
         intervals = [IntervalMeta.from_json(interval) for interval in json_data['intervals']]
+        intervals.sort(key=lambda x: x.start_time, reverse=True)
         meta = IntervalMeta.from_json(json_data['meta'])
         return cls(intervals=intervals, meta=meta)
+
+    @property
+    def current_week(self):
+        return self.intervals[0]
+
+    @property
+    def previous_week(self):
+        return self.intervals[1]

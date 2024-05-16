@@ -1,10 +1,11 @@
 import asyncio
 import datetime
+import random
 
 from services.jobs.fetch.base import BaseFetcher
-from services.jobs.fetch.circulating import CacaoCirculatingSupplyFetcher
 from services.jobs.fetch.pool_price import PoolFetcher
-from services.lib.constants import MAYA_DENOM, MAYA_DIVIDER_INV
+from services.lib.constants import MAYA_DENOM, MAYA_DIVIDER_INV, cacao_to_float, BOND_MODULE, POOL_MODULE, \
+    THOR_BLOCK_TIME
 from services.lib.date_utils import parse_timespan_to_seconds, DAY
 from services.lib.depcont import DepContainer
 from services.lib.midgard.name_service import NameService
@@ -12,13 +13,13 @@ from services.lib.midgard.urlgen import free_url_gen
 from services.lib.utils import WithLogger
 from services.models.earnings_history import EarningsData
 from services.models.key_stats_model import AlertKeyStats, AffiliateCollectors, MayaDividend, \
-    MayaDividends
+    MayaDividends, OverallSwapRoutes
 from services.models.swap_history import SwapHistoryResponse
 
 URL_SWAP_PATHS = "https://mayaswap.s3.eu-central-1.amazonaws.com/stats.json?r={r}"
 
 URL_NETWORK_STATS = "https://midgard.mayachain.info/v2/network"
-URL_AFFILIATE_STATS = "https://www.mayascan.org/api/walletStats?period=1w&days=7"
+URL_AFFILIATE_STATS = "https://www.mayascan.org/api/walletStats?period=1d&days=14"
 URL_CACAO_DIVIDENDS = "https://mayaswap.s3.eu-central-1.amazonaws.com/rewards.json"
 
 
@@ -50,8 +51,7 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         return collectors
 
     async def _load_dividends(self):
-        supply_loader = CacaoCirculatingSupplyFetcher(self.deps.session, self.deps.thor_connector.first_client_node_url)
-        supply_data = await supply_loader.get_supply_data()
+        supply_data = await self.deps.thor_connector.query_supply_raw()
         maya_supply = next((item['amount'] for item in supply_data if item['denom'] == MAYA_DENOM), 0)
         maya_supply = int(maya_supply) * MAYA_DIVIDER_INV
 
@@ -64,10 +64,24 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         swap_history = SwapHistoryResponse.from_json(swap_history)
         return swap_history
 
-    async def _load_earnings_history(self):
+    async def _load_earnings_history(self) -> EarningsData:
         earnings_history = await self.deps.midgard_connector.request(free_url_gen.url_earnings_history(free_url_gen.WEEK, 2))
         earnings_history = EarningsData.from_json(earnings_history)
         return earnings_history
+
+    async def _load_lock_stats(self, days_ago=7):
+        thor = self.deps.thor_connector
+        last_block = await thor.query_last_blocks()
+        last_block = last_block[0].mayachain
+        block_ago = last_block - DAY / THOR_BLOCK_TIME
+        # todo: work here
+        bond_balance = await thor.query_balance(BOND_MODULE)
+        pool_balance = await thor.query_balance(POOL_MODULE)
+
+    async def _load_swap_routes(self) -> OverallSwapRoutes:
+        data = await self._load_json(URL_SWAP_PATHS.format(r=random.uniform(0, 1)))
+        paths = OverallSwapRoutes.from_json(data)
+        return paths
 
     async def fetch(self) -> AlertKeyStats:
         # Load pool data for BTC/ETH/RUNE/USD value in the pools
@@ -86,27 +100,38 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         old_pools = pf.convert_pool_list_to_dict(list(old_pools.values()))
 
         # Load the data
-        mdg = self.deps.midgard_connector
         swap_history = await self._load_swap_history()
-        earnings_history = await mdg.request(free_url_gen.url_earnings_history(free_url_gen.WEEK, 2))
+        earnings_history = await self._load_earnings_history()
         affiliate_stats = await self._load_affiliate_stats()
-
         dividends = await self._load_dividends()
+        routes = await self._load_swap_routes()
 
-        routes = []
+        usd_per_cacao = earnings_history.intervals[0].cacao_price_usd
+        prev_usd_per_cacao = earnings_history.intervals[1].cacao_price_usd
+
+        curr_week_swap = swap_history.intervals[0]
+        prev_week_swap = swap_history.intervals[1]
 
         # Done. Construct the resulting event
         return AlertKeyStats(
             old_pools, fresh_pools,
-            bond_usd=0, bond_usd_prev=0,
-            pool_usd=0, pool_usd_prev=0,
-            protocol_revenue_usd=0, protocol_revenue_usd_prev=0,
-            affiliate_revenue_usd=0, affiliate_revenue_usd_prev=0,
-            maya_revenue_usd=0, maya_revenue_usd_prev=0,
+            bond_usd=0,
+            bond_usd_prev=0,
+            pool_usd=0,
+            pool_usd_prev=0,
+            protocol_revenue_usd=cacao_to_float(earnings_history.current_week.earnings) * usd_per_cacao,
+            protocol_revenue_usd_prev=cacao_to_float(earnings_history.previous_week.earnings) * prev_usd_per_cacao,
+            affiliate_revenue_usd=affiliate_stats.current_week_affiliate_revenue_usd,
+            affiliate_revenue_usd_prev=affiliate_stats.previous_week_affiliate_revenue_usd,
+            maya_revenue_usd=dividends.current_week_cacao_sum * usd_per_cacao,
+            maya_revenue_usd_prev=dividends.previous_week_cacao_sum * prev_usd_per_cacao,
             maya_revenue_per_unit=0,
-            unique_swapper_count=0, unique_swapper_count_prev=0,
-            number_of_swaps=0, number_of_swaps_prev=0,
-            swap_volume_usd=0, swap_volume_usd_prev=0,
+            unique_swapper_count=0,
+            unique_swapper_count_prev=0,
+            number_of_swaps=curr_week_swap.total_count,
+            number_of_swaps_prev=prev_week_swap.total_count,
+            swap_volume_usd=cacao_to_float(curr_week_swap.total_volume) * usd_per_cacao,
+            swap_volume_usd_prev=cacao_to_float(curr_week_swap.total_volume) * prev_usd_per_cacao,
             routes=routes,
             affiliates=affiliate_stats,
             dividends=dividends,

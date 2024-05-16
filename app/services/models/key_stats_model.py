@@ -42,6 +42,8 @@ class AffiliateCollector(NamedTuple):
 
     def get_summary(self, start_day_index, end_day_index):
         sliced = self.daily[start_day_index:end_day_index]
+        if not sliced:
+            print("stop")
         return AffiliateCollectorDay(
             volume_usd=sum(day.volume_usd for day in sliced),
             fees_usd=sum(day.fees_usd for day in sliced),
@@ -71,11 +73,11 @@ class AffiliateCollectors(NamedTuple):
         )
 
     @property
-    def current_week_affiliate_revenue(self):
+    def current_week_affiliate_revenue_usd(self):
         return sum(collector.current_week_summary.fees_usd for collector in self.collectors)
 
     @property
-    def previous_week_affiliate_revenue(self):
+    def previous_week_affiliate_revenue_usd(self):
         return sum(collector.previous_week_summary.fees_usd for collector in self.collectors)
 
     @property
@@ -88,6 +90,42 @@ class FSSwapRoutes(NamedTuple):
     asset_to: str
     volume_usd: float
     total_swaps: int
+
+
+class SwapRouteEntry(NamedTuple):
+    total: int
+    from_asset: str
+    to_asset: str
+    from_volume: float
+    to_volume: float
+    from_volume_usd: float
+    to_volume_usd: float
+    from_synth: bool
+    to_synth: bool
+
+    @classmethod
+    def from_json(cls, j):
+        return cls(
+            total=j['total'],
+            from_asset=j['from'],
+            to_asset=j['to'],
+            from_volume=float(j['fromVolume']),
+            to_volume=float(j['toVolume']),
+            from_volume_usd=float(j['fromVolumeUsd']),
+            to_volume_usd=float(j['toVolumeUsd']),
+            from_synth=j['fromSynth'],
+            to_synth=j['toSynth']
+        )
+
+
+class OverallSwapRoutes(NamedTuple):
+    routes: List[SwapRouteEntry]
+
+    @classmethod
+    def from_json(cls, j):
+        return cls(
+            routes=[SwapRouteEntry.from_json(route) for route in j['stats']['paths']]
+        )
 
 
 class MayaDividend(NamedTuple):
@@ -125,6 +163,14 @@ class MayaDividends(NamedTuple):
         sliced = self.dividends[start_index:end_index]
         return sum(d.reward for d in sliced)
 
+    @property
+    def current_week_cacao_sum(self):
+        return self.get_cacao_sum(0, 7)
+
+    @property
+    def previous_week_cacao_sum(self):
+        return self.get_cacao_sum(7, 14)
+
 
 @dataclasses.dataclass
 class AlertKeyStats:
@@ -157,7 +203,7 @@ class AlertKeyStats:
     swap_volume_usd: float
     swap_volume_usd_prev: float
 
-    routes: List[FSSwapRoutes]
+    routes: OverallSwapRoutes
     affiliates: AffiliateCollectors
 
     dividends: MayaDividends
@@ -193,8 +239,10 @@ class AlertKeyStats:
         return self.get_sum(('RUNE.RUNE',), previous)
 
     @property
-    def swap_routes(self):
+    def top_swap_routes(self):
         collectors = defaultdict(float)
-        for obj in self.routes:
-            collectors[(obj.asset_from, obj.asset_to)] += obj.swap_volume
+        for obj in self.routes.routes:
+            obj: SwapRouteEntry
+            collectors[(obj.from_asset, obj.to_asset)] += obj.to_volume_usd
+            collectors[(obj.to_asset, obj.from_asset)] += obj.from_volume_usd
         return list(sorted(collectors.items(), key=operator.itemgetter(1), reverse=True))

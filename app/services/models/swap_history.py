@@ -64,7 +64,9 @@ class SwapHistoryResponse:
 
     @classmethod
     def from_json(cls, j):
+        intervals = [SwapsHistoryEntry.from_json(interval_j) for interval_j in j.get('intervals', [])]
+        intervals.sort(key=lambda x: x.start_time, reverse=True)
         return cls(
             meta=SwapsHistoryEntry.from_json(j.get('meta', {})),
-            intervals=[SwapsHistoryEntry.from_json(interval_j) for interval_j in j.get('intervals', [])]
+            intervals=intervals
         )

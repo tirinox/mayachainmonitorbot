@@ -70,22 +70,6 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
     def _get_picture_sync(self):
         # prepare data
         r, loc, e = self.r, self.loc, self.event
-        curr_lock, prev_lock = e.bond_usd, e.bond_usd_prev
-
-        total_revenue_usd, prev_total_revenue_usd = e.protocol_revenue_usd, e.protocol_revenue_usd_prev
-        # block_rewards_usd, prev_block_rewards_usd = e.block_rewards_usd_curr_prev
-        # liq_fee_usd, prev_liq_fee_usd = e.liquidity_fee_usd_curr_prev
-        aff_fee_usd, prev_aff_fee_usd = e.affiliate_revenue_usd, e.affiliate_revenue_usd_prev
-
-        # block_ratio = e.block_ratio
-        # organic_ratio = e.organic_ratio
-        aff_collectors = e.top_affiliate_daily
-
-        swap_count, prev_swap_count = e.number_of_swaps, e.number_of_swaps_prev
-        usd_volume, prev_usd_volume = e.swap_volume_usd, e.swap_volume_usd_prev
-        unique_swap, prev_unique_swap = e.unique_swapper_count, e.unique_swapper_count_prev
-
-        swap_routes = e.swap_routes
 
         # prepare painting stuff
         image = self.bg.copy()
@@ -167,14 +151,14 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
         y = 888
 
         _indicator(100, y, loc.TEXT_PIC_STATS_NATIVE_ASSET_POOLED,
-                   short_dollar(curr_lock.total_value_pooled_usd),
-                   prev_lock.total_value_pooled_usd, curr_lock.total_value_pooled_usd)
+                   short_dollar(e.pool_usd),
+                   e.pool_usd_prev, e.pool_usd)
 
         # ------- total network security usd -------
 
         _indicator(100, y + delta_y, loc.TEXT_PIC_STATS_NETWORK_SECURITY,
-                   short_dollar(curr_lock.total_value_bonded_usd),
-                   prev_lock.total_value_bonded_usd, curr_lock.total_value_bonded_usd)
+                   short_dollar(e.bond_usd),
+                   e.bond_usd_prev, e.bond_usd)
 
         # 2. Block
         # -------- protocol revenue -----
@@ -183,13 +167,13 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
 
         _indicator(x, 442,
                    loc.TEXT_PIC_STATS_PROTOCOL_REVENUE,
-                   short_dollar(total_revenue_usd),
-                   prev_total_revenue_usd, total_revenue_usd)
+                   short_dollar(e.protocol_revenue_usd),
+                   e.protocol_revenue_usd_prev, e.protocol_revenue_usd)
 
         _indicator(x, 623,
                    loc.TEXT_PIC_STATS_AFFILIATE_REVENUE,
-                   short_dollar(aff_fee_usd),
-                   prev_aff_fee_usd, aff_fee_usd)
+                   short_dollar(e.affiliate_revenue_usd),
+                   e.protocol_revenue_usd_prev, e.affiliate_revenue_usd)
 
         # ----- top 3 affiliates table -----
 
@@ -202,7 +186,9 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
         y = 844
         y_margin = 60
         font_aff = r.fonts.get_font_bold(40)
-        for i, (label, fee_usd) in zip(range(1, n_max + 1), aff_collectors):
+        for i, aff_collector in enumerate(e.affiliates.top_affiliate_collectors_this_week[:n_max], start=1):
+            label = aff_collector.code
+            fee_usd = aff_collector.current_week_summary.fees_usd
             text = f'{i}. {label}'
             draw.text((x, y),
                       text,
@@ -256,8 +242,8 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
 
         _indicator(x, y,
                    loc.TEXT_PIC_STATS_UNIQUE_SWAPPERS,
-                   pretty_money(unique_swap),
-                   prev_unique_swap, unique_swap)
+                   pretty_money(e.unique_swapper_count),
+                   e.unique_swapper_count_prev, e.unique_swapper_count)
 
         # ---- count of swaps ----
 
@@ -265,8 +251,8 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
 
         _indicator(x, y,
                    loc.TEXT_PIC_STATS_NUMBER_OF_SWAPS,
-                   pretty_money(swap_count),
-                   prev_swap_count, swap_count)
+                   pretty_money(e.number_of_swaps),
+                   e.number_of_swaps_prev, e.number_of_swaps)
 
         # ---- swap volume -----
 
@@ -274,8 +260,8 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
 
         _indicator(x, y,
                    loc.TEXT_PIC_STATS_USD_VOLUME,
-                   short_dollar(usd_volume),
-                   prev_usd_volume, usd_volume)
+                   short_dollar(e.swap_volume_usd),
+                   e.swap_volume_usd_prev, e.swap_volume_usd)
 
         # ---- routes ----
 
@@ -290,7 +276,7 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
         y_margin = 60
 
         font_routes = r.fonts.get_font_bold(40)
-        for i, ((label_left, label_right), count) in zip(range(1, n_max + 1), swap_routes):
+        for i, ((label_left, label_right), count) in zip(range(1, n_max + 1), e.swap_routes):
             l_asset, r_asset = Asset(label_left), Asset(label_right)
 
             text = f'{i}. {l_asset.name} ⇌ {r_asset.name}'

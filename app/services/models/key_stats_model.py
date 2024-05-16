@@ -4,9 +4,11 @@ from collections import defaultdict
 from datetime import datetime
 from typing import NamedTuple, List
 
-from services.lib.constants import STABLE_COIN_POOLS_ALL, thor_to_float
-from services.models.pool_info import PoolInfoMap
 import dateutil.parser
+
+from services.lib.constants import STABLE_COIN_POOLS_ALL, thor_to_float
+from services.lib.date_utils import discard_time
+from services.models.pool_info import PoolInfoMap
 
 KEY_DATETIME = "datetime"
 
@@ -68,6 +70,18 @@ class AffiliateCollectors(NamedTuple):
             dates=[datetime.strptime(d, date_format) for d in j['dates']]
         )
 
+    @property
+    def current_week_affiliate_revenue(self):
+        return sum(collector.current_week_summary.fees_usd for collector in self.collectors)
+
+    @property
+    def previous_week_affiliate_revenue(self):
+        return sum(collector.previous_week_summary.fees_usd for collector in self.collectors)
+
+    @property
+    def top_affiliate_collectors_this_week(self):
+        return list(sorted(self.collectors, key=lambda x: x.current_week_summary.fees_usd, reverse=True))
+
 
 class FSSwapRoutes(NamedTuple):
     asset_from: str
@@ -84,7 +98,7 @@ class MayaDividend(NamedTuple):
     @classmethod
     def from_json(cls, j):
         return cls(
-            date=dateutil.parser.parse(j['date']),
+            date=discard_time(dateutil.parser.parse(j['date'])),
             reward=j['reward'],
             denom=j['denom']
         )
@@ -96,10 +110,20 @@ class MayaDividends(NamedTuple):
 
     @classmethod
     def from_json(cls, j: dict, maya_supply: float):
+        dividends = [MayaDividend.from_json(d) for d in j['rewards']]
+        dividends.sort(key=operator.attrgetter("date"), reverse=True)
         return cls(
-            dividends=[MayaDividend.from_json(d) for d in j['rewards']],
+            dividends=dividends,
             maya_supply=maya_supply
         )
+
+    @property
+    def latest_date(self):
+        return self.dividends[0].date
+
+    def get_cacao_sum(self, start_index, end_index) -> float:
+        sliced = self.dividends[start_index:end_index]
+        return sum(d.reward for d in sliced)
 
 
 @dataclasses.dataclass
@@ -136,6 +160,8 @@ class AlertKeyStats:
     routes: List[FSSwapRoutes]
     affiliates: AffiliateCollectors
 
+    dividends: MayaDividends
+
     end_date: datetime
 
     days: int = 7
@@ -165,20 +191,6 @@ class AlertKeyStats:
 
     def get_rune(self, previous=False):
         return self.get_sum(('RUNE.RUNE',), previous)
-
-    @property
-    def top_affiliate_daily(self):
-        # todo
-        daily_list, _ = self.curr_prev_data
-        collectors = defaultdict(float)
-
-        for objects_for_day in daily_list:
-            for objects in objects_for_day.values():
-                for obj in objects:
-                    if isinstance(obj, AffiliateCollectorDay):
-                        if obj.label:
-                            collectors[obj.label] += obj.fee_usd
-        return list(sorted(collectors.items(), key=operator.itemgetter(1), reverse=True))
 
     @property
     def swap_routes(self):

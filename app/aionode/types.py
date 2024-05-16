@@ -7,6 +7,8 @@ from typing import List, NamedTuple
 import ujson
 from dateutil.parser import parse as date_parser
 
+from services.lib.constants import cacao_to_float
+
 THOR_BASE_MULT = 10 ** 8
 THOR_BASE_MULT_INV = 1.0 / THOR_BASE_MULT
 
@@ -384,7 +386,7 @@ class ThorBalances(NamedTuple):
 
     @property
     def cacao_float(self):
-        return thor_to_float(self.cacao)
+        return cacao_to_float(self.cacao)
 
     @classmethod
     def from_json(cls, j, address):

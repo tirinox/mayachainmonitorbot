@@ -84,6 +84,10 @@ class ThorConnector:
         data = await self._request(path)
         return ThorBalances.from_json(data, address)
 
+    async def query_supply_raw(self):
+        r = await self._request(self.env.path_supply)
+        return r.get('supply') if r else None
+
     async def query_tendermint_block_raw(self, height):
         path = self.env.path_block_by_height.format(height=height)
         data = await self._request(path, is_rpc=True)

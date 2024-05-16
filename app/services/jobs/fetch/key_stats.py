@@ -7,6 +7,7 @@ from services.jobs.fetch.pool_price import PoolFetcher
 from services.lib.constants import MAYA_DENOM, MAYA_DIVIDER_INV
 from services.lib.date_utils import parse_timespan_to_seconds, DAY
 from services.lib.depcont import DepContainer
+from services.lib.midgard.name_service import NameService
 from services.lib.midgard.urlgen import free_url_gen
 from services.lib.utils import WithLogger
 from services.models.earnings_history import EarningsData
@@ -38,6 +39,14 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
     async def _load_affiliate_stats(self) -> AffiliateCollectors:
         affiliate_stats = await self._load_json(URL_AFFILIATE_STATS)
         collectors = AffiliateCollectors.from_json(affiliate_stats)
+
+        name_service: NameService = self.deps.name_service
+
+        # rewrite code to the real labels
+        collectors = collectors._replace(collectors=[collector._replace(
+            code=name_service.get_affiliate_name(collector.code)
+        ) for collector in collectors.collectors])
+
         return collectors
 
     async def _load_dividends(self):

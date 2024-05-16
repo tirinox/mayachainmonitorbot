@@ -26,6 +26,13 @@ class FlipSideSaver(INotified):
         super().__init__()
         self.filename = filename
 
+    def clear_data(self):
+        try:
+            import os
+            os.remove(self.filename)
+        except Exception:
+            print(f'Failed to remove {self.filename}')
+
     async def on_data(self, sender, data):
         # result, fresh_pools, old_pools = data
         with open(self.filename, 'wb') as f:
@@ -50,14 +57,17 @@ async def demo_analyse(app: LpAppFramework):
     f.add_subscriber(saver)
 
     await f.run_once()
-    await asyncio.sleep(5)  # let them send the picture
 
 
-async def demo_picture(app: LpAppFramework):
+async def demo_picture(app: LpAppFramework, cached=True):
     sep()
     print('Start')
 
     loader = FlipSideSaver()
+
+    if not cached:
+        loader.clear_data()
+
     data = loader.load_data()
     if not data:
         await demo_analyse(app)
@@ -67,7 +77,7 @@ async def demo_picture(app: LpAppFramework):
     print('Data loaded')
 
     # loc = app.deps.loc_man.default
-    loc = app.deps.loc_man[Language.RUSSIAN]
+    loc = app.deps.loc_man[Language.ENGLISH]
 
     pic_gen = KeyStatsPictureGenerator(loc, data)
     pic, name = await pic_gen.get_picture()
@@ -81,7 +91,7 @@ async def main():
         await lp_app.deps.last_block_fetcher.run_once()
 
         # await demo_analyse(lp_app)
-        await demo_picture(lp_app)
+        await demo_picture(lp_app, cached=False)
         # await demo_load(lp_app)
 
 

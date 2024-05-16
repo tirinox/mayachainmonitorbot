@@ -79,7 +79,7 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
         start_date = e.end_date - timedelta(days=e.days)
         period_str = self.loc.text_key_stats_period(start_date, e.end_date)
 
-        draw.text((1862, 236), period_str,
+        draw.text((1900, 120), period_str,
                   fill='#fff', font=r.fonts.get_font_bold(52),
                   anchor='rm')
 

@@ -1219,7 +1219,7 @@ class BaseLocalization(ABC):  # == English
     @staticmethod
     def text_key_stats_period(start_date: datetime, end_date: datetime):
         date_format = '%d %B %Y'
-        return f'{start_date.strftime(date_format)} – {end_date.strftime(date_format)}'
+        return f'{start_date.strftime(date_format)} –\n – {end_date.strftime(date_format)}'
 
     def notification_text_key_metrics_caption(self, data: AlertKeyStats):
         return 'MayaChain weekly stats'

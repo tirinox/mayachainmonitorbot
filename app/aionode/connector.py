@@ -19,8 +19,8 @@ class ThorConnector:
     async def query_raw(self, path, is_rpc=False):
         return await self._request(path, is_rpc=is_rpc)
 
-    async def query_node_accounts(self) -> List[ThorNodeAccount]:
-        data = await self._request(self.env.path_nodes)
+    async def query_node_accounts(self, height=0) -> List[ThorNodeAccount]:
+        data = await self._request(self.env.path_nodes.format(height=int(height)))
         return [ThorNodeAccount.from_json(j) for j in data] if data else []
 
     async def query_queue(self) -> ThorQueue:

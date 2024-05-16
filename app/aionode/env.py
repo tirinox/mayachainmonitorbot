@@ -15,7 +15,7 @@ class ThorEnvironment:
     retry_delay: float = 0.0
 
     path_queue: str = '/mayachain/queue'
-    path_nodes: str = '/mayachain/nodes'
+    path_nodes: str = '/mayachain/nodes?height={height}'
     path_pools: str = "/mayachain/pools"
     path_pools_height: str = "/mayachain/pools?height={height}"
     path_pool: str = "/mayachain/pool/{pool}"

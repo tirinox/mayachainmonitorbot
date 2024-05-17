@@ -139,7 +139,6 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
                                  text, coin_font, font_small_n)
             v_y += v_delta_y
 
-
         # helper:
         def _indicator(_x, _y, name, text_value, old_value, new_value, _margin=72):
             draw.text((_x, _y),
@@ -166,7 +165,8 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
 
         # ------- total network security usd -------
 
-        _indicator(100, y + delta_y, loc.TEXT_PIC_STATS_NETWORK_SECURITY,
+        net_sec_y = y + delta_y
+        _indicator(100, net_sec_y, loc.TEXT_PIC_STATS_NETWORK_SECURITY,
                    short_dollar(e.bond_usd),
                    e.bond_usd_prev, e.bond_usd)
 
@@ -217,6 +217,10 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
         # ----- organic fees vs block rewards
 
         # todo: put here maya revenues!
+
+        _indicator(x, net_sec_y, loc.TEXT_PIC_MAYA_HOLDER_DIVIDENDS,
+                   short_dollar(e.maya_revenue_usd),
+                   e.maya_revenue_usd_prev, e.maya_revenue_usd)
 
         # draw.text((x, 1050),
         #           loc.TEXT_PIC_STATS_ORGANIC_VS_BLOCK_REWARDS,

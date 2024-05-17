@@ -1,13 +1,13 @@
 import asyncio
 import datetime
-import random
 from typing import List
 
 from aionode.types import ThorNodeAccount
 from services.jobs.fetch.base import BaseFetcher
 from services.jobs.fetch.pool_price import PoolFetcher
-from services.lib.constants import MAYA_DENOM, MAYA_DIVIDER_INV, cacao_to_float, BOND_MODULE, POOL_MODULE, \
-    THOR_BLOCK_TIME
+from services.jobs.scanner.swap_routes import SwapRouteRecorder
+from services.jobs.user_counter import UserCounter
+from services.lib.constants import MAYA_DENOM, MAYA_DIVIDER_INV, cacao_to_float, THOR_BLOCK_TIME
 from services.lib.date_utils import parse_timespan_to_seconds, DAY
 from services.lib.depcont import DepContainer
 from services.lib.midgard.name_service import NameService
@@ -15,7 +15,7 @@ from services.lib.midgard.urlgen import free_url_gen
 from services.lib.utils import WithLogger
 from services.models.earnings_history import EarningsData
 from services.models.key_stats_model import AlertKeyStats, AffiliateCollectors, MayaDividend, \
-    MayaDividends, OverallSwapRoutes
+    MayaDividends
 from services.models.pool_info import PoolInfoMap
 from services.models.swap_history import SwapHistoryResponse
 
@@ -90,11 +90,6 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
 
         return prev_bond, curr_bond
 
-    async def _load_swap_routes(self) -> OverallSwapRoutes:
-        data = await self._load_json(URL_SWAP_PATHS.format(r=random.uniform(0, 1)))
-        paths = OverallSwapRoutes.from_json(data)
-        return paths
-
     @staticmethod
     def _sum_pool(pools: PoolInfoMap, cacao_price):
         return cacao_to_float(sum(p.balance_rune for p in pools.values())) * cacao_price
@@ -120,7 +115,7 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         earnings_history = await self._load_earnings_history()
         affiliate_stats = await self._load_affiliate_stats()
         dividends = await self._load_dividends()
-        routes = await self._load_swap_routes()
+
         prev_bond, curr_bond = await self._load_lock_stats()
 
         usd_per_cacao = earnings_history.intervals[0].cacao_price_usd
@@ -130,6 +125,13 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         prev_week_swap = swap_history.intervals[1]
 
         maya_revenue_per_unit = dividends.current_week_cacao_sum / dividends.maya_supply
+
+        route_recorder: SwapRouteRecorder = self.deps.route_recorder
+        top_routes = await route_recorder.get_top_swap_routes_by_volume(days=self.tally_days_period, top_n=4)
+
+        user_counter: UserCounter = self.deps.user_counter
+        unique_swapper_count = await user_counter.counter.get_wau()
+        unique_swapper_count_prev = await user_counter.counter.get_previous_wau()
 
         # Done. Construct the resulting event
         return AlertKeyStats(
@@ -145,14 +147,15 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
             maya_revenue_usd=dividends.current_week_cacao_sum * usd_per_cacao,
             maya_revenue_usd_prev=dividends.previous_week_cacao_sum * prev_usd_per_cacao,
             maya_revenue_per_unit=maya_revenue_per_unit,
-            unique_swapper_count=0,
-            unique_swapper_count_prev=0,
+            unique_swapper_count=unique_swapper_count,
+            unique_swapper_count_prev=unique_swapper_count_prev,
             number_of_swaps=curr_week_swap.total_count,
             number_of_swaps_prev=prev_week_swap.total_count,
             swap_volume_usd=cacao_to_float(curr_week_swap.total_volume) * usd_per_cacao,
             swap_volume_usd_prev=cacao_to_float(curr_week_swap.total_volume) * prev_usd_per_cacao,
-            routes=routes,
+            routes=top_routes,
             affiliates=affiliate_stats,
             dividends=dividends,
             end_date=datetime.datetime.now(),
+            price=usd_per_cacao,
         )

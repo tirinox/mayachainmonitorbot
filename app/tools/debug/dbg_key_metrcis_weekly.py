@@ -92,7 +92,7 @@ async def main():
         await lp_app.deps.last_block_fetcher.run_once()
 
         # await demo_analyse(lp_app)
-        await demo_picture(lp_app, cached=True)
+        await demo_picture(lp_app, cached=False)
         # await demo_load(lp_app)
 
 

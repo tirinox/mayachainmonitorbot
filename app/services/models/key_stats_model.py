@@ -85,47 +85,11 @@ class AffiliateCollectors(NamedTuple):
         return list(sorted(self.collectors, key=lambda x: x.current_week_summary.fees_usd, reverse=True))
 
 
-class FSSwapRoutes(NamedTuple):
-    asset_from: str
-    asset_to: str
-    volume_usd: float
-    total_swaps: int
-
 
 class SwapRouteEntry(NamedTuple):
-    total: int
     from_asset: str
     to_asset: str
-    from_volume: float
-    to_volume: float
-    from_volume_usd: float
-    to_volume_usd: float
-    from_synth: bool
-    to_synth: bool
-
-    @classmethod
-    def from_json(cls, j):
-        return cls(
-            total=j['total'],
-            from_asset=j['from'],
-            to_asset=j['to'],
-            from_volume=float(j['fromVolume']),
-            to_volume=float(j['toVolume']),
-            from_volume_usd=float(j['fromVolumeUsd']),
-            to_volume_usd=float(j['toVolumeUsd']),
-            from_synth=j['fromSynth'],
-            to_synth=j['toSynth']
-        )
-
-
-class OverallSwapRoutes(NamedTuple):
-    routes: List[SwapRouteEntry]
-
-    @classmethod
-    def from_json(cls, j):
-        return cls(
-            routes=[SwapRouteEntry.from_json(route) for route in j['stats']['paths']]
-        )
+    volume_cacao: float
 
 
 class MayaDividend(NamedTuple):
@@ -203,7 +167,9 @@ class AlertKeyStats:
     swap_volume_usd: float
     swap_volume_usd_prev: float
 
-    routes: OverallSwapRoutes
+    price: float
+
+    routes: List[SwapRouteEntry]
     affiliates: AffiliateCollectors
 
     dividends: MayaDividends
@@ -241,8 +207,7 @@ class AlertKeyStats:
     @property
     def top_swap_routes(self):
         collectors = defaultdict(float)
-        for obj in self.routes.routes:
+        for obj in self.routes:
             obj: SwapRouteEntry
-            collectors[(obj.from_asset, obj.to_asset)] += obj.to_volume_usd
-            collectors[(obj.to_asset, obj.from_asset)] += obj.from_volume_usd
+            collectors[(obj.from_asset, obj.to_asset)] += obj.volume_cacao * self.price
         return list(sorted(collectors.items(), key=operator.itemgetter(1), reverse=True))

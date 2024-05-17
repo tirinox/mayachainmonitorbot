@@ -976,7 +976,7 @@ class RussianLocalization(BaseLocalization):
     TEXT_PIC_STATS_UNIQUE_SWAPPERS = 'Уникальных трейдеров'
     TEXT_PIC_STATS_NUMBER_OF_SWAPS = 'Количество обменов'
     TEXT_PIC_STATS_USD_VOLUME = 'Объем торгов'
-    TEXT_PIC_STATS_TOP_SWAP_ROUTES = 'Топ 3 пути обмена'
+    TEXT_PIC_STATS_TOP_SWAP_ROUTES = 'Топ пути обмена'
     TEXT_PIC_STATS_ORGANIC_VS_BLOCK_REWARDS = 'Комиссии / награды блока'
     TEXT_PIC_MAYA_HOLDER_DIVIDENDS = 'Дивиденды холдеров Maya'
 

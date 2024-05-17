@@ -56,7 +56,10 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
 
     @staticmethod
     def percent_change(old_v, new_v):
-        return (new_v - old_v) / old_v * 100.0 if old_v else 0.0
+        real = (new_v - old_v) / old_v * 100.0 if old_v else 0.0
+        if real > 1e6:  # prevents displaying too big numbers
+            return 0
+        return real
 
     def text_and_change(self, old_v, new_v, draw, x, y, text, font_main, font_second, fill='#fff',
                         x_shift=20, y_shift=6):
@@ -192,7 +195,7 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
                   fill='#fff',
                   font=font_indicator_name)
 
-        n_max = 3
+        n_max = 4
         y = 844
         y_margin = 60
         font_aff = r.fonts.get_font_bold(40)

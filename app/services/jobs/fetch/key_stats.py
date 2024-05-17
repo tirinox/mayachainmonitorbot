@@ -129,6 +129,8 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         curr_week_swap = swap_history.intervals[0]
         prev_week_swap = swap_history.intervals[1]
 
+        maya_revenue_per_unit = dividends.current_week_cacao_sum / dividends.maya_supply
+
         # Done. Construct the resulting event
         return AlertKeyStats(
             old_pools, fresh_pools,
@@ -142,7 +144,7 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
             affiliate_revenue_usd_prev=affiliate_stats.previous_week_affiliate_revenue_usd,
             maya_revenue_usd=dividends.current_week_cacao_sum * usd_per_cacao,
             maya_revenue_usd_prev=dividends.previous_week_cacao_sum * prev_usd_per_cacao,
-            maya_revenue_per_unit=0,
+            maya_revenue_per_unit=maya_revenue_per_unit,
             unique_swapper_count=0,
             unique_swapper_count_prev=0,
             number_of_swaps=curr_week_swap.total_count,

@@ -1201,7 +1201,7 @@ class BaseLocalization(ABC):  # == English
         return bonding_apy_change, liquidity_apy_change
 
     TEXT_PIC_STATS_NATIVE_ASSET_VAULTS = "Native Asset Vaults"
-    TEXT_PIC_STATS_WEEKLY_REVENUE = "Weekly Protocol Revenue"
+    TEXT_PIC_STATS_WEEKLY_REVENUE = "Weekly Revenue"
     TEXT_PIC_STATS_SWAP_INFO = "Weekly Swap Info"
 
     TEXT_PIC_STATS_NATIVE_ASSET_POOLED = 'Native Assets Pooled'

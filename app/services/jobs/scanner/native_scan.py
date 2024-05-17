@@ -180,8 +180,6 @@ class NativeScannerBlock(BaseFetcher):
         block_results_raw = await self._fetch_block_results_raw(block_no)
         if block_results_raw is not None:
             block_result = BlockResult.load_block(block_results_raw, block_no)
-            if not block_result.is_error:
-                self.logger.info(f'Block #{block_no} has {len(block_result.txs)} txs.')
             return block_result
         else:
             self.logger.warning(f'Error fetching block txs results #{block_no}.')
@@ -213,6 +211,8 @@ class NativeScannerBlock(BaseFetcher):
             self.logger.error(f'Failed to get transactions of the block #{block_index}.')
             return
 
-        # So we match the logs with the txs
+        self.logger.info(f'Block #{block_index} has {len(block_result.txs)} txs, '
+                         f'{len(block_result.tx_logs)} logs, '
+                         f'{len(block_result.end_block_events)} events.')
+
         return block_result.only_successful
-        # return block_result

@@ -222,6 +222,8 @@ class ThorTx:
 
     is_savings: bool = False
 
+    swap_props: object = None
+
     def sort_inputs_by_first_asset(self):
         self.in_tx.sort(key=lambda sub_tx: (sub_tx.coins[0].asset if sub_tx.coins else ''))
 

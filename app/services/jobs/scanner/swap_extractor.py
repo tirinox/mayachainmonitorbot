@@ -50,6 +50,7 @@ class SwapExtractorBlock(WithDelegates, INotified, WithLogger):
         # Extract finished TX
         txs = await self.detect_swap_finished(block, interesting_events)
 
+        # --8<-- debugging stuff --8<--
         if self.dbg_watch_swap_id:
             if any(tx.tx_hash == self.dbg_watch_swap_id for tx in txs):
                 self.dbg_print(f'🎉 Swap finished\n')
@@ -97,7 +98,7 @@ class SwapExtractorBlock(WithDelegates, INotified, WithLogger):
         return not self.dbg_watch_swap_id or self.dbg_watch_swap_id == tx_id
 
     async def register_swap_events(self, block: BlockResult, interesting_events: List[TypeEventSwapAndOut]):
-        boom = False
+        # boom = False
 
         for swap_ev in interesting_events:
             if not swap_ev.tx_id:

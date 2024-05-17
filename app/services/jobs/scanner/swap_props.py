@@ -223,6 +223,7 @@ class SwapProps(NamedTuple):
                 affiliate_address=affiliate_address,
                 streaming=ss_desc
             ),
-            status=SUCCESS
+            status=SUCCESS,
+            swap_props=self,
         )
         return tx

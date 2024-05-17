@@ -33,6 +33,7 @@ from services.jobs.ilp_summer import ILPSummer
 from services.jobs.node_churn import NodeChurnDetector
 from services.jobs.scanner.native_scan import NativeScannerBlock
 from services.jobs.scanner.swap_extractor import SwapExtractorBlock
+from services.jobs.scanner.swap_routes import SwapRouteRecorder
 from services.jobs.transfer_detector import RuneTransferDetectorTxLogs
 from services.jobs.user_counter import UserCounter
 from services.jobs.volume_filler import VolumeFillerUpdater
@@ -283,8 +284,8 @@ class App(WithLogger):
             decoder.add_subscriber(balance_notifier)
 
             # Count unique users
-            user_counter = UserCounter(d)
-            d.block_scanner.add_subscriber(user_counter)
+            d.user_counter = UserCounter(d)
+            d.block_scanner.add_subscriber(d.user_counter)
 
             if d.cfg.get('token_transfer.enabled', True):
                 d.token_transfer_notifier = TokenTransferNotifier(d)
@@ -331,6 +332,10 @@ class App(WithLogger):
 
             d.volume_recorder = VolumeRecorder(d)
             volume_filler.add_subscriber(d.volume_recorder)
+
+            # Swap route recorder
+            d.route_recorder = SwapRouteRecorder(d.db)
+            volume_filler.add_subscriber(d.route_recorder)
 
             if achievements_enabled:
                 volume_filler.add_subscriber(achievements)

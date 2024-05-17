@@ -9,6 +9,8 @@ from services.jobs.fetch.fair_price import RuneMarketInfoFetcher
 from services.jobs.fetch.last_block import LastBlockFetcher
 from services.jobs.fetch.runeyield import AsgardConsumerConnectorBase, get_rune_yield_connector
 from services.jobs.fetch.tx import TxFetcher
+from services.jobs.scanner.swap_routes import SwapRouteRecorder
+from services.jobs.user_counter import UserCounter
 from services.lib.config import Config
 from services.lib.constants import NetworkIdents
 from services.lib.delegates import INotified
@@ -80,6 +82,9 @@ class LpAppFramework(App):
         d.rune_market_fetcher = RuneMarketInfoFetcher(d)
 
         d.last_block_fetcher.add_subscriber(d.last_block_store)
+
+        d.route_recorder = SwapRouteRecorder(d.db)
+        d.user_counter = UserCounter(d)
 
         if self.emergency:
             d.emergency.run_in_background()

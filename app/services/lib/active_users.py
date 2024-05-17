@@ -60,15 +60,18 @@ class DailyActiveUserCounter(ActiveUserCounter):
         yesterday = now_ts() - DAY + 1.0
         return await self.get_dau(yesterday)
 
-    async def get_au_over_days(self, days):
+    async def get_au_over_days(self, days, start_day=0):
         assert 0 < days <= 31
-        now = now_ts()
+        now = now_ts() - start_day * DAY
         timestamps = [now - day_ago * DAY for day_ago in range(days)]
         postfixes = map(self.key_postfix, timestamps)
         return await self.get_count(postfixes)
 
     async def get_wau(self):
         return await self.get_au_over_days(7)
+
+    async def get_previous_wau(self):
+        return await self.get_au_over_days(7, 7)
 
     async def get_mau(self):
         return await self.get_au_over_days(30)

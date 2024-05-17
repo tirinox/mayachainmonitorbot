@@ -66,6 +66,8 @@ class DepContainer:
     pol_notifier = None
 
     dex_analytics = None
+    user_counter = None  # type: 'UserCounter'
+    route_recorder = None  # type: 'SwapRouteRecorder'
 
     scheduler: Optional[Scheduler] = None
 

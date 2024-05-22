@@ -195,11 +195,11 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
                   fill='#fff',
                   font=font_indicator_name)
 
-        n_max = 4
+        n_top_aff = 3
         y = 844
         y_margin = 60
         font_aff = r.fonts.get_font_bold(40)
-        for i, aff_collector in enumerate(e.affiliates.top_affiliate_collectors_this_week[:n_max], start=1):
+        for i, aff_collector in enumerate(e.affiliates.top_affiliate_collectors_this_week[:n_top_aff], start=1):
             label = aff_collector.code
             fee_usd = aff_collector.current_week_summary.fees_usd
             text = f'{i}. {label}'
@@ -292,8 +292,9 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
         y += 60
         y_margin = 60
 
+        n_route_max = 4
         font_routes = r.fonts.get_font_bold(40)
-        for i, ((label_left, label_right), volume) in zip(range(1, n_max + 1), e.top_swap_routes):
+        for i, ((label_left, label_right), volume) in zip(range(1, n_route_max + 1), e.top_swap_routes):
             l_asset, r_asset = Asset(label_left), Asset(label_right)
 
             text = f'{i}. {l_asset.name} ⇌ {r_asset.name}'

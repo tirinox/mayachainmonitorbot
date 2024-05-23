@@ -47,7 +47,7 @@ class LastBlockStore(INotified, WithDelegates, WithLogger):
 
         self.last_maya_block = maya_block
 
-        self.logger.info(f'Last THOR block: #{maya_block}')
+        self.logger.info(f'Last Maya block: #{maya_block}')
 
         await self.series.add(thor_block=maya_block)
 

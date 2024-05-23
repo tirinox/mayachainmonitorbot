@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 from time import perf_counter
 from typing import List, Optional
 
@@ -23,9 +24,12 @@ class NodeInfoFetcher(BaseFetcher):
         raw_nodes = await thor.query_raw(thor.env.path_nodes)
 
         nodes = []
-        for j in raw_nodes:
-            node = NodeInfo.from_json(j)
-            nodes.append(node)
+        try:
+            for j in raw_nodes:
+                node = NodeInfo.from_json(j)
+                nodes.append(node)
+        except JSONDecodeError:
+            self.logger.exception('Failed to parse node list')
 
         nodes.sort(key=lambda k: (k.status, -k.bond))
 

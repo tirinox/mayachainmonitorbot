@@ -118,10 +118,6 @@ class MainMenuDialog(BaseDialog):
     async def cmd_mimir(self, message: Message):
         await self.build_metrics_dialog().show_mimir_info(message)
 
-    @message_handler(commands='weekly', state='*')
-    async def cmd_weekly(self, message: Message):
-        await self.build_metrics_dialog().show_weekly_stats(message)
-
     #
     # @message_handler(commands='cexflow', state='*')
     # async def cmd_cex_flow(self, message: Message):
@@ -138,30 +134,29 @@ class MainMenuDialog(BaseDialog):
     #     message.text = ''
     #     await MyWalletsMenu.easy_enter(self)
     #
-    # @message_handler(commands='supply', state='*')
-    # async def cmd_supply(self, message: Message):
-    #     message.text = ''
-    #     await self.build_metrics_dialog().show_rune_supply(message)
-    #
+    @message_handler(commands='supply', state='*')
+    async def cmd_supply(self, message: Message):
+        message.text = ''
+        await self.build_metrics_dialog().show_rune_supply(message)
+
     # @message_handler(commands='savings', state='*')
     # async def cmd_savings(self, message: Message):
     #     message.text = ''
     #     await self.build_metrics_dialog().show_savers(message)
     #
-    # @message_handler(commands='voting', state='*')
-    # async def cmd_voting(self, message: Message):
-    #     message.text = ''
-    #     await self.build_metrics_dialog().show_voting_info(message)
-    #
+    @message_handler(commands='voting', state='*')
+    async def cmd_voting(self, message: Message):
+        message.text = ''
+        await self.build_metrics_dialog().show_voting_info(message)
+
     @message_handler(commands='pools', state='*')
     async def cmd_top_pools(self, message: Message):
         message.text = ''
         await self.build_metrics_dialog().show_top_pools(message)
 
-    #
-    # @message_handler(commands='weekly', state='*')
-    # async def cmd_weekly(self, message: Message):
-    #     await self.build_metrics_dialog().show_weekly_stats(message)
+    @message_handler(commands='weekly', state='*')
+    async def cmd_weekly(self, message: Message):
+        await self.build_metrics_dialog().show_weekly_stats(message)
 
     @message_handler(commands='help', state='*')
     async def cmd_help(self, message: Message):

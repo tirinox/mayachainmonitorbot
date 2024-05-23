@@ -339,15 +339,14 @@ class MetricsDialog(BaseDialog):
         if not self.deps.weekly_stats_notifier or not self.deps.weekly_stats_notifier.last_event:
             await message.answer(self.loc.TEXT_WEEKLY_STATS_NO_DATA,
                                  disable_notification=True)
-            return
+        else:
+            ev = self.deps.weekly_stats_notifier.last_event
 
-        ev = self.deps.weekly_stats_notifier.last_event
+            pic_gen = KeyStatsPictureGenerator(self.loc, ev)
+            pic, pic_name = await pic_gen.get_picture()
+            caption = self.loc.notification_text_key_metrics_caption(ev)
 
-        pic_gen = KeyStatsPictureGenerator(self.loc, ev)
-        pic, pic_name = await pic_gen.get_picture()
-        caption = self.loc.notification_text_key_metrics_caption(ev)
-
-        await message.answer_photo(img_to_bio(pic, pic_name), caption=caption, disable_notification=True)
+            await message.answer_photo(img_to_bio(pic, pic_name), caption=caption, disable_notification=True)
 
         await self.safe_delete(loading_message)
 

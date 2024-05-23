@@ -17,7 +17,9 @@ class KeyMetricsNotifier(INotified, WithDelegates, WithLogger):
         super().__init__()
         self.deps = deps
 
-        self.data_max_age = self.deps.cfg.as_interval('key_metrics.data_max_age', self.MAX_DATA_AGE_DEFAULT)
+        self.data_max_age = deps.cfg.as_interval('key_metrics.data_max_age', self.MAX_DATA_AGE_DEFAULT)
+
+        self.notifications_enabled = deps.cfg.get('key_metrics.notification.enabled', False)
 
         raw_cd = self.deps.cfg.key_metrics.notification.cooldown
         self.notify_cd_sec = parse_timespan_to_seconds(raw_cd)
@@ -56,7 +58,7 @@ class KeyMetricsNotifier(INotified, WithDelegates, WithLogger):
 
         self._prev_data = e
 
-        if await self.notify_cd.can_do():
+        if self.notifications_enabled and await self.notify_cd.can_do():
             await self._notify(e)
             await self.notify_cd.do()
 

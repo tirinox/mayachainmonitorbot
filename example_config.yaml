@@ -487,8 +487,9 @@ pol:
 
 
 key_metrics:
-  enabled: false
+  enabled: true  # data collection
   fetch_period: 10m
   data_max_age: 36h
   notification:
+    enabled: false  # post updates
     cooldown: 7d

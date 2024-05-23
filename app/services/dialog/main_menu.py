@@ -118,6 +118,10 @@ class MainMenuDialog(BaseDialog):
     async def cmd_mimir(self, message: Message):
         await self.build_metrics_dialog().show_mimir_info(message)
 
+    @message_handler(commands='weekly', state='*')
+    async def cmd_weekly(self, message: Message):
+        await self.build_metrics_dialog().show_weekly_stats(message)
+
     #
     # @message_handler(commands='cexflow', state='*')
     # async def cmd_cex_flow(self, message: Message):

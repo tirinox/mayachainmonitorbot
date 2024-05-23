@@ -17,7 +17,7 @@ class SwapRouteRecorder(WithLogger, INotified):
         super().__init__()
         self.redis = db.redis
         self.key_prefix = key_prefix
-        self.clear_routes_daily = 60
+        self.keep_days = 60
         self.clear_every_ticks = 10
         self._clear_counter = 0
 
@@ -86,15 +86,15 @@ class SwapRouteRecorder(WithLogger, INotified):
         self.logger.info(f"Deleted {total_deleted} old swap events older than {days} days")
 
     async def _clear_routes_if_needed(self):
-        if self.clear_routes_daily > 0:
+        if self.keep_days > 0:
             self._clear_counter += 1
             if self._clear_counter >= self.clear_every_ticks:
                 self._clear_counter = 0
-                await self.clear_old_events(self.clear_routes_daily)
+                await self.clear_old_events(self.keep_days)
 
     @property
     def key_counted_routes(self):
-        return f"{self.key_prefix}:counted_routes"
+        return f"{self.key_prefix}:route:counted_routes"
 
     async def is_registered(self, tx_id):
         return await self.redis.sismember(self.key_counted_routes, tx_id)

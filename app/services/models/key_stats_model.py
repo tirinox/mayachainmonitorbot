@@ -42,8 +42,6 @@ class AffiliateCollector(NamedTuple):
 
     def get_summary(self, start_day_index, end_day_index):
         sliced = self.daily[start_day_index:end_day_index]
-        if not sliced:
-            print("stop")
         return AffiliateCollectorDay(
             volume_usd=sum(day.volume_usd for day in sliced),
             fees_usd=sum(day.fees_usd for day in sliced),
@@ -83,7 +81,6 @@ class AffiliateCollectors(NamedTuple):
     @property
     def top_affiliate_collectors_this_week(self):
         return list(sorted(self.collectors, key=lambda x: x.current_week_summary.fees_usd, reverse=True))
-
 
 
 class SwapRouteEntry(NamedTuple):

@@ -41,15 +41,23 @@ class CryptoLogoDownloader:
         Chains.KUJI: 'kujira',
     }
 
+    # Mapping: Chain to the asset name of the logo of this chain
+    #   that often corresponds to the logo of the governance token
+    CHAIN_TO_LOGO_ASSET = {
+        Chains.ARB: 'ARB.ARB-0X912CE59144191C1204E64559FE8253A0E49E6548',
+        Chains.ETH: 'ETH.ETH',
+        # to be continued...
+    }
+
     TEST_ASSET_MAPPING = {
         ETH_USDT_TEST_SYMBOL: ETH_USDT_SYMBOL,
     }
 
-    def get_full_path(self, path):
+    def path_to_local_storage(self, path):
         return os.path.join(self.base_dir, path)
 
-    def coin_path(self, coin):
-        return self.get_full_path(f'{coin}.png')
+    def path_to_local_coin_image(self, coin):
+        return self.path_to_local_storage(f'{coin}.png')
 
     def __init__(self, data_dir: str) -> None:
         self.base_dir = data_dir
@@ -84,7 +92,7 @@ class CryptoLogoDownloader:
         if not url:
             raise FileNotFoundError
 
-        target_path = self.coin_path(asset)
+        target_path = self.path_to_local_coin_image(asset)
         await download_file(url, target_path)
 
         # thumbnail
@@ -95,14 +103,21 @@ class CryptoLogoDownloader:
 
     async def get_or_download_logo_cached(self, asset, forced=False):
         try:
-            local_path = self.coin_path(asset)
+            local_path = self.path_to_local_coin_image(asset)
             if forced or not os.path.exists(local_path):
                 await self._download_logo(asset)
             logo = Image.open(local_path).convert("RGBA")
         except Exception as e:
-            logo = Image.open(self.get_full_path(self.UNKNOWN_LOGO))
+            logo = Image.open(self.path_to_local_storage(self.UNKNOWN_LOGO))
             logger.error(f'error ({e}) loading logo for "{asset}". using the default one...')
 
         if logo.size != (self.LOGO_WIDTH, self.LOGO_HEIGHT):
             logo.thumbnail((self.LOGO_WIDTH, self.LOGO_HEIGHT))
         return logo
+
+    async def get_logo_for_chain(self, chain, forced=False):
+        # for example: for ARB.XXX-0X123123, we need to get the logo for ARB
+        virtual_asset = self.CHAIN_TO_LOGO_ASSET.get(chain)
+        if not virtual_asset:
+            return
+        return await self.get_or_download_logo_cached(virtual_asset, forced)

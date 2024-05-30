@@ -60,3 +60,16 @@ For deep performance profiling
 `pip install line-profiler-pycharm`
 
 If you use PyCharm, please mark directory "app" as a source root.
+
+### Caveats
+
+1. If you cannot debug on Python 3.10+, try uninstalling uvloop package `pip uninstall uvloop`. It helped me.
+2. If you use PyCharm, please mark directory "app" as a source root.
+3. If you experience problems with Redis, try to run analytics script and clean the database if it is too heavy.
+```bash
+make attach
+PYTHONPATH="/app" python tools/redis_analytics.py /config/config.yaml
+PYTHONPATH="/app" python tools/cleanup_tx_db.py /config/config.yaml
+```
+
+cleanup_tx_db script will remove all transactions older than 30 days.

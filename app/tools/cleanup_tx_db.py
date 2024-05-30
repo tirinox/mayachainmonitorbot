@@ -1,3 +1,7 @@
+# Instructions:
+# $ make attach
+# $ PYTHONPATH="/app" python tools/cleanup_tx_db.py /config/config.yaml
+
 import asyncio
 import logging
 

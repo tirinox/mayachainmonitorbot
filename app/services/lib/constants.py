@@ -19,12 +19,6 @@ ARB_SYMBOL = 'ARB.ARB-0X912CE59144191C1204E64559FE8253A0E49E6548'
 ETH_USDT_TEST_SYMBOL = 'ETH.USDT-0XA3910454BF2CB59B8B3A401589A3BACC5CA42306'
 ETH_USDT_SYMBOL = 'ETH.USDT-0XDAC17F958D2EE523A2206206994597C13D831EC7'
 ETH_USDC_SYMBOL = 'ETH.USDC-0XA0B86991C6218B36C1D19D4A2E9EB0CE3606EB48'
-ETH_DAI_SYMBOL = 'ETH.DAI-0X6B175474E89094C44DA98B954EEDEAC495271D0F'
-AVAX_USDC_SYMBOL = 'AVAX.USDC-0XB97EF9EF8734C71904D8002F8B6BC66DD9C48A6E'
-BSC_BUSD_SYMBOL = 'BSC.BUSD-0XE9E7CEA3DEDCA5984780BAFC599BD69ADD087D56'
-BSC_USDC_SYMBOL = 'BSC.USDC-0X8AC76A51CC950D9822D68B83FE1AD97B32CD580D'
-ETH_GUSD_SYMBOL = 'ETH.GUSD-0X056FD409E1D7A124BD7017459DFEA2F387B6D5CD'
-ETH_LUSD_SYMBOL = 'ETH.LUSD-0X5F98805A4E8BE255A32880FDEC7F6728C6568BA0'
 
 KUJI_USK_SYMBOL = 'KUJI.USK'
 
@@ -37,14 +31,8 @@ CACAO_DENOM = 'cacao'
 MAYA_DENOM = 'maya'
 
 STABLE_COIN_POOLS_ALL = (
-    BSC_BUSD_SYMBOL,
     ETH_USDC_SYMBOL,
-    BSC_USDC_SYMBOL,
-    AVAX_USDC_SYMBOL,
     ETH_USDT_SYMBOL,
-    ETH_DAI_SYMBOL,
-    ETH_GUSD_SYMBOL,
-    ETH_LUSD_SYMBOL,
     KUJI_USK_SYMBOL,
 )
 
@@ -69,8 +57,9 @@ class Chains:
     KUJI = 'KUJI'
     DASH = 'DASH'
     ARB = 'ARB'
+    XRD = 'XRD'
 
-    META_ALL = (MAYA, THOR, ETH, KUJI, DASH, ARB)
+    META_ALL = (MAYA, THOR, ETH, KUJI, DASH, ARB, XRD)
 
     @staticmethod
     def detect_chain(orig_address: str) -> str:
@@ -81,8 +70,10 @@ class Chains:
             return Chains.MAYA
         elif address.startswith('thor') or address.startswith('tthor') or address.startswith('sthor'):
             return Chains.THOR
-        elif address.startswith('kujija'):
+        elif address.startswith('kujira'):
             return Chains.KUJI
+        elif address.startswith('account_rdx'):
+            return Chains.XRD
         return ''
 
     @staticmethod
@@ -101,6 +92,8 @@ class Chains:
             return 0.26
         elif chain == Chains.KUJI:
             return 2.2
+        elif chain == Chains.XRD:
+            return 0
         return 0.01
 
     @staticmethod
@@ -224,6 +217,6 @@ THORCHAIN_BIRTHDAY = 1618058210955 * 0.001  # 2021-04-10T12:36:50.955991742Z
 DEFAULT_RUNE_FEE = 2000000  # fixme!
 
 DEFAULT_RESERVE_ADDRESS = 'maya1dheycdevq39qlkxs2a6wuuzyn4aqxhve4hc8sm'
-BOND_MODULE = 'thor17gw75axcnr8747pkanye45pnrwk7p9c3cqncsv'
+BOND_MODULE = 'maya17gw75axcnr8747pkanye45pnrwk7p9c3chd5xu'
 POOL_MODULE = 'maya1g98cy3n9mmjrpn0sxmn63lztelera37n8yyjwl'
 SYNTH_MODULE = 'thor1v8ppstuf6e3x0r4glqc68d5jqcs2tf38cg2q6y'

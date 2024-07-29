@@ -197,11 +197,14 @@ names:
     kf: "Kensho Finance"
     moca: "Moca"
     mc: "Moca"
+    ma: "Moca"
+    mo: "Moca"
     ts: "THORSwap"
     dcg: "Dash Core"
     leo: "LeoDex"
     tt: "Turbo Trade"
     OS: "Osaia"
+    
 
 
 tx:
@@ -257,7 +260,7 @@ tx:
     also_trigger_when:
       dex_aggregator_used:
         min_usd_total: 20000
-      affiliate_fee_usd_greater: 2000
+      affiliate_fee_usd_greater: 500
       streaming_swap:
         volume_greater: 25000
         notify_start: true

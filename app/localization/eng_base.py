@@ -704,7 +704,7 @@ class BaseLocalization(ABC):  # == English
 
     @staticmethod
     def url_for_tx_tracker(tx_id: str):
-        return f'https://track.ninerealms.com/{tx_id}'
+        return f'https://www.mayascan.org/tx/{tx_id}'
 
     def _add_input_output_links(self, tx, name_map, text_inputs, text_outputs, text_user):
         blockchain_components = [f"{text_user}{self.link_to_explorer_user_address_for_tx(tx, name_map)}"]

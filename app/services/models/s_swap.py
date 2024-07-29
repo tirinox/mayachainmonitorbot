@@ -1,7 +1,8 @@
 from typing import NamedTuple, List
 
-from services.lib.constants import THOR_BLOCK_TIME, thor_to_float
+from services.lib.constants import THOR_BLOCK_TIME
 from services.lib.memo import THORMemo
+from services.lib.money import convert_amount
 
 
 class StreamingSwap(NamedTuple):
@@ -121,4 +122,4 @@ class AlertSwapStart(NamedTuple):
 
     @property
     def in_amount_float(self):
-        return thor_to_float(self.in_amount)
+        return convert_amount(self.in_amount, self.in_asset)

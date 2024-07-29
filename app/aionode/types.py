@@ -591,7 +591,7 @@ class ThorPOL(NamedTuple):
 
 
 class ThorNetwork(NamedTuple):
-    bond_reward_rune: int
+    bond_reward_cacao: int
     total_bond_units: int
     total_reserve: int
     vaults_migrating: bool
@@ -599,7 +599,7 @@ class ThorNetwork(NamedTuple):
     @classmethod
     def from_json(cls, j):
         return cls(
-            bond_reward_rune=int(j.get('bond_reward_rune'), 0),
+            bond_reward_cacao=int(j.get('bond_reward_cacao'), 0),
             total_bond_units=int(j.get('total_bond_units', 0)),
             total_reserve=int(j.get('total_reserve', 0)),
             vaults_migrating=bool(j.get('vaults_migrating', False)),

@@ -3,7 +3,7 @@ from typing import Optional, List
 from proto.access import parse_thor_address, NativeThorTx
 from proto.types import MsgDeposit, MsgObservedTxIn
 from services.jobs.scanner.native_scan import BlockResult
-from services.lib.constants import NATIVE_CACAO_SYMBOL, thor_to_float
+from services.lib.constants import NATIVE_CACAO_SYMBOL, thor_to_float, cacao_to_float
 from services.lib.depcont import DepContainer
 from services.lib.memo import THORMemo
 from services.lib.money import is_cacao, Asset
@@ -36,11 +36,10 @@ class SwapStartDetector(WithLogger):
                 self.logger.warning(f'{memo.asset}: asset not found!')
                 return
 
-            in_amount = thor_to_float(msg.coins[0].amount)
             in_asset = Asset.from_coin(msg.coins[0])
 
             if str(in_asset) == NATIVE_CACAO_SYMBOL:
-                volume_usd = in_amount * ph.usd_per_rune
+                volume_usd = cacao_to_float(msg.coins[0].amount) * ph.usd_per_rune
             else:
                 in_pool_name = ph.pool_fuzzy_first(in_asset.native_pool_name)
                 if not in_pool_name:
@@ -48,6 +47,7 @@ class SwapStartDetector(WithLogger):
                     return
 
                 in_pool_info = ph.find_pool(in_pool_name)
+                in_amount = thor_to_float(msg.coins[0].amount)
                 volume_usd = in_amount * in_pool_info.usd_per_asset
 
             if hasattr(msg, 'from_address'):

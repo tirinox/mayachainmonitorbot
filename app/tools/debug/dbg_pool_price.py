@@ -103,22 +103,6 @@ async def demo_top_pools(app: LpAppFramework):
     await fetcher_pool_info.run_once()
 
 
-
-async def debug_load_pools(app: LpAppFramework):
-    await app.deps.last_block_fetcher.run_once()
-
-    pf = app.deps.pool_fetcher
-    pools = await pf.load_pools(3723736)
-    print(pools)
-    sep()
-    #
-    # pools = await pf.load_pools()
-    # print(len(pools))
-    # sep()
-    # pools = await pf.load_pools()
-    # print(len(pools))
-
-
 async def main():
     app = LpAppFramework()
     async with app(brief=True):

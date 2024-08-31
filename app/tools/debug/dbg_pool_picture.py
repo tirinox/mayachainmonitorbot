@@ -31,8 +31,8 @@ async def main():
                     v.volume_24h *= random.uniform(0.5, 1.5)
 
         print(pools)
-        # loc = lp_app.deps.loc_man.default
-        loc = lp_app.deps.loc_man[Language.RUSSIAN]
+        loc = lp_app.deps.loc_man.default
+        # loc = lp_app.deps.loc_man[Language.RUSSIAN]
         event = PoolMapPair(pools, prev_pools)
         pool_pic_gen = PoolPictureGenerator(loc, event)
         pool_pic, _ = await pool_pic_gen.get_picture()

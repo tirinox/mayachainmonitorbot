@@ -41,7 +41,8 @@ async def twitter_post_price(app: LpAppFramework):
 async def main():
     setup_logs(logging.INFO)
     print(os.getcwd())
-    cfg = Config('../../../temp/twitter.yaml')
+    # cfg = Config('../../../temp/twitter.yaml')
+    cfg = Config('../../../config.yaml')
     twitter_bot = TwitterBotMock(cfg) if MOCK else TwitterBot(cfg)
 
     app = LpAppFramework()
@@ -55,7 +56,7 @@ async def main():
         r = await twitter_bot.verify_credentials()
         print(f'Verify: {r}')
 
-        await asyncio.sleep(10)
+        await asyncio.sleep(5.5)
 
         # await twitter_post_supply(app)
 

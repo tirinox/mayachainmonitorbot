@@ -15,7 +15,6 @@ from services.dialog.telegram.telegram import TelegramBot
 from services.dialog.twitter.twitter_bot import TwitterBot, TwitterBotMock
 from services.jobs.achievement.notifier import AchievementsNotifier
 from services.jobs.fetch.account_number import AccountNumberFetcher
-from services.jobs.fetch.borrowers import BorrowersFetcher
 from services.jobs.fetch.chains import ChainStateFetcher
 from services.jobs.fetch.const_mimir import ConstMimirFetcher
 from services.jobs.fetch.fair_price import RuneMarketInfoFetcher
@@ -375,17 +374,6 @@ class App(WithLogger):
                 volume_filler.add_subscriber(self.refund_notifier_tx)
                 self.refund_notifier_tx.add_subscriber(d.alert_presenter)
 
-            # if d.cfg.tx.loans.get('enabled', True):
-            #     loan_extractor = LoanExtractorBlock(d)
-            #     d.block_scanner.add_subscriber(loan_extractor)
-            #
-            #     if achievements_enabled:
-            #         loan_extractor.add_subscriber(achievements)
-            #
-            #     loan_notifier = LoanTxNotifier(d, curve=curve)
-            #     loan_extractor.add_subscriber(loan_notifier)
-            #     loan_notifier.add_subscriber(d.alert_presenter)
-
             tasks.append(fetcher_tx)
 
         if d.cfg.get('queue.enabled', True):
@@ -524,12 +512,6 @@ class App(WithLogger):
             metrics_notifier.add_subscriber(d.alert_presenter)
             if achievements_enabled:
                 metrics_fetcher.add_subscriber(achievements)
-
-        if d.cfg.get('borrowers.enabled', False):
-            borrowers_fetcher = BorrowersFetcher(d)
-            tasks.append(borrowers_fetcher)
-            if achievements_enabled:
-                borrowers_fetcher.add_subscriber(achievements)
 
         # -------- SCHEDULER --------
 

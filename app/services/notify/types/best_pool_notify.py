@@ -4,7 +4,6 @@ from typing import Optional
 from aioredis import Redis
 
 from localization.languages import Language
-from localization.manager import BaseLocalization
 from services.jobs.fetch.pool_price import PoolInfoFetcherMidgard
 from services.lib.cooldown import Cooldown
 from services.lib.date_utils import parse_timespan_to_seconds

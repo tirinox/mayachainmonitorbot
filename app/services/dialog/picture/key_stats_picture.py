@@ -8,11 +8,11 @@ from services.dialog.picture.common import BasePictureGenerator
 from services.dialog.picture.resources import Resources
 from services.lib.constants import BTC_SYMBOL, ETH_SYMBOL, ETH_USDC_SYMBOL, ETH_USDT_SYMBOL, KUJI_USK_SYMBOL, \
     RUNE_SYMBOL
-from services.lib.draw_utils import paste_image_masked, result_color, TC_LIGHTNING_BLUE, TC_YGGDRASIL_GREEN, \
-    dual_side_rect, COLOR_OF_PROFIT, font_estimate_size
-from services.lib.money import pretty_money, short_dollar, short_money, format_percent, Asset, AssetRUNE, short_rune
+from services.lib.draw_utils import paste_image_masked, result_color, COLOR_OF_PROFIT, font_estimate_size
+from services.lib.money import pretty_money, short_dollar, short_money
 from services.lib.texts import bracketify
 from services.lib.utils import async_wrap
+from services.models.asset import Asset
 from services.models.key_stats_model import AlertKeyStats
 
 

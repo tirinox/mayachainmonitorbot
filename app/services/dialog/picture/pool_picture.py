@@ -6,6 +6,7 @@ from services.dialog.picture.resources import Resources
 from services.lib.draw_utils import result_color, TC_LIGHTNING_BLUE
 from services.lib.money import pretty_money, Asset, short_money, short_dollar
 from services.lib.utils import async_wrap
+from services.models.asset import is_ambiguous_asset
 from services.models.pool_info import PoolMapPair
 
 
@@ -60,9 +61,7 @@ class PoolPictureGenerator(BasePictureGenerator):
             logo_x, logo_y = x + 49, y - logo_size // 2 + 12
             image.paste(logo, (logo_x, logo_y), logo)
 
-            ambiguous_name = a.gas_asset_from_chain(a.chain) != a
-            if ambiguous_name:
-                # gas_asset = a.gas_asset_from_chain(a.chain)
+            if is_ambiguous_asset(name.asset, self.event.all_assets):
                 gas_logo = self.chain_logos.get(a.chain)
                 if gas_logo:
                     gas_logo = gas_logo.copy()

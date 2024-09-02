@@ -54,7 +54,7 @@ async def my_test_circulating(lp_app: LpAppFramework):
 
 async def debug_circulating_rune_fetcher(app: LpAppFramework):
     # data = await app.deps.rune_market_fetcher.get_full_supply()
-    supply = CacaoCirculatingSupplyFetcher(app.deps.thor_connector)
+    supply = CacaoCirculatingSupplyFetcher(app.deps.session, app.deps.thor_connector.env.thornode_url)
     data = await supply.fetch()
 
     print(data)

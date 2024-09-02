@@ -1,7 +1,6 @@
 import asyncio
 from typing import NamedTuple, Dict
 
-from aionode.connector import ThorConnector
 from services.lib.constants import CACAO_IDEAL_SUPPLY, CACAO_DENOM, cacao_to_float
 from services.lib.utils import WithLogger
 
@@ -118,10 +117,20 @@ class CacaoCirculatingSupply(NamedTuple):
 
 
 class CacaoCirculatingSupplyFetcher(WithLogger):
-    def __init__(self, thor: ThorConnector, step_sleep=0):
+    def __init__(self, session, thor_node, step_sleep=0):
         super().__init__()
-        self.thor = thor
+        self.session = session
+        self.thor_node = thor_node
         self.step_sleep = step_sleep
+
+    async def get_all_native_token_supplies(self):
+        # todo fix this
+        url_supply = f'{self.thor_node}/cosmos/bank/v1beta1/supply'
+        self.logger.debug(f'Get: "{url_supply}"')
+        async with self.session.get(url_supply) as resp:
+            j = await resp.json()
+            items = j['supply']
+            return items
 
     async def fetch(self) -> CacaoCirculatingSupply:
         """
@@ -158,9 +167,12 @@ class CacaoCirculatingSupplyFetcher(WithLogger):
             return 0
 
     async def get_cacao_total_supply(self):
-        items = await self.thor.query_supply_raw()
-        return self.get_pure_cacao_from_thor_array(items)
+        supplies = await self.get_all_native_token_supplies()
+        return self.get_pure_cacao_from_thor_array(supplies)
 
     async def get_cacao_address_balance(self, address):
-        balance = await self.thor.query_balance(address)
-        return int(balance.cacao_float)
+        url_balance = f'{self.thor_node}/cosmos/bank/v1beta1/balances/{address}'
+        self.logger.debug(f'Get: "{url_balance}"')
+        async with self.session.get(url_balance) as resp:
+            j = await resp.json()
+            return self.get_pure_cacao_from_thor_array(j['balances'])

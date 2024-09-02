@@ -31,6 +31,13 @@ class RuneMarketInfoFetcher(WithLogger):
         if self.cex_pair:
             self.logger.info(f'Reference is CACAO/${self.cex_pair} at "{self.cex_name}" CEX.')
 
+    def get_supply_fetcher(self):
+        return CacaoCirculatingSupplyFetcher(
+            self.deps.session,
+            thor_node=self.deps.thor_connector.env.thornode_url,
+            step_sleep=self.deps.cfg.sleep_step
+        )
+
     @retries(5)
     async def total_pooled_rune(self):
         try:
@@ -43,8 +50,7 @@ class RuneMarketInfoFetcher(WithLogger):
 
     @retries(5)
     async def _get_circulating_supply(self) -> CacaoCirculatingSupply:
-        supply_fetcher = CacaoCirculatingSupplyFetcher(self.deps.thor_connector, step_sleep=self.deps.cfg.sleep_step)
-        return await supply_fetcher.fetch()
+        return await self.get_supply_fetcher().fetch()
 
     def _enrich_circulating_supply(self, supply: CacaoCirculatingSupply) -> CacaoCirculatingSupply:
         ns = self.deps.net_stats

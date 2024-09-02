@@ -26,7 +26,7 @@ from services.jobs.fetch.node_info import NodeInfoFetcher
 from services.jobs.fetch.pol import POLFetcher
 from services.jobs.fetch.pool_price import PoolFetcher, PoolInfoFetcherMidgard
 from services.jobs.fetch.queue import QueueFetcher
-from services.jobs.fetch.savers_vnx import VNXSaversStatsFetcher
+from services.jobs.fetch.savers import SaversStatsFetcher
 from services.jobs.fetch.tx import TxFetcher
 from services.jobs.ilp_summer import ILPSummer
 from services.jobs.node_churn import NodeChurnDetector
@@ -175,7 +175,8 @@ class App(WithLogger):
             d.session,
             d.thor_connector,
             int(cfg.get_pure('tries', 3)),
-            public_url=d.thor_env.midgard_url
+            public_url=d.thor_env.midgard_url,
+            network_id=d.cfg.network_id,
         )
 
         d.name_service = NameService(d.db, d.cfg, d.midgard_connector, d.node_holder)
@@ -474,19 +475,13 @@ class App(WithLogger):
             d.pool_fetcher.add_subscriber(supply_notifier)
 
         if d.cfg.get('saver_stats.enabled', True):
-            # pool -- SaversStatsNotifier -------------------- alert_presenter
-            #     \-- SaversStatsFetcher -- Achievements ----/
+            d.saver_stats_fetcher = SaversStatsFetcher(d)
+            tasks.append(d.saver_stats_fetcher)
 
-            # SaversStatsFetcher: any => SaversBank => [Achievements] ==> [alert_presenter]
-            # SaversStatsNotifier: any => EventSaverStats  ==> [alert_presenter]
-
-            d.saver_stats_fetcher = VNXSaversStatsFetcher(d)
-            ssc = SaversStatsNotifier(d, d.saver_stats_fetcher)
-            d.pool_fetcher.add_subscriber(ssc)
+            ssc = SaversStatsNotifier(d)
             ssc.add_subscriber(d.alert_presenter)
 
             if achievements_enabled:
-                d.pool_fetcher.add_subscriber(d.saver_stats_fetcher)
                 d.saver_stats_fetcher.add_subscriber(achievements)
 
         if d.cfg.get('wallet_counter.enabled', True) and achievements_enabled:  # only used along with achievements

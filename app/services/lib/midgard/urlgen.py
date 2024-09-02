@@ -1,38 +1,7 @@
-from abc import ABC, abstractmethod
-
-
-class MidgardURLGenBase(ABC):
-    LIQUIDITY_TX_TYPES_STRING = ''
-
+class MidgardURLGenV2:
     def __init__(self, base_url: str):
         self.base_url = base_url.rstrip('/')
 
-    @abstractmethod
-    def url_for_tx(self, offset=0, count=50, address=None, types=None) -> str:
-        ...
-
-    @abstractmethod
-    def url_for_pool_depth_history(self, pool, from_ts, to_ts) -> str:
-        ...
-
-    @abstractmethod
-    def url_for_address_pool_membership(self, address, show_savers=False) -> str:
-        ...
-
-    @abstractmethod
-    def url_network(self):
-        ...
-
-    @abstractmethod
-    def url_stats(self):
-        ...
-
-    @abstractmethod
-    def url_pool_info(self):
-        ...
-
-
-class MidgardURLGenV2(MidgardURLGenBase):
     LIQUIDITY_TX_TYPES = ['withdraw', 'addLiquidity']
 
     def url_for_tx(self, offset=0, count=50, address=None, tx_type=None, txid=None, next_page_token='') -> str:
@@ -65,6 +34,30 @@ class MidgardURLGenV2(MidgardURLGenBase):
             spec = f'count={days}'
         return f"{self.base_url}/v2/history/swaps?interval=day&{spec}"
 
+    def url_for_earnings_history(self, from_ts=0, to_ts=0, count=10, interval='day') -> str:
+        spec = ''
+        if from_ts and to_ts:
+            spec = f'from={from_ts}&to={to_ts}'
+        elif count:
+            spec = f'count={count}'
+        if interval:
+            spec += f"&interval={interval}"
+        return f"{self.base_url}/v2/history/earnings?{spec}"
+
+    def url_for_savers_history(self, pool: str, from_ts=0, to_ts=0, count=10, interval='day') -> str:
+        params = []
+
+        if interval:
+            params.append(f"interval={interval}")
+        if count:
+            params.append(f"count={count}")
+        if from_ts:
+            params.append(f"from={from_ts}")
+        if to_ts:
+            params.append(f"to={to_ts}")
+
+        return f"{self.base_url}/v2/history/savers/{pool}?{'&'.join(params)}"
+
     def url_for_address_pool_membership(self, address, show_savers=False) -> str:
         return f"{self.base_url}/v2/member/{address}?showSavers={self.bool_flag(show_savers)}"
 
@@ -74,7 +67,9 @@ class MidgardURLGenV2(MidgardURLGenBase):
     def url_stats(self):
         return f'{self.base_url}/v2/stats'
 
-    def url_pool_info(self):
+    def url_pool_info(self, period=None):
+        if period:
+            return f'{self.base_url}/v2/pools?period={period}'
         return f'{self.base_url}/v2/pools'
 
     def url_borrowers(self):

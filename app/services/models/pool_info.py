@@ -131,6 +131,10 @@ class PoolInfo:
         return self.usd_per_asset / self.runes_per_asset
 
     @property
+    def usd_per_rune(self):
+        return self.usd_per_asset * self.asset_per_rune if self.asset_per_rune else 0.0
+
+    @property
     def usd_volume_24h(self):
         """ Used for top_pools """
         return cacao_to_float(self.volume_24h) * self.rune_price

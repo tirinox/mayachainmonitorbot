@@ -1,108 +1,143 @@
 import asyncio
-from itertools import chain
+from typing import List
 
-from services.jobs.fetch.pool_price import PoolFetcher, PoolInfoFetcherMidgard
+from services.jobs.fetch.base import BaseFetcher
+from services.jobs.fetch.fair_price import RuneMarketInfoFetcher
+from services.jobs.fetch.pool_price import PoolInfoFetcherMidgard
 from services.lib.async_cache import AsyncTTL
-from services.lib.delegates import INotified, WithDelegates
+from services.lib.constants import thor_to_float
 from services.lib.depcont import DepContainer
-from services.lib.utils import WithLogger
-from services.models.pool_info import PoolInfoMap
-from services.models.price import LastPriceHolder
-from services.models.savers import SaverVault, SaversBank, get_savers_apr, AlertSaverStats
-from services.notify.types.block_notify import LastBlockStore
+from services.models.asset import normalize_asset
+from services.models.savers import SaverVault, AlertSaverStats, SaversBank, VNXSaversStats, MidgardSaversHistory
 
 
-class SaversStatsFetcher(INotified, WithDelegates, WithLogger):
+class SaversStatsFetcher(BaseFetcher):
     def __init__(self, deps: DepContainer):
-        super().__init__()
-        self.deps = deps
+        sleep_period = deps.cfg.as_interval('saver_stats.fetch_period', '10m')
+        super().__init__(deps, sleep_period)
         self._pool_source = PoolInfoFetcherMidgard(self.deps, 0)
+        self._supply_fetcher = RuneMarketInfoFetcher(self.deps)
+        self._anti_spam_sleep = 0.5
 
-    async def get_one_pool_members(self, asset, height=0):
-        return await self.deps.thor_connector.query_savers(asset, height=height)
+    @staticmethod
+    def calc_saver_return(savers_depth, savers_units, old_savers_depth, old_savers_units, period):
+        saver_before_growth = float(old_savers_depth) / float(old_savers_units)
+        saver_growth = float(savers_depth) / float(savers_units)
+        return ((saver_growth - saver_before_growth) / saver_before_growth) * (356 / period)
 
-    async def get_all_savers(self, pool_map: PoolInfoMap, block_no=0) -> SaversBank:
-        block_no = block_no or self.deps.last_block_store.last_maya_block
+    def convert(self, stats: VNXSaversStats, new=True):
+        amount = thor_to_float(stats.savers_depth)
+        amount_old = thor_to_float(stats.savers_depth_old)
+        amount_usd = stats.asset_price * amount
+        amount_usd_old = stats.asset_price * amount_old
 
-        # Get savers members @ block #block_no
-        active_pools = [p for p in pool_map.values() if p.is_enabled and p.savers_units > 0]
-        per_pool_members = await asyncio.gather(
-            *(self.get_one_pool_members(p.asset, block_no) for p in active_pools)
+        max_synth_per_asset_ratio = self.deps.mimir_const_holder.get_max_synth_per_pool_depth()  # normally: 0.6
+
+        cap = stats.pool.get_synth_cap_in_asset_float(max_synth_per_asset_ratio)
+        rune_earned = thor_to_float(stats.earned) * stats.asset_price / stats.usd_per_rune
+        rune_earned_old = thor_to_float(stats.earned_old) * stats.asset_price / stats.usd_per_rune
+
+        savers_return = stats.saver_return if new and stats.saver_return else stats.saver_return_old
+
+        return SaverVault(
+            asset=stats.asset,
+            number_of_savers=stats.savers_count if new else stats.savers_count_old,
+            total_asset_saved=amount if new else amount_old,
+            total_asset_saved_usd=amount_usd if new else amount_usd_old,
+            apr=savers_return * 100.0,
+            asset_cap=cap,
+            runes_earned=rune_earned if new else rune_earned_old,
+            synth_supply=thor_to_float(stats.synth_supply),
+            pool=stats.pool,
         )
 
-        max_synth_per_pool_depth = self.deps.mimir_const_holder.get_max_synth_per_pool_depth()
+    @staticmethod
+    def make_bank(vaults: List[SaverVault]):
+        n = 0
+        for v in vaults:
+            n += v.number_of_savers
+        return SaversBank(n, vaults)
 
-        pep_pool_savers = []
+    async def load_stats_now(self) -> dict[str, VNXSaversStats]:
+        mimir_max_synth_per_pool_depth = self.deps.mimir_const_holder.get_max_synth_per_pool_depth()
 
-        for pool, members in zip(active_pools, per_pool_members):
-            synth_cap = pool.get_synth_cap_in_asset_float(max_synth_per_pool_depth)
-            total_usd = SaverVault.calc_total_saved_usd(pool.asset, pool.savers_depth_float, pool_map)
-            # rune_earned = (now.cumulative_yield - that_day.cumulative_yield) / asset_per_rune
-            runes_earned = pool.saver_growth_rune  # fixme: invalid
-            pep_pool_savers.append(SaverVault(
-                pool.asset,
-                len(members),
-                total_asset_saved=pool.savers_depth_float,
-                total_asset_saved_usd=total_usd,
-                apr=get_savers_apr(pool, block_no) * 100.0,
-                asset_cap=synth_cap,
-                runes_earned=runes_earned,
-                synth_supply=pool.synth_supply_float,
-            ))
+        supplies = await self._supply_fetcher.get_supply_fetcher().get_all_native_token_supplies()
+        supplies = {
+            normalize_asset(s['denom']).upper(): int(s['amount']) for s in supplies
+        }
 
-        savers = SaversBank(
-            # none?
-            total_unique_savers=len(set(chain(*per_pool_members))),
-            vaults=pep_pool_savers
-        )
+        # all_earnings = await self.deps.midgard_connector.query_earnings(count=30, interval='day')
+        all_earnings = await self.deps.midgard_connector.query_earnings()
+        # 1 day before
+        prev_earnings = await self.deps.midgard_connector.query_earnings(count=2, interval='day')
 
-        savers.sort_vaults()
-        return savers
+        pools = await self._pool_source.get_pool_info_midgard(period='7d')
+        all_saver_pools = [
+            pool for pool in pools.values() if pool.savers_depth > 0
+        ]
 
-    async def get_savers_event(self, period, usd_per_rune=None) -> AlertSaverStats:
-        pf: PoolFetcher = self.deps.pool_fetcher
-        block_store: LastBlockStore = self.deps.last_block_store
-        shared_price_holder = self.deps.price_holder
+        saver_pools = {}
 
-        # Load the current state
-        curr_pools = await self._pool_source.fetch() or await pf.load_pools()
+        for pool in all_saver_pools:
+            savers_history: MidgardSaversHistory = await self.deps.midgard_connector.query_savers_history(
+                pool.asset, count=9, interval='day'
+            )
 
-        usd_per_rune = usd_per_rune or shared_price_holder.calculate_rune_price_here(curr_pools)
-        pf.fill_usd_in_pools(curr_pools, usd_per_rune)
+            synth_cap = 2.0 * mimir_max_synth_per_pool_depth * pool.balance_asset
+            synth_supply = supplies.get(pool.asset, 0)
+            if synth_supply:
+                filled = synth_supply / synth_cap
+            else:
+                filled = pool.savers_depth / synth_cap
 
-        price_holder = LastPriceHolder(shared_price_holder.stable_coins)
-        price_holder.usd_per_rune = usd_per_rune
-        price_holder.pool_info_map = curr_pools
+            old_savers_return = self.calc_saver_return(
+                savers_history.intervals[-1].savers_depth,
+                savers_history.intervals[-1].savers_units,
+                savers_history.intervals[0].savers_depth,
+                savers_history.intervals[0].savers_units,
+                period=7
+            )
 
-        last_block_no = block_store.last_maya_block
+            current_earnings_pool = [p for p in all_earnings.meta.pools if p.pool == pool.asset][0]
+            old_earnings_pool = [p for p in prev_earnings.intervals[0].pools if p.pool == pool.asset][0]
 
-        curr_saver = await self.get_all_savers(curr_pools, last_block_no)
+            # not sure, but I think this is the correct way to calculate the earnings
+            prev_earnings_val = current_earnings_pool.saver_earning - old_earnings_pool.saver_earning
 
-        # Load previous state to compare
-        prev_saver, prev_pools = None, None
-        if period:
-            prev_block = block_store.block_time_ago(period, last_block=last_block_no)
-            if prev_block < 0:
-                raise ValueError(f'Previous block is negative {prev_block}!')
+            saver_pools[pool.asset] = VNXSaversStats(
+                asset=pool.asset,
+                saver_return=pool.savers_apr,
+                saver_return_old=old_savers_return,
+                earned=current_earnings_pool.saver_earning,
+                earned_old=prev_earnings_val,
+                filled=filled,
+                savers_count=savers_history.meta.end_savers_count,
+                savers_count_old=savers_history.intervals[-1].savers_count,
+                savers_depth=pool.savers_depth,
+                savers_depth_old=savers_history.intervals[-1].savers_depth,
+                synth_supply=synth_supply,
+                asset_price=pool.usd_per_asset,
+                asset_depth=pool.balance_asset,
+                pool=pool,
+            )
 
-            prev_pools = await pf.load_pools(height=prev_block, usd_per_rune=usd_per_rune)
-            if prev_pools:
-                prev_saver = await self.get_all_savers(prev_pools, prev_block)
+            await asyncio.sleep(self._anti_spam_sleep)
 
-        for vault in curr_saver.vaults:
-            if pool := curr_pools.get(vault.asset):
-                vault.apr = pool.savers_apr * 100.0 if pool else 0.0
+        return saver_pools
 
-        return AlertSaverStats(
-            prev_saver, curr_saver, price_holder
-        )
+    async def get_savers_event(self, *_) -> AlertSaverStats:
+        vnx_vaults = await self.load_stats_now()
+        vaults = [self.convert(v) for v in vnx_vaults.values()]
+        curr_saver = self.make_bank(vaults)
+        old_vaults = [self.convert(v, new=False) for v in vnx_vaults.values()]
+        prev_state = self.make_bank(old_vaults)
+        return AlertSaverStats(prev_state, curr_saver)
 
     CACHE_TTL = 60
 
     @AsyncTTL(time_to_live=CACHE_TTL)
-    async def get_savers_event_cached(self, period, usd_per_rune=None) -> AlertSaverStats:
-        return await self.get_savers_event(period, usd_per_rune)
+    async def get_savers_event_cached(self) -> AlertSaverStats:
+        return await self.get_savers_event()
 
-    async def on_data(self, sender, data):
-        data = await self.get_all_savers(self.deps.price_holder.pool_info_map)
-        await self.pass_data_to_listeners(data)
+    async def fetch(self) -> AlertSaverStats:
+        return await self.get_savers_event_cached()

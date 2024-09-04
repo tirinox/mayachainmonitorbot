@@ -18,6 +18,7 @@ class SaversStatsFetcher(BaseFetcher):
         self._pool_source = PoolInfoFetcherMidgard(self.deps, 0)
         self._supply_fetcher = RuneMarketInfoFetcher(self.deps)
         self._anti_spam_sleep = 0.5
+        self.tally_period_days = deps.cfg.as_int('saver_stats.tally_period_days', 7)
 
     @staticmethod
     def calc_saver_return(savers_depth, savers_units, old_savers_depth, old_savers_units, period):
@@ -68,8 +69,10 @@ class SaversStatsFetcher(BaseFetcher):
 
         # all_earnings = await self.deps.midgard_connector.query_earnings(count=30, interval='day')
         all_earnings = await self.deps.midgard_connector.query_earnings()
-        # 1 day before
-        prev_earnings = await self.deps.midgard_connector.query_earnings(count=2, interval='day')
+        # a few days ago
+        prev_earnings = await self.deps.midgard_connector.query_earnings(
+            count=self.tally_period_days, interval='day'
+        )
 
         pools = await self._pool_source.get_pool_info_midgard(period='7d')
         all_saver_pools = [
@@ -80,7 +83,9 @@ class SaversStatsFetcher(BaseFetcher):
 
         for pool in all_saver_pools:
             savers_history: MidgardSaversHistory = await self.deps.midgard_connector.query_savers_history(
-                pool.asset, count=9, interval='day'
+                pool.asset,
+                count=self.tally_period_days + 2,
+                interval='day'
             )
 
             synth_cap = 2.0 * mimir_max_synth_per_pool_depth * pool.balance_asset
@@ -95,7 +100,7 @@ class SaversStatsFetcher(BaseFetcher):
                 savers_history.intervals[-1].savers_units,
                 savers_history.intervals[0].savers_depth,
                 savers_history.intervals[0].savers_units,
-                period=7
+                period=self.tally_period_days
             )
 
             current_earnings_pool = [p for p in all_earnings.meta.pools if p.pool == pool.asset][0]

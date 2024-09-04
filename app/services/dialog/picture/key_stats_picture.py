@@ -90,9 +90,9 @@ class KeyStatsPictureGenerator(BasePictureGenerator):
 
         x_col_1, x_col_2, x_col_3 = 100, 769, 1423
 
-        draw.text((1900, 120), period_str,
+        draw.text((1490, 120), period_str,
                   fill='#fff', font=r.fonts.get_font_bold(52),
-                  anchor='rm')
+                  anchor='lm')
 
         # Block subtitles
         subtitle_font = r.fonts.get_font_bold(50)

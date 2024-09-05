@@ -11,7 +11,7 @@ class SaversStatsNotifier(WithDelegates, INotified, WithLogger):
         super().__init__()
         self.deps = deps
 
-        cd_notify = deps.cfg.as_interval('saver_stats.period', '7d')
+        cd_notify = deps.cfg.as_interval('saver_stats.notification.period', '7d')
         self.cd_notify = Cooldown(deps.db, 'SaverStats:Notify', cd_notify)
 
     async def on_data(self, sender, event: AlertSaverStats):

@@ -465,10 +465,11 @@ supply:
 
 saver_stats:
   enabled: true
-  period: 3d
+  fetch_period: 10m  # (!) new
 
-  notification: # (!) new
-    enabled: false
+  notification:  # (!) new
+    enabled: true
+    period: 3d
 
 
 wallet_counter:

@@ -464,8 +464,11 @@ supply:
 
 
 saver_stats:
-  enabled: false
+  enabled: true
   period: 3d
+
+  notification: # (!) new
+    enabled: false
 
 
 wallet_counter:

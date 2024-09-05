@@ -105,9 +105,9 @@ class MainMenuDialog(BaseDialog):
     # async def cmd_stats(self, message: Message):
     #     await self.build_metrics_dialog().show_last_stats(message)
     #
-    # @message_handler(commands='queue', state='*')
-    # async def cmd_queue(self, message: Message):
-    #     await self.build_metrics_dialog().show_queue(message, DAY)
+    @message_handler(commands='queue', state='*')
+    async def cmd_queue(self, message: Message):
+        await self.build_metrics_dialog().show_queue(message, DAY)
 
     @message_handler(commands='chains', state='*')
     async def cmd_chains(self, message: Message):
@@ -139,11 +139,11 @@ class MainMenuDialog(BaseDialog):
         message.text = ''
         await self.build_metrics_dialog().show_rune_supply(message)
 
-    # @message_handler(commands='savings', state='*')
-    # async def cmd_savings(self, message: Message):
-    #     message.text = ''
-    #     await self.build_metrics_dialog().show_savers(message)
-    #
+    @message_handler(commands='savings,savers', state='*')
+    async def cmd_savings(self, message: Message):
+        message.text = ''
+        await self.build_metrics_dialog().show_savers(message)
+
     @message_handler(commands='voting', state='*')
     async def cmd_voting(self, message: Message):
         message.text = ''

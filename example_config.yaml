@@ -415,19 +415,21 @@ node_info:
 constants:
   mimir_change:
     enabled: true
-    cooldown: 10m  # (!) new
+    cooldown: 10m
   fetch_period: 130s
 
   voting:
     enabled: true
     notification:
       cooldown: 2h
+    hide_forever: # (!) new
+      - ACCEPT_RADIX
 
 
 chain_halt_state:
   enabled: true
   fetch_period: 67s
-  cooldown: 5m  # (!) new
+  cooldown: 5m
 
 
 last_block:
@@ -465,9 +467,9 @@ supply:
 
 saver_stats:
   enabled: true
-  fetch_period: 10m  # (!) new
+  fetch_period: 10m
 
-  notification:  # (!) new
+  notification:
     enabled: true
     period: 3d
 

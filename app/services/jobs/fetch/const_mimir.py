@@ -1,4 +1,5 @@
 import asyncio
+import random
 from typing import List, NamedTuple
 
 from aionode.types import ThorConstants, ThorMimir, ThorMimirVote
@@ -21,6 +22,7 @@ class ConstMimirFetcher(BaseFetcher):
         sleep_period = parse_timespan_to_seconds(deps.cfg.constants.fetch_period)
         super().__init__(deps, sleep_period)
         self.step_sleep = deps.cfg.sleep_step
+        self._dbg_new_votes = []
 
     async def fetch(self) -> MimirTuple:
         thor = self.deps.thor_connector
@@ -36,6 +38,24 @@ class ConstMimirFetcher(BaseFetcher):
         await asyncio.sleep(self.step_sleep)
 
         votes = await thor.query_mimir_votes()
+
+        # # fixme ------------------------------------
+        # # DEBUG: add some votes
+        # self._dbg_new_votes.append(
+        #     # ACCEPT_RADIX
+        #     ThorMimirVote('ACCEPT_RADIX', random.randint(3, 333), singer=
+        #                   random.choice(
+        #                       [
+        #                           'maya1a9yx064qcjn8en4eal5sqragshtqdq0dj6maya',
+        #                           'maya1gsj57czxvxmgkxsd9vc7qe9k9rvupr3sp0rllq',
+        #                           'maya1m9l2fuezgfpa6vyt2x62jpuj6y6dyhwqwjlm9l',
+        #                           'maya1rw0u9q4p4a9kaellp7m2x2rsu4teqm475cdash',
+        #                       ]
+        #                   ))
+        # )
+        # votes += self._dbg_new_votes
+        # # fixme ------------------------------------
+
         await asyncio.sleep(self.step_sleep)
 
         votes: List[ThorMimirVote]
@@ -49,6 +69,8 @@ class ConstMimirFetcher(BaseFetcher):
             self.deps.node_holder.active_nodes
         )
 
-        self.logger.info(f'Got {len(constants.constants)} CONST entries'
-                         f' and {len(mimir.constants)} MIMIR entries.')
+        self.logger.info(f'Got {len(constants.constants)} CONST'
+                         f', {len(mimir.constants)} MIMIR'
+                         f', {len(votes)} votes'
+                         f' and {len(node_mimir)} accepted node mimirs.')
         return MimirTuple(constants, mimir, node_mimir, votes)

@@ -117,12 +117,13 @@ class SwapRouteRecorder(WithLogger, INotified):
             if await self.is_registered(tx.tx_hash):
                 continue
 
-            await self.store_swap_event(
-                tx.first_input_tx.first_asset,
-                tx.first_output_tx.first_asset,
-                tx.full_rune,
-                datetime.utcfromtimestamp(tx.date_timestamp)
-            )
+            if tx.first_output_tx and tx.first_input_tx:
+                await self.store_swap_event(
+                    tx.first_input_tx.first_asset,
+                    tx.first_output_tx.first_asset,
+                    tx.full_rune,
+                    datetime.utcfromtimestamp(tx.date_timestamp)
+                )
 
             await self.register(tx.tx_hash)
 

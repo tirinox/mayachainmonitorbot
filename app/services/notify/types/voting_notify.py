@@ -20,6 +20,11 @@ class VotingNotifier(INotified, WithDelegates, WithLogger):
         self.notification_cd_time = parse_timespan_to_seconds(cfg.as_str('notification.cooldown'))
         assert self.notification_cd_time > 0
 
+        self.hide_forever_options = [
+            str(item).upper().strip()
+            for item in cfg.get('hide_forever', [])
+        ]
+
     KEY_PREV_STATE = 'NodeMimir:Voting:PrevState'
 
     async def read_prev_state(self):
@@ -44,6 +49,10 @@ class VotingNotifier(INotified, WithDelegates, WithLogger):
         await self.deps.db.redis.set(self.KEY_PREV_STATE, json.dumps(data))
 
     async def _on_progress_changed(self, key, prev_progress, voting: MimirVoting, vote_option: MimirVoteOption):
+        # todo: test it
+        if str(voting.key).upper().strip() in self.hide_forever_options:
+            return
+
         cd = Cooldown(self.deps.db, f'VotingNotification:{key}:{vote_option.value}', self.notification_cd_time)
         if await cd.can_do():
             await self.deps.broadcaster.notify_preconfigured_channels(
@@ -59,7 +68,8 @@ class VotingNotifier(INotified, WithDelegates, WithLogger):
         prev_state = await self.read_prev_state()
 
         events = []
-        for voting in holder.voting_manager.all_voting_list:
+        all_voting = holder.voting_manager.all_voting_list
+        for voting in all_voting:
             prev_voting = prev_state.get(voting.key)
             if not prev_voting:  # ignore for the first time to avoid spamming
                 continue

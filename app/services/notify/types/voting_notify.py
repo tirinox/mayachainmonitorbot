@@ -49,8 +49,8 @@ class VotingNotifier(INotified, WithDelegates, WithLogger):
         await self.deps.db.redis.set(self.KEY_PREV_STATE, json.dumps(data))
 
     async def _on_progress_changed(self, key, prev_progress, voting: MimirVoting, vote_option: MimirVoteOption):
-        # todo: test it
         if str(voting.key).upper().strip() in self.hide_forever_options:
+            self.logger.warning(f'Voting {voting.key} is in the hide_forever list. Skip notification.')
             return
 
         cd = Cooldown(self.deps.db, f'VotingNotification:{key}:{vote_option.value}', self.notification_cd_time)

@@ -213,6 +213,7 @@ names:
     DPH: "Delphibets"
     SSP: "ShardSpace"
     be: "WinBit32"
+    is: "InstaSwap"
     
 tx:
   enabled: true

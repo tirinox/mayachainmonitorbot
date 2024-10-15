@@ -192,7 +192,7 @@ names:
     runifier: Runifier
     0xbami: Unizen
     ds: Defispot
-    eld: "El Dorado"
+    eld: "El Dorito"
     cs: CacaoSwap
     kf: "Kensho Finance"
     moca: "Moca"
@@ -204,9 +204,16 @@ names:
     leo: "LeoDex"
     tt: "Turbo Trade"
     OS: "Osaia"
+    va: "Vultisig Android"
+    vi: "Vultisig iOS"
+    v0: "Vultisig"
+    dp: "Astrolescent"
+    oci: "Ociswap"
+    sk: "SwapKit"
+    DPH: "Delphibets"
+    SSP: "ShardSpace"
+    be: "WinBit32"
     
-
-
 tx:
   enabled: true
 

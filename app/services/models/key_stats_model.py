@@ -126,6 +126,7 @@ class MayaDividends(NamedTuple):
 
     @property
     def current_week_cacao_sum(self):
+        # todo?
         return self.get_cacao_sum(0, 7)
 
     @property

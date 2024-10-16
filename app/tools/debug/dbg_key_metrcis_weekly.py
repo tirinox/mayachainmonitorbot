@@ -13,11 +13,13 @@ from tools.lib.lp_common import LpAppFramework, save_and_show_pic
 
 async def demo_load(app: LpAppFramework):
     f = KeyStatsFetcher(app.deps)
-    # r = await f._load_dividends()
+    r = await f._load_dividends()
     # r = await f._load_earnings_history()
-    r = await f._load_lock_stats()
+    # r = await f._load_lock_stats()
     # r = await f.fetch()
     print(r)
+    print(f'{r.current_week_cacao_sum = }')
+    print(f'{r.previous_week_cacao_sum = }')
 
 
 class FlipSideSaver(INotified):

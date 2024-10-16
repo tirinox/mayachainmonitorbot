@@ -59,8 +59,8 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         maya_supply = int(maya_supply) * MAYA_DIVIDER_INV
 
         maya_dividends = await self._load_json(URL_CACAO_DIVIDENDS)
-        maya_dividends = [MayaDividend.from_json(item) for item in maya_dividends['rewards']]
-        return MayaDividends(maya_dividends, maya_supply)
+        # maya_dividends = [MayaDividend.from_json(item) for item in maya_dividends['rewards']]
+        return MayaDividends.from_json(maya_dividends, maya_supply)
 
     async def _load_swap_history(self):
         swap_history = await self.deps.midgard_connector.request(free_url_gen.url_swap_history(free_url_gen.WEEK, 2))

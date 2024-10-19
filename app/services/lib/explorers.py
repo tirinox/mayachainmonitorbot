@@ -55,6 +55,7 @@ def get_explorer_url_to_tx(network_id, pool_or_chain: str, tx_id: str):
     elif chain == Chains.DASH:
         return f'https://explorer.dash.org/insight/tx/{tx_id}'
     elif chain == Chains.ARB:
+        tx_id = add_0x(tx_id)
         return f'https://arbiscan.io/tx/{tx_id}'
     elif chain == Chains.XRD:
         return f'https://dashboard.radixdlt.com/transaction/{tx_id}'

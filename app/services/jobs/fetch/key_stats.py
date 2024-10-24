@@ -68,7 +68,8 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         return swap_history
 
     async def _load_earnings_history(self) -> EarningsData:
-        earnings_history = await self.deps.midgard_connector.request(free_url_gen.url_earnings_history(free_url_gen.WEEK, 2))
+        earnings_history = await self.deps.midgard_connector.request(
+            free_url_gen.url_earnings_history(free_url_gen.WEEK, 2))
         earnings_history = EarningsData.from_json(earnings_history)
         return earnings_history
 
@@ -148,8 +149,9 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
             bond_usd_prev=prev_bond * prev_usd_per_cacao,
             pool_usd=self._sum_pool(fresh_pools, usd_per_cacao),
             pool_usd_prev=self._sum_pool(old_pools, prev_usd_per_cacao),
-            protocol_revenue_usd=cacao_to_float(earnings_history.current_week.earnings) * usd_per_cacao,
-            protocol_revenue_usd_prev=cacao_to_float(earnings_history.previous_week.earnings) * prev_usd_per_cacao,
+            protocol_revenue_usd=cacao_to_float(earnings_history.current_week.liquidity_fees) * usd_per_cacao,
+            protocol_revenue_usd_prev=cacao_to_float(
+                earnings_history.previous_week.liquidity_fees) * prev_usd_per_cacao,
             affiliate_revenue_usd=affiliate_stats.current_week_affiliate_revenue_usd,
             affiliate_revenue_usd_prev=affiliate_stats.previous_week_affiliate_revenue_usd,
             maya_revenue_usd=dividends.current_week_cacao_sum * usd_per_cacao,

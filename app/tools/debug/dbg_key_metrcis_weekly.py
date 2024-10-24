@@ -21,7 +21,7 @@ async def demo_load(app: LpAppFramework):
 
 
 class FlipSideSaver(INotified):
-    DEFAULT_FILENAME = '../temp/fs_key_metrics_4.pickle'
+    DEFAULT_FILENAME = '../temp/key_metrics_v5.pickle'
 
     def __init__(self, filename=DEFAULT_FILENAME) -> None:
         super().__init__()
@@ -80,6 +80,10 @@ async def demo_picture(app: LpAppFramework, cached=True):
     # loc = app.deps.loc_man.default
     loc = app.deps.loc_man[Language.ENGLISH]
 
+    sep('DATA')
+    print(data)
+    sep()
+
     pic_gen = KeyStatsPictureGenerator(loc, data)
     pic, name = await pic_gen.get_picture()
     save_and_show_pic(pic, name=name)
@@ -91,7 +95,7 @@ async def main():
         # await lp_app.prepare(brief=True)
         await lp_app.deps.last_block_fetcher.run_once()
 
-        await demo_analyse(lp_app)
+        # await demo_analyse(lp_app)
         await demo_picture(lp_app, cached=False)
         # await demo_load(lp_app)
 

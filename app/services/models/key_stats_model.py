@@ -82,6 +82,17 @@ class AffiliateCollectors(NamedTuple):
     def top_affiliate_collectors_this_week(self):
         return list(sorted(self.collectors, key=lambda x: x.current_week_summary.fees_usd, reverse=True))
 
+    @property
+    def alt_fees_7d(self):
+        """
+        Alternative way to calc fees to make sure
+        """
+        fees = 0
+        for collector in self.collectors:
+            for day in collector.daily[:7]:
+                fees += day.fees_usd
+        return fees
+
 
 class SwapRouteEntry(NamedTuple):
     from_asset: str

@@ -142,6 +142,9 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         # [ ] number of swaps
         #  ... Comparing with https://www.mayascan.org/stats
 
+        # print(f'{affiliate_stats.alt_fees_7d = }')
+        # print(f'{affiliate_stats.current_week_affiliate_revenue_usd = }')
+
         # Done. Construct the resulting event
         return AlertKeyStats(
             old_pools, fresh_pools,

@@ -123,6 +123,7 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
 
         curr_week_swap = swap_history.intervals[0]
         prev_week_swap = swap_history.intervals[1]
+        assert curr_week_swap.start_time > prev_week_swap.start_time
 
         maya_revenue_per_unit = dividends.current_week_cacao_sum / dividends.maya_supply
 
@@ -132,6 +133,13 @@ class KeyStatsFetcher(BaseFetcher, WithLogger):
         user_counter: UserCounter = self.deps.user_counter
         unique_swapper_count = await user_counter.counter.get_wau()
         unique_swapper_count_prev = await user_counter.counter.get_previous_wau()
+
+        # should we invert the order of sorting?
+        # [v] maya dividends
+        # [ ] weekly volume
+        # [ ] swap volume. is this same as weekly volume?
+        # [ ] number of swaps
+        #  ... Comparing with https://www.mayascan.org/stats
 
         # Done. Construct the resulting event
         return AlertKeyStats(

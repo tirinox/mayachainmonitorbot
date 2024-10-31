@@ -1,5 +1,4 @@
 from localization.achievements.ach_eng import AchievementsEnglishLocalization
-from localization.twitter_eng import MAYA_TWITTER_HANDLE
 
 from services.jobs.achievement.ach_list import Achievement, A
 
@@ -14,7 +13,7 @@ class AchievementsTwitterEnglishLocalization(AchievementsEnglishLocalization):
             # special case for anniversary
             msg += f"Happy Birthday! It's been {milestone_str} years since the first block!"
         elif a.key == A.COIN_MARKET_CAP_RANK:
-            msg += f".{MAYA_TWITTER_HANDLE} CACAO is #{milestone_str} largest coin my market cap!"
+            msg += f".@Maya_Protocol CACAO is #{milestone_str} largest coin my market cap!"
             if a.has_previous:
                 msg += f'\nPreviously #{prev_milestone_str} ({ago} ago)'
         else:

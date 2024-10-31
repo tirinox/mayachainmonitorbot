@@ -35,6 +35,8 @@ from services.models.tx import ThorTx
 from services.models.tx_type import TxType
 from services.notify.channel import MESSAGE_SEPARATOR
 
+MAYA_TWITTER_HANDLE = '@Maya_Protocol'
+
 
 class TwitterEnglishLocalization(BaseLocalization):
     def __init__(self, cfg: Config):
@@ -928,7 +930,7 @@ class TwitterEnglishLocalization(BaseLocalization):
         return self.smart_split(parts)
 
     def notification_text_key_metrics_caption(self, data: AlertKeyStats):
-        return '.@MayaChain weekly stats $CACAO'
+        return f'.{MAYA_TWITTER_HANDLE} weekly stats $CACAO'
 
     # ----- LOANS ------
 

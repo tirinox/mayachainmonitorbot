@@ -164,6 +164,8 @@ def float_to_thor(x: float) -> int:
 
 
 def cacao_to_float(x) -> float:
+    if x == '':
+        return 0
     return int(x) * CACAO_DIVIDER_INV
 
 

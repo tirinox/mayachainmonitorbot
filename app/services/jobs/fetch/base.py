@@ -176,7 +176,7 @@ class BaseFetcher(WithDelegates, WatchedEntity, ABC, WithLogger):
 
             if isinstance(e, (BusyLoadingErrorNormal, BusyLoadingErrorAIO)):
                 self.deps.emergency.report(self.name, f'BusyLoadingError: {e}')
-                self.data_controller.request_global_pause()
+                # self.data_controller.request_global_pause()
 
             self.logger.exception(f"task error: {e}")
             self.error_counter += 1

@@ -427,6 +427,11 @@ class ThorTx:
             if t == TxType.SWAP:
                 self.affiliate_fee = self.meta_swap.affiliate_fee
 
+                # fix bug with cacao:
+                #  if there are 2 outputs and one of them is cacao
+                if len(self.out_tx) >= 2:
+                    self.out_tx = [tx for tx in self.out_tx if not is_cacao(tx.coins[0].asset)]
+
         self.is_savings = any(True for asset in self.pools if Asset.from_string(asset).is_synth)
 
     def asymmetry(self, force_abs=False):

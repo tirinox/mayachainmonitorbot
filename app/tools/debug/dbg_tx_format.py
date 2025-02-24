@@ -213,6 +213,9 @@ async def demo_swap_1(app):
 async def demo_swap_2(app):
     await show_tx_by_hash(app, 'CE1A8C4A2FE2DF833DFBA6604E8F3D7105F00DFDFD3F6B15381E8A0B637BD8C6')
 
+async def demo_swap_3(app):
+    await show_tx_by_hash(app, 'D6A20EB444FAB6465845A5A47B29396880949D607A031285CC619E1CB3DFF152')
+
 
 async def demo_add_liq(app):
     await show_tx_by_hash(app, '5FD68A320E462D9E6E18F125DF057E8B1A13ABBEC8D569951012843EF3E67CB7')
@@ -239,7 +242,7 @@ async def main():
     await app.prepare(brief=True)
 
     # await demo_swap_1(app)
-    await demo_swap_2(app)
+    await demo_swap_3(app)
     # await demo_add_liq(app)
     # await demo_withdraw_liq(app)
     # await demo_refund(app)

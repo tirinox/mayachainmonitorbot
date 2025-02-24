@@ -84,7 +84,7 @@ class NameService(WithLogger):
                             break
 
             name_map = NameMap(thorname_by_name, thorname_by_address)
-            name_map = self.enrich_name_map_with_nodes(name_map, addresses)
+            # name_map = self.enrich_name_map_with_nodes(name_map, addresses)
             return name_map
         except Exception as e:
             self.logger.exception(f'Something went wrong. That is OK. {e!r}', exc_info=True)

@@ -16,7 +16,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1
 
 
-
 WORKDIR /app
 ADD ./app/requirements.txt .
 

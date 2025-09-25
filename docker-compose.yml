@@ -37,9 +37,9 @@ services:
       - "${REDIS_PORT}"
     command:
       - 'redis-server'
-      - '--save 900 1'
-      - '--save 300 10'
-      - '--save 60 10000'
+      - '--save 9000 1'
+      - '--save 3000 10'
+      - '--save 600 10000'
       - '--port ${REDIS_PORT}'
       - '--requirepass ${REDIS_PASSWORD}'
 

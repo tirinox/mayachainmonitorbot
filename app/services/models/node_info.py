@@ -15,6 +15,7 @@ from services.lib.date_utils import now_ts
 from services.lib.texts import find_country_emoji
 from services.lib.thor_logic import get_effective_security_bond
 from services.models.base import BaseModelMixin
+from services.models.location_info import LocationInfo
 
 ZERO_VERSION = VersionInfo(0)
 
@@ -56,7 +57,7 @@ class NodeInfo(BaseModelMixin):
     observe_chains: List = field(default_factory=list)
     jail: Dict = field(default_factory=dict)
 
-    ip_info: Dict[str, Any] = field(default_factory=dict)
+    ip_info: LocationInfo = field(default_factory=dict)
 
     @property
     def chain_dict(self):
@@ -139,7 +140,7 @@ class NodeInfo(BaseModelMixin):
     @property
     def flag_emoji(self) -> str:
         if self.ip_info:
-            return find_country_emoji(self.ip_info.get('country', ''))
+            return find_country_emoji(self.ip_info.country_name)
         return ''
 
 
@@ -366,7 +367,7 @@ class NetworkNodeIpInfo:
     UNKNOWN_PROVIDER = 'Unknown'
 
     node_info_list: List[NodeInfo] = field(default_factory=list)
-    ip_info_dict: Dict[str, dict] = field(default_factory=dict)  # IP -> Geo Info
+    ip_info_dict: Dict[str, LocationInfo] = field(default_factory=dict)  # IP -> Geo Info
     total_rune_supply: float = 301e6  # todo: set it correctly dynamically
 
     @property
@@ -384,8 +385,8 @@ class NetworkNodeIpInfo:
     def select_ip_info_for_nodes(self, nodes: List[NodeInfo]) -> List[dict]:
         return [self.ip_info_dict.get(n.ip_address, None) for n in nodes]
 
-    def get_general_provider(self, data: dict):
-        org = data.get('org')
+    def get_general_provider(self, data: LocationInfo):
+        org = data.org
         if org is None:
             return self.UNKNOWN_PROVIDER
         try:
@@ -415,7 +416,7 @@ class NetworkNodeIpInfo:
         return self.get_feature_by_f(self.get_general_provider, nodes, unknown)
 
     def get_countries(self, nodes: List[NodeInfo] = None, unknown=UNKNOWN_PROVIDER) -> List[str]:
-        return self.get_feature_by_f(lambda info: info.get('country_name', self.UNKNOWN_PROVIDER), nodes, unknown)
+        return self.get_feature_by_f(lambda info: info.country_name or '', nodes, unknown)
 
     @staticmethod
     def get_min_median_max_total_bond(nodes: List[NodeInfo]) -> Tuple[float, float, float, float]:

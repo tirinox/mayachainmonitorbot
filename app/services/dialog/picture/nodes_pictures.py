@@ -15,6 +15,7 @@ from services.lib.money import clamp, short_rune, format_percent
 from services.lib.plot_graph import plot_legend, PlotGraphLines
 from services.lib.texts import bracketify
 from services.lib.utils import async_wrap, Singleton, most_common_and_other, linear_transform
+from services.models.location_info import LocationInfo
 from services.models.node_info import NetworkNodeIpInfo, NodeStatsItem
 
 
@@ -88,11 +89,11 @@ class WorldMap:
         remember_clusters = {}
 
         for node in data.node_info_list:
-            geo = data.ip_info_dict.get(node.ip_address) or {}
-            lat, long = geo.get('latitude'), geo.get('longitude')
+            geo = data.ip_info_dict.get(node.ip_address) or LocationInfo(node.ip_address)
+            lat, long = geo.latitude, geo.longitude
 
-            country = geo.get('country_name')
-            city = geo.get('city')
+            country = geo.country_name
+            city = geo.city
             if country:
                 countries.append(country)
 

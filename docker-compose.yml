@@ -18,7 +18,7 @@ services:
       - ./config.yaml:/config/config.yaml
 
   redis:
-    image: "redis:6.2.6-alpine"
+    image: "redis:8.2.1"
     volumes:
       - ./redis_data:/data
     networks:
@@ -37,9 +37,9 @@ services:
       - "${REDIS_PORT}"
     command:
       - 'redis-server'
-      - '--save 9000 1'
-      - '--save 3000 10'
-      - '--save 600 10000'
+      - '--save 12000 1'
+      - '--save 6000 10'
+      - '--save 1200 10000'
       - '--port ${REDIS_PORT}'
       - '--requirepass ${REDIS_PASSWORD}'
 

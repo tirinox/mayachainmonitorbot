@@ -1,8 +1,7 @@
 aiodns
 aiofiles
 aiogram==2.*
-aiohttp
-aioredis
+aiohttp>=3.12.15
 async-timeout
 bech32
 colorama
@@ -36,3 +35,4 @@ uvicorn
 uvloop>=0.17.0
 web3>=6.0.0
 websockets
+setuptools

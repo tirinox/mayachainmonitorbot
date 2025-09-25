@@ -1,6 +1,6 @@
 from datetime import date, datetime, timedelta
 
-from aioredis import Redis
+from redis.asyncio import Redis
 from aionode.types import ThorLastBlock
 
 from services.lib.constants import THOR_BLOCK_TIME

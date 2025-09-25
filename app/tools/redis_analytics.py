@@ -6,13 +6,12 @@ import asyncio
 import logging
 
 import tqdm
-from aioredis import Redis
 
 from tools.lib.lp_common import LpAppFramework
 
 
 async def do_job(app):
-    r: Redis = await app.deps.db.get_redis()
+    r = await app.deps.db.get_redis()
     logging.info('Loading all txs from DB')
     tx_keys = await r.keys()
     logging.info(f'Found {len(tx_keys)} txs')

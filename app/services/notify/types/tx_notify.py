@@ -2,7 +2,7 @@ import asyncio
 from contextlib import suppress
 from typing import List
 
-from aioredis import Redis
+from redis.asyncio import Redis
 
 from services.jobs.scanner.event_db import EventDatabase
 from services.lib.config import SubConfig

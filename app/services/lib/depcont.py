@@ -37,7 +37,7 @@ class DepContainer:
     loc_man = None  # type: 'LocalizationManager'
     broadcaster = None  # type: 'Broadcaster'
     alert_presenter = None
-    thor_env: ThorEnvironment = ThorEnvironment()
+    thor_env: ThorEnvironment = field(default_factory=ThorEnvironment)
 
     session: Optional[ClientSession] = None
 
@@ -81,13 +81,13 @@ class DepContainer:
 
     # shared data holders
 
-    price_holder: LastPriceHolder = LastPriceHolder()
-    queue_holder: QueueInfo = QueueInfo.error()
+    price_holder: LastPriceHolder = field(default_factory=LastPriceHolder)
+    queue_holder: QueueInfo = field(default_factory=QueueInfo.error)
     mimir_const_holder: Optional[MimirHolder] = None
     halted_chains: Set[str] = field(default_factory=set)
     chain_info: Dict[str, ThorChainInfo] = field(default_factory=dict)
-    node_holder: NodeListHolder = NodeListHolder()
-    net_stats: NetworkStats = NetworkStats()
+    node_holder: NodeListHolder = field(default_factory=NodeListHolder)
+    net_stats: NetworkStats = field(default_factory=NetworkStats)
     last_block_store = None
 
     emergency: Optional[EmergencyReport] = None
@@ -96,7 +96,7 @@ class DepContainer:
 
     is_loading: bool = True
 
-    new_feature: NewFeatureManager = NewFeatureManager(Features.EXPIRE_TABLE)
+    new_feature: NewFeatureManager = field(default_factory=lambda: NewFeatureManager(Features.EXPIRE_TABLE))
 
     def make_http_session(self):
         session_timeout = self.cfg.get_timeout_global
